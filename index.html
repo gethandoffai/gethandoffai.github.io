@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handoff: Your First AI Assistant</title>
+<meta name="theme-color" content="#1b1b1b">
+<link rel="icon" href="mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one question per screen on a single card, progress ticks across the top.
+   Stage 1 qualifies everyone; stage 2 (the build brief) only shows for qualified budgets.
+   Handoff brand: dark first, rainbow only on the logo, one solid accent everywhere else. */
+:root {
+  --bg: #1b1b1b; --card: #232324; --field: #2c2c2e; --line: #39393d;
+  --fg: #f2f2f3; --muted: #a3a5ab; --accent: #6f93ff; --on-accent: #111113; --accent-soft: #263150;
+  --good: #7fd36b; --deal: #ffb347; --err: #ff8a80;
+  --display: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f3f3f5; --card: #ffffff; --field: #f3f3f6; --line: #dedee4;
+    --fg: #18181a; --muted: #5f6168; --accent: #2f5ee8; --on-accent: #ffffff; --accent-soft: #e6ecfd;
+    --good: #2b8a3e; --deal: #a35c00; --err: #c0392b; color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding-block: 32px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { width: 100%; max-width: 640px; display: flex; flex-direction: column; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; font: 700 22px/1 var(--display); letter-spacing: -.01em; }
+.brand svg { width: 40px; height: 40px; flex: none; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.ticks { display: flex; gap: 4px; }
+.ticks span { height: 4px; flex: 1; border-radius: 2px; background: var(--line); transition: background .25s; }
+.ticks span.on { background: var(--accent); }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 32px; display: flex; flex-direction: column; gap: 22px;
+}
+h1 { font: 700 clamp(30px, 6.5vw, 44px)/1.08 var(--display); margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+h2 { font: 600 clamp(23px, 4.8vw, 30px)/1.2 var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+p { margin: 0; max-width: 60ch; }
+.sub { color: var(--muted); }
+.deal { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; font-size: 15px; }
+.deal b { font: 600 13px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--deal); }
+.deal s { color: var(--muted); }
+.how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.how div { border-top: 2px solid var(--accent); padding-top: 12px; font-size: 15px; line-height: 1.5; }
+.how b { display: block; font: 600 17px/1.3 var(--display); margin-bottom: 4px; }
+.options { display: grid; gap: 10px; }
+.opt {
+  display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+  font: 500 16px/1.4 var(--body); color: var(--fg); background: transparent;
+  border: 1px solid var(--line); border-radius: 12px; padding: 15px 16px; cursor: pointer;
+}
+.opt:hover { border-color: var(--accent); }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt .box { width: 20px; height: 20px; flex: none; border: 1.5px solid var(--muted); border-radius: 50%; display: grid; place-items: center; }
+.multi .opt .box { border-radius: 5px; }
+.opt[aria-pressed="true"] .box { border-color: var(--accent); background: var(--accent); }
+.opt[aria-pressed="true"] .box::after { content: ""; width: 7px; height: 7px; background: var(--on-accent); border-radius: inherit; }
+label { font-weight: 600; font-size: 15px; display: block; margin-bottom: 8px; }
+label small { font-weight: 400; color: var(--muted); }
+input[type=text], input[type=email], input[type=tel], input[type=url], textarea {
+  width: 100%; font: 17px/1.45 var(--body); color: var(--fg); background: var(--field);
+  border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px;
+}
+::placeholder { color: var(--muted); opacity: .75; }
+textarea { min-height: 160px; resize: vertical; }
+input:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fields .full { grid-column: 1 / -1; }
+.slider { display: flex; flex-direction: column; gap: 14px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.readout { display: flex; gap: 28px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.readout div { font: 700 38px/1 var(--display); }
+.readout small { display: block; font: 500 12px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 8px; }
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.btn {
+  font: 600 16px/1 var(--body); border-radius: 12px; padding: 15px 22px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); text-decoration: none; display: inline-block;
+}
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.ghost { background: transparent; color: var(--muted); border-color: transparent; padding-inline: 4px; }
+.err { color: var(--err); font-size: 15px; min-height: 1em; }
+.fine { font-size: 14px; color: var(--muted); }
+.ok { color: var(--good); font: 500 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.stage { color: var(--accent); font: 500 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.checklist { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.checklist li::before { content: "\2192  "; color: var(--accent); }
+@media (max-width: 520px) {
+  .card { padding: 22px; }
+  .how, .fields { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <span class="brand"><svg viewBox="0 0 600 600" aria-hidden="true"><defs><linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="570" y2="0"><stop offset="0" stop-color="#4f7bff"/><stop offset=".28" stop-color="#9a6cf0"/><stop offset=".45" stop-color="#ff6f6f"/><stop offset=".62" stop-color="#ffb347"/><stop offset=".78" stop-color="#7fd36b"/><stop offset="1" stop-color="#46c9d6"/></linearGradient><filter id="bl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter><filter id="er"><feMorphology operator="erode" radius="9"/></filter><path id="hm" fill-rule="evenodd" d="M200 30h200a170 170 0 0 1 170 170v200a170 170 0 0 1-170 170H200A170 170 0 0 1 30 400V200A170 170 0 0 1 200 30ZM215 160a40 40 0 0 0-40 40v200a40 40 0 0 0 80 0v-65h90v65a40 40 0 0 0 80 0V200a40 40 0 0 0-80 0v65h-90v-65a40 40 0 0 0-40-40Z"/></defs><use href="#hm" fill="url(#lg)" filter="url(#bl)" opacity=".7"/><use href="#hm" fill="url(#lg)"/><use href="#hm" fill="#1b1b1b" filter="url(#er)"/></svg>Handoff</span>
+    <span class="eyebrow" id="count"></span>
+  </div>
+  <div class="ticks" id="ticks" aria-hidden="true"></div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <p class="fine">Your answers only go to the Handoff team building your assistant.</p>
+</main>
+
+<script>
+const QUALIFIED = ['Under $500', '$500 to $1,500', '$1,500+'];  // under $500 fits the $375 founding deal
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec';
+const isQ = () => QUALIFIED.includes(answers.budget);
+const BRIEF = 'Build brief';
+
+const STEPS = [
+  { id: 'intro' },
+  { id: 'business', type: 'single', q: 'What best describes you?',
+    opts: ['Solo / freelancer', 'Local service business (trades, salon, clinic, etc.)', 'Online store / ecommerce', 'B2B company (sales, distribution, manufacturing)', 'Agency or consultant', 'Creator or personal brand', 'Something else'] },
+  { id: 'offer', type: 'short', q: 'In one sentence, what do you sell and who buys it?',
+    ph: 'We install HVAC systems for homeowners around Phoenix.' },
+  { id: 'team', type: 'single', q: 'How many people work in the business?',
+    opts: ['Just me', '2 to 5', '6 to 20', '21 to 100', 'More than 100'] },
+  { id: 'pains', type: 'multi', q: 'Where does your week disappear?', hint: 'Pick everything that applies.',
+    opts: ['Answering emails', 'Scheduling and follow-ups', 'Social media content', 'Quotes, proposals, invoices', 'Answering the same customer questions', 'Data entry and reports', 'Research and finding leads', 'Writing (listings, blogs, SOPs)'] },
+  { id: 'task', type: 'short', q: 'Name the one task you\'d hand off first.',
+    hint: 'Just one job. If it works, we do the next one after.', ph: 'Replying to every new quote request within an hour' },
+  { id: 'hours', type: 'range', q: 'Roughly how many hours a week does that task take?' },
+  { id: 'tools', type: 'multi', q: 'Which tools do you use day to day?', hint: 'This tells us what your assistant can plug into.',
+    opts: ['Gmail / Google Workspace', 'Outlook / Microsoft 365', 'Shopify', 'QuickBooks', 'A CRM (HubSpot, Salesforce, etc.)', 'Canva', 'Slack or Teams', 'Mostly paper and spreadsheets'],
+    detail: 'Anything else? (optional)', detailPh: 'Jobber, ServiceTitan, Squarespace...' },
+  { id: 'budget', type: 'single', q: 'What would you invest to get that time back?',
+    opts: ['Just exploring for now', 'Under $500', '$500 to $1,500', '$1,500+'] },
+
+  { id: 'brief', when: isQ },
+  { id: 'trigger', type: 'single', when: isQ, stage: BRIEF, q: 'What kicks this task off?',
+    opts: ['A new email comes in', 'A form, order or booking comes in', 'A set time (every morning, every Friday...)', 'A message, call or text', 'I decide when it\'s needed'],
+    detail: 'Be specific (optional)', detailPh: 'A "New quote request" email from our website form' },
+  { id: 'steps', type: 'text', when: isQ, stage: BRIEF, min: 60, q: 'Walk us through exactly how you do it today.',
+    hint: 'Write it like instructions for a new hire. Numbered steps are perfect. This is the most important answer.',
+    ph: '1. Open the quote request email\n2. Look up the address on Google Maps to check the service area\n3. Pull our price sheet and pick the right package\n4. Write a reply with the price and 2 install dates\n5. Log it in our spreadsheet' },
+  { id: 'sources', type: 'multi', when: isQ, stage: BRIEF, q: 'Where does the information for this task come from?',
+    opts: ['An email inbox', 'A spreadsheet', 'A CRM or job software', 'Website forms or orders', 'PDFs or documents', 'Texts or phone calls', 'Researching online', 'Mostly in my head'],
+    detail: 'Name the specific inbox, sheet or app', detailPh: 'quotes@ inbox, "2026 Pricing" Google Sheet, Jobber' },
+  { id: 'outputs', type: 'multi', when: isQ, stage: BRIEF, q: 'When the task is done, what exists that didn\'t before?',
+    opts: ['An email or reply sent', 'A document (quote, proposal, report)', 'A spreadsheet or CRM updated', 'A social post or ad', 'A list of leads or research', 'A calendar event or reminder', 'A text message sent'],
+    detail: 'Where does it go and who sees it?', detailPh: 'Reply goes to the customer, copy logged in the Quotes sheet' },
+  { id: 'volume', type: 'short', when: isQ, stage: BRIEF, q: 'How often does it happen?',
+    ph: 'About 15 quote requests a week, more in summer' },
+  { id: 'example', type: 'text', when: isQ, stage: BRIEF, min: 20, q: 'Show us what a great result looks like.',
+    hint: 'Paste a real example you were happy with, like an email you sent or a quote. Swap out anything private.',
+    ph: 'Hi Sarah, thanks for reaching out! For a 2,000 sq ft home our Comfort package is $8,400 installed...' },
+  { id: 'example_link', type: 'short', optional: true, when: isQ, stage: BRIEF, q: 'Got a sample file? Paste a share link.',
+    hint: 'A template, past quote or spreadsheet in Google Drive or Dropbox, set to "anyone with the link can view." Optional, but it makes the build much closer to real.',
+    ph: 'https://drive.google.com/...' },
+  { id: 'rules', type: 'text', when: isQ, stage: BRIEF, min: 10, q: 'What judgment calls do you make, and what should it never do?',
+    hint: 'Pricing rules, who gets priority, tone of voice, anything that needs a human.',
+    ph: 'Never quote under $6k. Anything commercial goes to me. Friendly, not salesy. Don\'t promise dates without checking the calendar.' },
+  { id: 'approval', type: 'single', when: isQ, stage: BRIEF, q: 'How much should it do on its own?',
+    opts: ['Draft everything for my OK first', 'Handle the simple ones, draft the rest for me', 'Run fully on its own'] },
+  { id: 'ai', type: 'multi', when: isQ, stage: BRIEF, q: 'Which AI accounts do you already have?',
+    opts: ['None yet', 'ChatGPT (free)', 'ChatGPT Plus or Team', 'Claude', 'Gemini / Google Workspace AI', 'Microsoft Copilot'] },
+  { id: 'success', type: 'short', when: isQ, stage: BRIEF, q: 'In 30 days, how will you know it\'s working?',
+    ph: 'Every quote request gets a reply within an hour and I stop doing them at night.' },
+  { id: 'timeline', type: 'single', when: isQ, stage: BRIEF, q: 'When do you want this running?',
+    opts: ['As soon as possible', 'Within the next month', 'In the next few months'] },
+  { id: 'decider', type: 'single', when: isQ, stage: BRIEF, q: 'Who makes the call on this?',
+    opts: ['Just me', 'Me and a partner', 'I need someone else\'s approval'] },
+
+  { id: 'contact', type: 'contact', q: 'Where should we send your assistant?' },
+  { id: 'done' }
+];
+
+const answers = { hours: 5, pains: [], tools: [], sources: [], outputs: [], ai: [] };
+// Which ad or link sent them: ?ad=04 or utm tags on the link
+const qs = new URLSearchParams(location.search);
+answers.source = qs.get('ad') || qs.get('utm_content') || qs.get('utm_source') || (document.referrer ? new URL(document.referrer).hostname : 'direct');
+let cur = 'intro';
+
+const card = document.getElementById('card');
+const ticks = document.getElementById('ticks');
+const count = document.getElementById('count');
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const visible = () => STEPS.filter(s => !s.when || s.when());
+const step = () => STEPS.find(s => s.id === cur);
+
+function progress() {
+  const qs = visible().filter(s => s.type);
+  const n = qs.findIndex(s => s.id === cur) + 1;
+  const done = n || (cur === 'done' ? qs.length : 0);
+  ticks.innerHTML = qs.map((s, k) => '<span' + (k < done ? ' class="on"' : '') + '></span>').join('');
+  // Total is only known once budget decides whether the build brief appears
+  count.textContent = n ? 'Question ' + n + (answers.budget ? ' of ' + qs.length : '') : '';
+}
+
+function nav(ok, label) {
+  return '<div class="nav">' +
+    (cur !== 'intro' && cur !== 'business' ? '<button class="btn ghost" id="back" type="button">Back</button>' : '<span></span>') +
+    '<button class="btn" id="next" type="button"' + (ok ? '' : ' disabled') + '>' + (label || 'Next') + '</button></div>';
+}
+
+function valid(s) {
+  const v = answers[s.id];
+  if (s.optional) return true;
+  if (s.type === 'multi') return v.length > 0;
+  if (s.type === 'single') return !!v;
+  if (s.type === 'text') return (v || '').trim().length >= (s.min || 1);
+  if (s.type === 'short') return (v || '').trim().length > 1;
+  return true;
+}
+
+function heading(s) {
+  return (s.stage ? '<span class="stage">' + s.stage + '</span>' : '') + '<h2>' + esc(s.q) + '</h2>' + (s.hint ? '<p class="sub">' + esc(s.hint) + '</p>' : '');
+}
+
+function detailField(s) {
+  if (!s.detail) return '';
+  return '<div><label for="f-' + s.id + '-detail">' + esc(s.detail) + '</label><input type="text" id="f-' + s.id + '-detail" placeholder="' + esc(s.detailPh || '') + '" value="' + esc(answers[s.id + '_detail'] || '') + '"></div>';
+}
+
+function render() {
+  const s = step();
+  progress();
+  if (s.id === 'intro') {
+    card.innerHTML =
+      '<h1>Tell us what eats your week. We\'ll build the AI that handles it, before you buy.</h1>' +
+      '<p class="sub">Answer a few questions about one task you\'re sick of doing. We build a working AI assistant around it, then show it to you running on a short call. No AI experience needed.</p>' +
+      '<div class="deal"><b>Founding client deal</b><span><s>$750</s> $375 setup for the first 5 businesses.</span></div>' +
+      '<div class="how"><div><b>You answer</b>About 2 minutes to start.</div><div><b>We build</b>A working assistant made for your business.</div><div><b>You watch it run</b>Then decide. Nothing to pay before that.</div></div>' +
+      '<div class="nav"><span></span><button class="btn" id="next" type="button">Start</button></div>';
+  } else if (s.id === 'brief') {
+    card.innerHTML =
+      '<span class="ok">You\'re a fit</span><h2>Now the build brief. This is what lets us build it before you buy.</h2>' +
+      '<p class="sub">About 5 more minutes. The more real detail you give, the more finished your assistant will be on the call.</p>' +
+      '<ul class="checklist"><li>How the task works today, step by step</li><li>Where the info comes from and where results go</li><li>A real example of a great result</li><li>Your rules and what needs a human</li></ul>' +
+      nav(true, 'Start the brief');
+  } else if (s.type === 'single' || s.type === 'multi') {
+    const multi = s.type === 'multi';
+    const sel = v => multi ? answers[s.id].includes(v) : answers[s.id] === v;
+    card.innerHTML = heading(s) +
+      '<div class="options' + (multi ? ' multi' : '') + '">' +
+      s.opts.map((o, k) => '<button class="opt" type="button" data-k="' + k + '" aria-pressed="' + sel(o) + '"><span class="box"></span>' + esc(o) + '</button>').join('') +
+      '</div>' + detailField(s) + nav(valid(s));
+    card.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const v = s.opts[b.dataset.k];
+      if (multi) {
+        const a = answers[s.id];
+        a.includes(v) ? a.splice(a.indexOf(v), 1) : a.push(v);
+        render();
+      } else {
+        answers[s.id] = v;
+        render();
+        if (!s.detail) setTimeout(go, 180);
+      }
+    });
+    const d = document.getElementById('f-' + s.id + '-detail');
+    if (d) d.oninput = () => { answers[s.id + '_detail'] = d.value; };
+  } else if (s.type === 'text' || s.type === 'short') {
+    const field = s.type === 'text'
+      ? '<textarea id="f-field" maxlength="4000" placeholder="' + esc(s.ph || '') + '">' + esc(answers[s.id] || '') + '</textarea>'
+      : '<input type="text" id="f-field" maxlength="500" placeholder="' + esc(s.ph || '') + '" value="' + esc(answers[s.id] || '') + '">';
+    card.innerHTML = heading(s) + field + nav(valid(s));
+    const t = document.getElementById('f-field');
+    t.oninput = () => { answers[s.id] = t.value; document.getElementById('next').disabled = !valid(s); };
+    t.onkeydown = e => { if (s.type === 'short' && e.key === 'Enter' && valid(s)) go(); };
+    t.focus();
+  } else if (s.type === 'range') {
+    card.innerHTML = heading(s) + '<div class="slider">' +
+      '<input type="range" id="f-hours" min="1" max="40" step="1" value="' + answers.hours + '" aria-label="Hours per week">' +
+      '<div class="readout"><div><span id="hw"></span><small>hours a week</small></div><div><span id="hy"></span><small>hours a year</small></div><div><span id="wd"></span><small>full work weeks a year</small></div></div>' +
+      '</div>' + nav(true);
+    const r = document.getElementById('f-hours');
+    const show = () => {
+      answers.hours = +r.value;
+      document.getElementById('hw').textContent = r.value;
+      document.getElementById('hy').textContent = (r.value * 50).toLocaleString();
+      document.getElementById('wd').textContent = (r.value * 50 / 40).toFixed(1);
+    };
+    r.oninput = show; show();
+  } else if (s.type === 'contact') {
+    const v = k => esc(answers[k] || '');
+    card.innerHTML = '<h2>' + esc(s.q) + '</h2><p class="sub">We\'ll reach out once your assistant is ready to show.</p>' +
+      '<div class="fields">' +
+      '<div><label for="f-name">Your name</label><input type="text" id="f-name" autocomplete="name" value="' + v('name') + '"></div>' +
+      '<div><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" value="' + v('email') + '"></div>' +
+      '<div><label for="f-company">Business name</label><input type="text" id="f-company" autocomplete="organization" value="' + v('company') + '"></div>' +
+      '<div><label for="f-phone">Phone <small>(optional)</small></label><input type="tel" id="f-phone" autocomplete="tel" value="' + v('phone') + '"></div>' +
+      '<div class="full"><label for="f-website">Website or Instagram' + (isQ() ? '' : ' <small>(optional)</small>') + '</label><input type="text" id="f-website" value="' + v('website') + '"></div>' +
+      '</div><p class="err" id="err"></p>' + nav(true, 'Send my answers');
+    ['name', 'email', 'company', 'phone', 'website'].forEach(k => {
+      const el = document.getElementById('f-' + k);
+      el.oninput = () => { answers[k] = el.value.trim(); };
+    });
+  } else if (s.id === 'done') {
+    const r = answers.result || {};
+    const first = esc((answers.name || '').split(' ')[0]);
+    card.innerHTML = r.qualified
+      ? '<span class="ok">Got it' + (first ? ', ' + first : '') + '</span><h2>Pick a time and we\'ll have your assistant built for the call.</h2>' +
+        '<p class="sub">Grab a 30 minute slot. Before the call we build a working version from your brief, so the call is you watching it run.</p>' +
+        '<div><a class="btn" href="' + esc(r.bookingUrl || '#') + '" target="_blank" rel="noopener">Pick a time</a></div>'
+      : '<span class="ok">Got it' + (first ? ', ' + first : '') + '</span><h2>Thanks. We\'ll email you within 24 hours.</h2>' +
+        '<p class="sub">We\'ll send a couple of simple ways to start using AI on the task you described, free. If it clicks, we can build the full version later.</p>';
+  }
+  const next = document.getElementById('next');
+  const back = document.getElementById('back');
+  if (next) next.onclick = s.type === 'contact' ? submit : go;
+  if (back) back.onclick = () => move(-1);
+}
+
+function move(d) {
+  const vis = visible();
+  const k = vis.findIndex(s => s.id === cur) + d;
+  if (k >= 0 && k < vis.length) { cur = vis[k].id; render(); window.scrollTo(0, 0); }
+}
+function go() { move(1); }
+
+function submit() {
+  const err = document.getElementById('err');
+  const next = document.getElementById('next');
+  if (!answers.name) return err.textContent = 'Add your name so we know who we\'re building for.';
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(answers.email || '')) return err.textContent = 'That email doesn\'t look right. Check it and try again.';
+  if (isQ() && !answers.website) return err.textContent = 'Add your website or Instagram so we can match your brand.';
+  err.textContent = '';
+  next.disabled = true; next.textContent = 'Sending...';
+  const done = res => { answers.result = res; go(); };
+  const fail = () => { next.disabled = false; next.textContent = 'Send my answers'; err.textContent = 'Something went wrong sending your answers. Try again in a moment.'; };
+  if (window.google && google.script && google.script.run) {
+    google.script.run.withSuccessHandler(done).withFailureHandler(fail).submitIntake(answers);
+  } else if (location.protocol === 'file:') {
+    // Local preview: no backend, so fake the response
+    setTimeout(() => done({ qualified: isQ(), bookingUrl: '#' }), 400);
+  } else {
+    // Hosted page: plain text body keeps this a simple request, so no Google sign-in or CORS preflight is involved
+    fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(answers) })
+      .then(r => r.json()).then(j => j.ok ? done(j.result) : fail()).catch(fail);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
