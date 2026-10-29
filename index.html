@@ -223,6 +223,20 @@ footer a:hover { color: var(--fg); }
 .dots { display: flex; gap: 6px; }
 .dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: all .3s; }
 .dots i.on { width: 20px; background: var(--fg); }
+.where { display: flex; align-items: center; gap: 8px; padding: 2px 4px 8px; font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.where i { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; font: 700 11px/1 var(--mono); font-style: normal; color: var(--ink); background: var(--c); }
+.where em { margin-left: auto; font: inherit; color: inherit; }
+.mail { background: #1d1d20; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: grid; gap: 6px; font-size: 14px; }
+.mail .hd { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.mail .hd b { color: var(--fg); font-weight: 600; font-size: 13px; }
+.mail.draft { border-color: color-mix(in srgb, var(--blue) 50%, var(--line)); }
+.dr { color: var(--coral); margin-right: 6px; }
+.lb { font: 500 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); background: var(--amber); border-radius: 4px; padding: 4px 6px; }
+.ev { display: grid; gap: 3px; font-size: 14px; padding: 10px 12px; border-radius: 10px; border-left: 3px solid var(--blue); background: color-mix(in srgb, var(--blue) 14%, #1d1d20); }
+.ev small, .exnote { color: var(--muted); font-size: 13px; }
+.ask { align-self: flex-end; max-width: 84%; background: #2a2a2d; padding: 9px 13px; border-radius: 16px; font-size: 14px; }
+.ans { font-size: 14px; color: #dcdde0; }
+.exnote { margin: 0; text-align: center; line-height: 1.45; }
 .motion .slide .st { opacity: 0; transform: translateY(12px) scale(.97); transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1.2); }
 .motion .slide.show .st { opacity: 1; transform: none; }
 @media (max-width: 900px) { .ex { justify-self: start; } }
@@ -250,7 +264,7 @@ footer a:hover { color: var(--fg); }
       <div>
         <p class="label rv"><b>01</b>Custom AI assistants for small businesses</p>
         <h1 class="rv" style="--d:.1s">Take back<br><span class="hl">your week.</span></h1>
-        <p class="lede rv" style="--d:.25s">We build an AI assistant around how you <em>already</em> work. It answers customers, books the time and handles the busywork, in your voice.</p>
+        <p class="lede rv" style="--d:.25s">We build an AI assistant around how you <em>already</em> work. It drafts your customer replies, holds the time and handles the busywork, in your voice.</p>
         <div class="cta rv" style="--d:.35s">
           <a class="btn" href="demo/" data-demo>Get your free demo &rarr;</a>
           <a class="btn ghost" href="#how">See how it works</a>
@@ -267,41 +281,37 @@ footer a:hover { color: var(--fg); }
         </div>
         <div class="phone">
           <div class="track" id="track">
-            <div class="slide" aria-label="A client books at 10pm">
-              <div class="bar"><span>10:04 PM</span><span>Jess</span></div>
-              <div class="msgs">
-                <div class="time">Tonight</div>
-                <div class="m in">Hey! Any chance you have time this Saturday?</div>
-                <div class="m out">Hi Jess! Saturday I have 9:30 or 11:00 open. Which works?</div>
-                <div class="tag">Your AI replied with your open times</div>
-                <div class="m in">9:30 please!</div>
-                <div class="m out">Done! You're booked Saturday at 9:30. See you then.</div>
-                <div class="tag">Booked automatically</div>
-              </div>
+            <div class="slide" aria-label="A booking request, answered in Gmail">
+              <div class="where"><i style="--c:var(--coral)">G</i>Gmail<em>10:04 PM</em></div>
+              <div class="st mail"><div class="hd"><b>Jess</b><span>10:02 PM</span></div>Hey! Any chance you have time this Saturday?</div>
+              <div class="st mail draft"><div class="hd"><b><span class="dr">Draft</span>Re: Saturday</b></div>Hi Jess! Saturday I have 9:30 or 11:00 open. Which works better?</div>
+              <div class="st tag">Open times pulled from your calendar</div>
+              <div class="st ev"><b>Sat 9:30 &middot; Hold for Jess</b><small>Google Calendar, until she confirms</small></div>
+              <div class="st tag">Waiting in your drafts. You hit send.</div>
             </div>
-            <div class="slide" aria-label="A quote drafted from your price list">
-              <div class="bar"><span>New request</span><span>Quote</span></div>
-              <div class="st m in">Can I get a price to swap 2 bathroom faucets? Thursday works.</div>
-              <div class="st qcard">
-                <div class="qh"><b>Quote #1042</b><span>Mike R.</span></div>
+            <div class="slide" aria-label="A quote drafted in Gmail from your price list">
+              <div class="where"><i style="--c:var(--coral)">G</i>Gmail<em>Drafts</em></div>
+              <div class="st mail"><div class="hd"><b>Mike R.</b><span>2:15 PM</span></div>Can I get a price to swap 2 bathroom faucets? Thursday works.</div>
+              <div class="st mail draft"><div class="hd"><b><span class="dr">Draft</span>Re: Faucet quote</b></div>
+                <span>Hi Mike, here's your quote for Thursday:</span>
                 <div class="ql"><span>Faucet swap x2</span><span>$240</span></div>
                 <div class="ql"><span>Supply lines</span><span>$36</span></div>
                 <div class="ql"><span>Trip fee</span><span>$45</span></div>
                 <div class="ql tot"><span>Total</span><span>$321</span></div>
               </div>
               <div class="st tag">Built from your price list</div>
-              <div class="st acts"><span class="ok">Send it</span><span>Edit</span></div>
             </div>
-            <div class="slide" aria-label="Following up on a quiet lead">
-              <div class="bar"><span>Follow ups</span><span>3 due</span></div>
-              <div class="st row"><i style="background:var(--amber)"></i><div><b>Sarah K.</b><small>Quote sent 3 days ago, no reply</small></div></div>
-              <div class="st m out">Hi Sarah! Just checking in on the deck quote. Happy to answer anything, or hold a spot for next week.</div>
-              <div class="st tag">Follow up sent in your voice</div>
-              <div class="st row"><i style="background:var(--green)"></i><div><b>Tom B.</b><small>Replied: "Yes, let's do it"</small></div></div>
-              <div class="st tag" style="color:var(--amber)">Flagged for you</div>
+            <div class="slide" aria-label="Follow ups drafted and flagged in Gmail">
+              <div class="where"><i style="--c:var(--coral)">G</i>Gmail<em>3 due</em></div>
+              <div class="st mail draft"><div class="hd"><b><span class="dr">Draft</span>To Sarah K.</b><span>No reply in 3 days</span></div>Hi Sarah! Just checking in on the deck quote. Happy to answer anything, or hold a spot for next week.</div>
+              <div class="st tag">Follow up drafted in your voice</div>
+              <div class="st mail"><div class="hd"><b>Tom B.</b><span class="lb">Needs you</span></div>Yes, let's do it. When can you start?</div>
+              <div class="st tag" style="color:var(--amber)">Labeled so you see it first</div>
             </div>
-            <div class="slide" aria-label="A week of posts, drafted">
-              <div class="bar"><span>Content</span><span>This week</span></div>
+            <div class="slide" aria-label="A week of posts, planned in the Claude app">
+              <div class="where"><i style="--c:var(--amber)">C</i>Claude app<em>Your project</em></div>
+              <div class="st ask">Plan next week's posts</div>
+              <div class="st ans">Here's your week, in your voice:</div>
               <div class="cal">
                 <div class="st day"><span>Mon</span><b style="--c:var(--amber)">Before and after reel</b></div>
                 <div class="st day"><span>Tue</span><b style="--c:var(--blue)">Client tip carousel</b></div>
@@ -309,20 +319,20 @@ footer a:hover { color: var(--fg); }
                 <div class="st day"><span>Thu</span><b style="--c:var(--coral)">Review spotlight</b></div>
                 <div class="st day"><span>Fri</span><b style="--c:var(--teal)">Weekend openings</b></div>
               </div>
-              <div class="st tag">5 posts drafted in your voice</div>
-              <div class="st acts"><span class="ok">Approve all</span><span>Review</span></div>
+              <div class="st ask">Looks good, write the captions</div>
             </div>
-            <div class="slide" aria-label="Your inbox, sorted">
-              <div class="bar"><span>Inbox</span><span>7:00 AM</span></div>
-              <div class="st row"><i style="background:var(--green)"></i><div><b>4 answered</b><small>Hours, prices, parking, gift cards</small></div></div>
-              <div class="st row"><i style="background:var(--blue)"></i><div><b>2 booked</b><small>Sat 9:30, Mon 2:00</small></div></div>
+            <div class="slide" aria-label="A morning recap of your inbox">
+              <div class="where"><i style="--c:var(--amber)">C</i>Claude app<em>7:00 AM</em></div>
+              <div class="st ans">Morning! Here's what came in overnight:</div>
+              <div class="st row"><i style="background:var(--green)"></i><div><b>4 replies drafted</b><small>Hours, prices, parking, gift cards</small></div></div>
+              <div class="st row"><i style="background:var(--blue)"></i><div><b>2 times held</b><small>Sat 9:30, Mon 2:00</small></div></div>
               <div class="st row"><i style="background:var(--amber)"></i><div><b>1 needs you</b><small>Refund question from Dana</small></div></div>
-              <div class="st m out">Morning! Overnight I answered 4, booked 2, and saved 1 for you.</div>
-              <div class="st tag">Your daily recap</div>
+              <div class="st tag">Kit: in Claude. Managed: texted to you.</div>
             </div>
           </div>
           <div class="pfoot"><div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div><button class="replay" id="replay" type="button">&#8635; Replay</button></div>
         </div>
+        <p class="exnote">Examples. It all happens in apps you already use: Gmail, Google Calendar and Claude. No new app to learn.</p>
       </div>
     </div>
   </section>
@@ -473,27 +483,7 @@ footer a:hover { color: var(--fg); }
       const tick = t => { const k = Math.min(1, (t - t0) / 900); el.textContent = Math.round(5 * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
       el.textContent = '0'; requestAnimationFrame(tick);
     }
-    // chat plays like a real text thread, with typing dots before each AI reply
-    const msgs = document.querySelector('.msgs'), items = [...msgs.children];
-    let timers = [];
-    function playChat() {
-      timers.forEach(clearTimeout); timers = [];
-      msgs.querySelectorAll('.typing').forEach(t => t.remove());
-      items.forEach(x => x.classList.remove('on'));
-      let t = 300;
-      items.forEach(x => {
-        if (x.classList.contains('out')) {
-          const dots = document.createElement('div'); dots.className = 'typing on'; dots.innerHTML = '<i></i><i></i><i></i>';
-          timers.push(setTimeout(() => msgs.insertBefore(dots, x), t)); t += 1100;
-          timers.push(setTimeout(() => { dots.remove(); x.classList.add('on'); }, t)); t += 500;
-        } else {
-          timers.push(setTimeout(() => x.classList.add('on'), t)); t += x.classList.contains('tag') ? 700 : 600;
-        }
-      });
-      return t;
-    }
     window.__playSlide = (slide, i) => {
-      if (i === 0) return playChat() + 2200;
       const st = [...slide.querySelectorAll('.st')];
       slide.classList.remove('show'); void slide.offsetWidth;
       st.forEach((x, k) => x.style.transitionDelay = (0.25 + k * 0.45) + 's');
