@@ -192,8 +192,9 @@ footer a:hover { color: var(--fg); }
 
 /* example carousel */
 .ex { justify-self: end; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip { font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; cursor: pointer; transition: all .25s; }
+.chips { display: flex; gap: 4px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: 1 0 auto; white-space: nowrap; font: 500 11px/1 var(--mono); letter-spacing: .02em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 6px; cursor: pointer; transition: all .25s; }
 .chip:hover { color: var(--fg); }
 .chip.on { background: var(--fg); color: var(--ink); border-color: var(--fg); }
 .ex .phone { max-width: none; justify-self: auto; padding: 18px 0 14px; overflow: hidden; }
