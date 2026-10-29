@@ -65,7 +65,7 @@ nav .wrap { display: flex; align-items: center; justify-content: space-between; 
 .links a:not(.btn):hover { color: var(--fg); }
 .links .btn { padding: 12px 16px; font-size: 15px; }
 
-section { padding-block: clamp(72px, 11vw, 132px); border-bottom: 1px solid var(--line); }
+section { padding-block: clamp(72px, 11vw, 132px); }
 .head { display: flex; flex-direction: column; gap: 20px; margin-bottom: 52px; }
 
 /* hero */
@@ -92,10 +92,19 @@ section { padding-block: clamp(72px, 11vw, 132px); border-bottom: 1px solid var(
 .big { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; }
 .big small { font-size: .32em; letter-spacing: -.03em; margin-left: .1em; }
 .stat h2 { margin-top: 26px; }
-.weeks { display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px; max-width: 460px; }
-.weeks span { aspect-ratio: 1; border-radius: 4px; background: var(--line); }
-.weeks span.on { background: var(--amber); }
-.weeks-cap { margin-top: 16px; }
+.year { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 30px 28px; display: grid; gap: 22px; min-width: 0; }
+.yr-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.yr-num { font: 700 64px/1 var(--display); letter-spacing: -.04em; color: var(--amber); }
+.wk-days, .wk { display: grid; grid-template-columns: 64px repeat(5, 1fr); gap: 6px; align-items: center; }
+.wk-days span { font: 500 11px/1 var(--mono); color: var(--muted); text-align: center; }
+.wk-list { display: grid; gap: 6px; }
+.wk span { font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.wk i { height: 26px; border-radius: 6px; background: var(--amber); }
+.wk i.half { background: linear-gradient(90deg, var(--amber) 50%, var(--line) 50%); }
+.wk i.off { background: var(--line); }
+.yr-bar { height: 12px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.yr-bar b { display: block; height: 100%; width: 12.5%; background: var(--amber); border-radius: 99px; }
+.yr-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; }
 
 /* jobs */
 .jobs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -104,9 +113,10 @@ section { padding-block: clamp(72px, 11vw, 132px); border-bottom: 1px solid var(
 .job p { font-size: 15.5px; color: var(--muted); }
 
 /* steps */
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+.steps-cta { margin-top: 40px; }
 .step { padding: 30px 28px 8px 0; display: flex; flex-direction: column; gap: 14px; }
-.step + .step { border-left: 1px solid var(--line); padding-left: 28px; }
+.step + .step { padding-left: 28px; }
 .step .num { font: 400 64px/1 var(--serif); font-style: italic; color: var(--amber); }
 .step p { color: var(--muted); font-size: 16px; }
 
@@ -153,8 +163,8 @@ footer a:hover { color: var(--fg); }
   .links a:not(.btn) { display: none; }
   .jobs { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
-  .step, .step + .step { border-left: 0; padding: 26px 0 18px; }
-  .step + .step { border-top: 1px solid var(--line); }
+  .step, .step + .step { padding: 26px 0 18px; }
+  .steps-cta .btn { width: 100%; justify-content: center; }
   .hero .cta .btn { flex: 1; justify-content: center; }
 }
 
@@ -175,9 +185,10 @@ footer a:hover { color: var(--fg); }
 @keyframes dot { 0%, 60%, 100% { transform: none; opacity: .5 } 30% { transform: translateY(-4px); opacity: 1 } }
 .replay { margin-top: 14px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 6px 8px; }
 .replay:hover { color: var(--fg); }
-.motion .weeks span.on { background: var(--line); transition: background .25s ease, transform .35s ease; }
-.motion .weeks.in span.on { background: var(--amber); transform: scale(1.08); }
-.motion .weeks.in span.on.half { background: linear-gradient(90deg, var(--amber) 50%, var(--line) 50%); }
+.motion .wk i:not(.off) { opacity: .15; transform: scaleX(.6); transition: opacity .3s ease, transform .4s ease; }
+.motion .year.lit .wk i:not(.off) { opacity: 1; transform: none; }
+.motion .yr-bar b { width: 0; transition: width 1.2s ease 1.6s; }
+.motion .year.lit .yr-bar b { width: 12.5%; }
 .job { position: relative; overflow: hidden; transition: transform .35s ease, border-color .35s ease; }
 .job::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
   background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--c, #4f7bff) 22%, transparent), transparent 70%); }
@@ -345,8 +356,25 @@ footer a:hover { color: var(--fg); }
         <h2 class="rv" style="--d:.15s">a week on one task is <em>6½ work weeks</em> a year.</h2>
       </div>
       <div>
-        <div class="weeks rv" id="weeks" aria-hidden="true"></div>
-        <p class="weeks-cap label rv" style="--d:.2s">6½ of 52 work weeks, gone to one job</p>
+        <div class="year rv" id="weeks" style="--d:.2s">
+          <div class="yr-head"><span class="yr-num">260</span><span class="label">hours a year. Here's what that looks like:</span></div>
+          <div>
+            <div class="wk-days" aria-hidden="true"><span></span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+            <div class="wk-list" aria-hidden="true">
+              <div class="wk"><span>Week 1</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 2</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 3</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 4</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 5</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 6</span><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="wk"><span>Week 7</span><i></i><i></i><i class="half"></i><i class="off"></i><i class="off"></i></div>
+            </div>
+          </div>
+          <div>
+            <div class="yr-bar" aria-hidden="true"><b></b></div>
+            <div class="yr-cap"><span class="label">6½ full work weeks</span><span class="label">out of 52</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -377,6 +405,7 @@ footer a:hover { color: var(--fg); }
         <div class="step rv" style="--d:0.15s"><span class="num">2.</span><h3>Watch it work</h3><p>On a short call we show you a working demo on your own examples. No slides.</p></div>
         <div class="step rv" style="--d:0.30s"><span class="num">3.</span><h3>Decide, then hand it off</h3><p>Like it? We set it up on your accounts and tune it with you for 30 days.</p></div>
       </div>
+      <div class="steps-cta rv" style="--d:.4s"><a class="btn" href="demo/" data-demo>Get started &rarr;</a></div>
     </div>
   </section>
 
@@ -454,9 +483,7 @@ footer a:hover { color: var(--fg); }
 </footer>
 
 <script>
-  // 6.5 of 52 weeks lit
   const w = document.getElementById('weeks');
-  for (let i = 0; i < 52; i++) { const s = document.createElement('span'); if (i < 7) s.className = 'on'; if (i === 6) s.style.background = 'linear-gradient(90deg, var(--amber) 50%, var(--line) 50%)'; w.appendChild(s); }
   // Tag site visitors so the lead sheet shows they came from the landing page
   document.querySelectorAll('[data-demo]').forEach(a => a.href = 'demo/?ad=site');
   // ---- scroll motion ----
@@ -476,8 +503,8 @@ footer a:hover { color: var(--fg); }
 
     // weeks light up one at a time
     function lightWeeks() {
-      const on = [...w.children].slice(0, 7);
-      on.forEach((s, i) => { s.style.background = ''; s.style.transitionDelay = (0.25 + i * 0.12) + 's'; if (i === 6) s.classList.add('half'); });
+      w.querySelectorAll('.wk i').forEach((d, i) => d.style.transitionDelay = (0.3 + i * 0.03) + 's');
+      w.classList.add('lit');
     }
     // 0 to 5 hours
     function countUp() {
