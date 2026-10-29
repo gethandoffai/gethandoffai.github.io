@@ -157,13 +157,81 @@ footer a:hover { color: var(--fg); }
   .step + .step { border-top: 1px solid var(--line); }
   .hero .cta .btn { flex: 1; justify-content: center; }
 }
+
+/* ---- scroll motion (only with JS, off for reduced motion) ---- */
+.progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, #4f7bff, #9a6cf0, #ff6f6f, #ffb347, #7fd36b, #46c9d6); }
+.motion .rv { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
+.motion .rv.in { opacity: 1; transform: none; }
+.motion .hl { background-color: transparent; background-image: linear-gradient(var(--hlc, var(--amber)), var(--hlc, var(--amber)));
+  background-repeat: no-repeat; background-size: 0% 100%; color: var(--fg); transition: background-size .9s cubic-bezier(.7,0,.2,1) .35s, color .3s ease .75s; }
+.motion .hl.blue { --hlc: var(--blue); }
+.motion .in .hl, .motion .hl.in { background-size: 100% 100%; color: var(--ink); }
+.motion .msgs > * { opacity: 0; transform: translateY(12px) scale(.96); transition: opacity .4s ease, transform .5s cubic-bezier(.2,.8,.2,1.2); }
+.motion .msgs > .on { opacity: 1; transform: none; }
+.typing { align-self: flex-end; display: flex; gap: 5px; padding: 12px 14px; background: #2a2a2d; border-radius: 18px; border-bottom-right-radius: 6px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: dot 1s infinite ease-in-out; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 60%, 100% { transform: none; opacity: .5 } 30% { transform: translateY(-4px); opacity: 1 } }
+.replay { margin-top: 14px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 6px 8px; }
+.replay:hover { color: var(--fg); }
+.motion .weeks span.on { background: var(--line); transition: background .25s ease, transform .35s ease; }
+.motion .weeks.in span.on { background: var(--amber); transform: scale(1.08); }
+.motion .weeks.in span.on.half { background: linear-gradient(90deg, var(--amber) 50%, var(--line) 50%); }
+.job { position: relative; overflow: hidden; transition: transform .35s ease, border-color .35s ease; }
+.job::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--c, #4f7bff) 22%, transparent), transparent 70%); }
+.job:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--c, #4f7bff) 60%, var(--line)); }
+.job:hover::before { opacity: 1; }
+.plan { transition: transform .35s ease, box-shadow .35s ease; }
+.plan:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+.motion .step .num { display: inline-block; transform: translateY(20px) rotate(-8deg); opacity: 0; transition: transform .8s cubic-bezier(.2,.8,.2,1.3) calc(var(--d,0s) + .15s), opacity .6s ease calc(var(--d,0s) + .15s); }
+.motion .step.in .num { transform: none; opacity: 1; }
+.glow i { will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .progress { display: none; } }
+
+/* example carousel */
+.ex { justify-self: end; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; cursor: pointer; transition: all .25s; }
+.chip:hover { color: var(--fg); }
+.chip.on { background: var(--fg); color: var(--ink); border-color: var(--fg); }
+.ex .phone { max-width: none; justify-self: auto; padding: 18px 0 14px; overflow: hidden; }
+.track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.track::-webkit-scrollbar { display: none; }
+.slide { flex: 0 0 100%; scroll-snap-align: start; padding: 0 18px; min-height: 410px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.4; }
+.slide .msgs { gap: 10px; }
+.qcard { background: #1d1d20; border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: grid; gap: 8px; font-size: 14px; }
+.qh { display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.qh span { color: var(--muted); }
+.ql { display: flex; justify-content: space-between; color: #cfd0d4; font-variant-numeric: tabular-nums; }
+.ql.tot { color: var(--fg); font-weight: 600; padding-top: 8px; border-top: 1px solid var(--line); }
+.acts { display: flex; gap: 8px; margin-top: auto; }
+.acts span { flex: 1; text-align: center; font-weight: 600; font-size: 14px; padding: 11px; border-radius: 12px; border: 1px solid var(--line); }
+.acts .ok { background: var(--blue); color: var(--ink); border-color: var(--blue); }
+.row { display: flex; gap: 12px; align-items: flex-start; background: #1d1d20; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+.row i { width: 10px; height: 10px; border-radius: 3px; margin-top: 6px; flex: none; }
+.row b { display: block; font-weight: 600; }
+.row small { color: var(--muted); font-size: 13px; }
+.slide .m.out { align-self: flex-end; }
+.cal { display: grid; gap: 7px; }
+.day { display: grid; grid-template-columns: 42px 1fr; align-items: center; gap: 10px; }
+.day span { font: 500 11px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.day b { font-weight: 500; font-size: 14px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--c) 16%, #1d1d20); border-left: 3px solid var(--c); }
+.pfoot { display: flex; justify-content: space-between; align-items: center; padding: 10px 18px 0; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: all .3s; }
+.dots i.on { width: 20px; background: var(--fg); }
+.motion .slide .st { opacity: 0; transform: translateY(12px) scale(.97); transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1.2); }
+.motion .slide.show .st { opacity: 1; transform: none; }
+@media (max-width: 900px) { .ex { justify-self: start; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
 </head>
 <body>
 <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
 
-<nav>
+<nav><span class="progress" id="progress"></span>
   <div class="wrap">
     <a class="brand" href="#top"><svg viewBox="0 0 600 600" aria-hidden="true"><defs><linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="570" y2="0"><stop offset="0" stop-color="#4f7bff"/><stop offset=".28" stop-color="#9a6cf0"/><stop offset=".45" stop-color="#ff6f6f"/><stop offset=".62" stop-color="#ffb347"/><stop offset=".78" stop-color="#7fd36b"/><stop offset="1" stop-color="#46c9d6"/></linearGradient><filter id="bl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter><filter id="er"><feMorphology operator="erode" radius="9"/></filter><path id="hm" fill-rule="evenodd" d="M200 30h200a170 170 0 0 1 170 170v200a170 170 0 0 1-170 170H200A170 170 0 0 1 30 400V200A170 170 0 0 1 200 30ZM215 160a40 40 0 0 0-40 40v200a40 40 0 0 0 80 0v-65h90v65a40 40 0 0 0 80 0V200a40 40 0 0 0-80 0v65h-90v-65a40 40 0 0 0-40-40Z"/></defs><use href="#hm" fill="url(#lg)" filter="url(#bl)" opacity=".7"/><use href="#hm" fill="url(#lg)"/><use href="#hm" fill="#161617" filter="url(#er)"/></svg>Handoff</a>
     <div class="links">
@@ -179,25 +247,80 @@ footer a:hover { color: var(--fg); }
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <p class="label"><b>01</b>Custom AI assistants for small businesses</p>
-        <h1>Take back<br><span class="hl">your week.</span></h1>
-        <p class="lede">We build an AI assistant around how you <em>already</em> work. It answers customers, books the time and handles the busywork, in your voice.</p>
-        <div class="cta">
+        <p class="label rv"><b>01</b>Custom AI assistants for small businesses</p>
+        <h1 class="rv" style="--d:.1s">Take back<br><span class="hl">your week.</span></h1>
+        <p class="lede rv" style="--d:.25s">We build an AI assistant around how you <em>already</em> work. It answers customers, books the time and handles the busywork, in your voice.</p>
+        <div class="cta rv" style="--d:.35s">
           <a class="btn" href="demo/" data-demo>Get your free demo &rarr;</a>
           <a class="btn ghost" href="#how">See how it works</a>
         </div>
-        <p class="note">$375 setup for the next 5 businesses</p>
+        <p class="note rv" style="--d:.45s">$375 setup for the next 5 businesses</p>
       </div>
-      <div class="phone" aria-label="Example: the assistant booking a client at 10pm">
-        <div class="bar"><span>10:04 PM</span><span>Jess</span></div>
-        <div class="msgs">
-          <div class="time">Tonight</div>
-          <div class="m in">Hey! Any chance you have time this Saturday?</div>
-          <div class="m out">Hi Jess! Saturday I have 9:30 or 11:00 open. Which works?</div>
-          <div class="tag">Your AI replied with your open times</div>
-          <div class="m in">9:30 please!</div>
-          <div class="m out">Done! You're booked Saturday at 9:30. See you then.</div>
-          <div class="tag">Booked automatically</div>
+      <div class="ex rv" style="--d:.3s">
+        <div class="chips" role="tablist" aria-label="Examples">
+          <button role="tab" class="chip on" data-i="0">Booking</button>
+          <button role="tab" class="chip" data-i="1">Quotes</button>
+          <button role="tab" class="chip" data-i="2">Follow ups</button>
+          <button role="tab" class="chip" data-i="3">Content</button>
+          <button role="tab" class="chip" data-i="4">Inbox</button>
+        </div>
+        <div class="phone">
+          <div class="track" id="track">
+            <div class="slide" aria-label="A client books at 10pm">
+              <div class="bar"><span>10:04 PM</span><span>Jess</span></div>
+              <div class="msgs">
+                <div class="time">Tonight</div>
+                <div class="m in">Hey! Any chance you have time this Saturday?</div>
+                <div class="m out">Hi Jess! Saturday I have 9:30 or 11:00 open. Which works?</div>
+                <div class="tag">Your AI replied with your open times</div>
+                <div class="m in">9:30 please!</div>
+                <div class="m out">Done! You're booked Saturday at 9:30. See you then.</div>
+                <div class="tag">Booked automatically</div>
+              </div>
+            </div>
+            <div class="slide" aria-label="A quote drafted from your price list">
+              <div class="bar"><span>New request</span><span>Quote</span></div>
+              <div class="st m in">Can I get a price to swap 2 bathroom faucets? Thursday works.</div>
+              <div class="st qcard">
+                <div class="qh"><b>Quote #1042</b><span>Mike R.</span></div>
+                <div class="ql"><span>Faucet swap x2</span><span>$240</span></div>
+                <div class="ql"><span>Supply lines</span><span>$36</span></div>
+                <div class="ql"><span>Trip fee</span><span>$45</span></div>
+                <div class="ql tot"><span>Total</span><span>$321</span></div>
+              </div>
+              <div class="st tag">Built from your price list</div>
+              <div class="st acts"><span class="ok">Send it</span><span>Edit</span></div>
+            </div>
+            <div class="slide" aria-label="Following up on a quiet lead">
+              <div class="bar"><span>Follow ups</span><span>3 due</span></div>
+              <div class="st row"><i style="background:var(--amber)"></i><div><b>Sarah K.</b><small>Quote sent 3 days ago, no reply</small></div></div>
+              <div class="st m out">Hi Sarah! Just checking in on the deck quote. Happy to answer anything, or hold a spot for next week.</div>
+              <div class="st tag">Follow up sent in your voice</div>
+              <div class="st row"><i style="background:var(--green)"></i><div><b>Tom B.</b><small>Replied: "Yes, let's do it"</small></div></div>
+              <div class="st tag" style="color:var(--amber)">Flagged for you</div>
+            </div>
+            <div class="slide" aria-label="A week of posts, drafted">
+              <div class="bar"><span>Content</span><span>This week</span></div>
+              <div class="cal">
+                <div class="st day"><span>Mon</span><b style="--c:var(--amber)">Before and after reel</b></div>
+                <div class="st day"><span>Tue</span><b style="--c:var(--blue)">Client tip carousel</b></div>
+                <div class="st day"><span>Wed</span><b style="--c:var(--green)">Behind the scenes</b></div>
+                <div class="st day"><span>Thu</span><b style="--c:var(--coral)">Review spotlight</b></div>
+                <div class="st day"><span>Fri</span><b style="--c:var(--teal)">Weekend openings</b></div>
+              </div>
+              <div class="st tag">5 posts drafted in your voice</div>
+              <div class="st acts"><span class="ok">Approve all</span><span>Review</span></div>
+            </div>
+            <div class="slide" aria-label="Your inbox, sorted">
+              <div class="bar"><span>Inbox</span><span>7:00 AM</span></div>
+              <div class="st row"><i style="background:var(--green)"></i><div><b>4 answered</b><small>Hours, prices, parking, gift cards</small></div></div>
+              <div class="st row"><i style="background:var(--blue)"></i><div><b>2 booked</b><small>Sat 9:30, Mon 2:00</small></div></div>
+              <div class="st row"><i style="background:var(--amber)"></i><div><b>1 needs you</b><small>Refund question from Dana</small></div></div>
+              <div class="st m out">Morning! Overnight I answered 4, booked 2, and saved 1 for you.</div>
+              <div class="st tag">Your daily recap</div>
+            </div>
+          </div>
+          <div class="pfoot"><div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div><button class="replay" id="replay" type="button">&#8635; Replay</button></div>
         </div>
       </div>
     </div>
@@ -207,53 +330,53 @@ footer a:hover { color: var(--fg); }
     <div class="wrap stat">
       <div>
         <p class="label"><b>02</b>The math</p>
-        <div class="big">5<small>hrs</small></div>
-        <h2>a week on one task is <em>6½ work weeks</em> a year.</h2>
+        <div class="big rv"><span id="count">5</span><small>hrs</small></div>
+        <h2 class="rv" style="--d:.15s">a week on one task is <em>6½ work weeks</em> a year.</h2>
       </div>
       <div>
-        <div class="weeks" id="weeks" aria-hidden="true"></div>
-        <p class="weeks-cap label">6½ of 52 work weeks, gone to one job</p>
+        <div class="weeks rv" id="weeks" aria-hidden="true"></div>
+        <p class="weeks-cap label rv" style="--d:.2s">6½ of 52 work weeks, gone to one job</p>
       </div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="head">
+      <div class="head rv">
         <p class="label"><b>03</b>What it handles</p>
         <h2>The work that <em>eats</em> your week.</h2>
       </div>
       <div class="jobs">
-        <div class="job"><span class="dot" style="background:var(--amber)"></span><h3>Customer replies</h3><p>Answers the same questions you answer every day, in your voice, using your real prices and policies.</p></div>
-        <div class="job"><span class="dot" style="background:var(--blue)"></span><h3>Booking</h3><p>Sends your open times and your booking link, or books it for you where your booking tool allows.</p></div>
-        <div class="job"><span class="dot" style="background:var(--green)"></span><h3>Quotes and follow ups</h3><p>Drafts the quote, chases the reply, and reminds you when someone goes quiet.</p></div>
-        <div class="job"><span class="dot" style="background:var(--coral)"></span><h3>The rest of the busywork</h3><p>Emails, captions, listings, reports. Whatever one job you'd hand off first.</p></div>
+        <div class="job rv" style="--d:0.0s;--c:var(--amber)"><span class="dot" style="background:var(--amber)"></span><h3>Customer replies</h3><p>Answers the same questions you answer every day, in your voice, using your real prices and policies.</p></div>
+        <div class="job rv" style="--d:0.1s;--c:var(--blue)"><span class="dot" style="background:var(--blue)"></span><h3>Booking</h3><p>Sends your open times and your booking link, or books it for you where your booking tool allows.</p></div>
+        <div class="job rv" style="--d:0.2s;--c:var(--green)"><span class="dot" style="background:var(--green)"></span><h3>Quotes and follow ups</h3><p>Drafts the quote, chases the reply, and reminds you when someone goes quiet.</p></div>
+        <div class="job rv" style="--d:0.3s;--c:var(--coral)"><span class="dot" style="background:var(--coral)"></span><h3>The rest of the busywork</h3><p>Emails, captions, listings, reports. Whatever one job you'd hand off first.</p></div>
       </div>
     </div>
   </section>
 
   <section id="how">
     <div class="wrap">
-      <div class="head">
+      <div class="head rv">
         <p class="label"><b>04</b>How it works</p>
         <h2>You see it work <em>before</em> you pay.</h2>
       </div>
       <div class="steps">
-        <div class="step"><span class="num">1.</span><h3>Tell us what eats your week</h3><p>A short form, about 5 minutes. Pick the one job you'd hand off first.</p></div>
-        <div class="step"><span class="num">2.</span><h3>Watch it work</h3><p>On a short call we show you a working demo on your own examples. No slides.</p></div>
-        <div class="step"><span class="num">3.</span><h3>Decide, then hand it off</h3><p>Like it? We set it up on your accounts and tune it with you for 30 days.</p></div>
+        <div class="step rv" style="--d:0.00s"><span class="num">1.</span><h3>Tell us what eats your week</h3><p>A short form, about 5 minutes. Pick the one job you'd hand off first.</p></div>
+        <div class="step rv" style="--d:0.15s"><span class="num">2.</span><h3>Watch it work</h3><p>On a short call we show you a working demo on your own examples. No slides.</p></div>
+        <div class="step rv" style="--d:0.30s"><span class="num">3.</span><h3>Decide, then hand it off</h3><p>Like it? We set it up on your accounts and tune it with you for 30 days.</p></div>
       </div>
     </div>
   </section>
 
   <section id="pricing">
     <div class="wrap">
-      <div class="head">
+      <div class="head rv">
         <p class="label"><b>05</b>Pricing</p>
         <h2>Two ways to <em>hand it off.</em></h2>
       </div>
       <div class="plans">
-        <div class="plan feat">
+        <div class="plan feat rv">
           <span class="pill">Next 5 businesses</span>
           <h3>The Kit</h3>
           <div class="price">$375<s>$750</s></div>
@@ -266,7 +389,7 @@ footer a:hover { color: var(--fg); }
           </ul>
           <p class="fine">Needs a Claude Pro plan ($20/mo, paid to Anthropic).</p>
         </div>
-        <div class="plan">
+        <div class="plan rv" style="--d:.15s">
           <span class="pill blue">Done for you</span>
           <h3>Managed</h3>
           <div class="price">$1,500 <small>setup + $250/mo</small></div>
@@ -285,27 +408,27 @@ footer a:hover { color: var(--fg); }
 
   <section id="faq">
     <div class="wrap">
-      <div class="head">
+      <div class="head rv">
         <p class="label"><b>06</b>Questions</p>
         <h2>Fair <em>questions.</em></h2>
       </div>
       <div class="faq">
-        <details><summary>Do I need to be good with tech?</summary><p>No. We build it and set it up with you. If you can send a text, you can use it.</p></details>
-        <details><summary>Will it send things without asking me?</summary><p>Only if you want it to. It starts by drafting for your OK. You decide what it can send on its own.</p></details>
-        <details><summary>Do I really see it before I pay?</summary><p>Yes. That's the whole point of the demo. We show it working on your own examples, then you decide.</p></details>
-        <details><summary>What if I use ChatGPT, not Claude?</summary><p>The Kit runs on Claude Pro. Managed doesn't need any AI account from you at all.</p></details>
-        <details><summary>Is there a refund?</summary><p>No refunds, because you see it work before you buy. After setup you get 30 days of adjustments to get it right.</p></details>
-        <details><summary>Who's it for?</summary><p>Owner-run businesses with 1 to 20 people. Salons, trades, clinics, shops, creators, consultants.</p></details>
+        <details class="rv"><summary>Do I need to be good with tech?</summary><p>No. We build it and set it up with you. If you can send a text, you can use it.</p></details>
+        <details class="rv"><summary>Will it send things without asking me?</summary><p>Only if you want it to. It starts by drafting for your OK. You decide what it can send on its own.</p></details>
+        <details class="rv"><summary>Do I really see it before I pay?</summary><p>Yes. That's the whole point of the demo. We show it working on your own examples, then you decide.</p></details>
+        <details class="rv"><summary>What if I use ChatGPT, not Claude?</summary><p>The Kit runs on Claude Pro. Managed doesn't need any AI account from you at all.</p></details>
+        <details class="rv"><summary>Is there a refund?</summary><p>No refunds, because you see it work before you buy. After setup you get 30 days of adjustments to get it right.</p></details>
+        <details class="rv"><summary>Who's it for?</summary><p>Owner-run businesses with 1 to 20 people. Salons, trades, clinics, shops, creators, consultants.</p></details>
       </div>
     </div>
   </section>
 
   <section class="end">
     <div class="wrap">
-      <p class="label"><b>07</b>Your move</p>
-      <h2>Take back<br><span class="hl blue">your week.</span></h2>
-      <a class="btn" href="demo/" data-demo>Get your free demo &rarr;</a>
-      <p class="muted">5 minute form. We'll reply to set up your demo.</p>
+      <p class="label rv"><b>07</b>Your move</p>
+      <h2 class="rv">Take back<br><span class="hl blue">your week.</span></h2>
+      <a class="btn rv" style="--d:.2s" href="demo/" data-demo>Get your free demo &rarr;</a>
+      <p class="muted rv" style="--d:.3s">5 minute form. We'll reply to set up your demo.</p>
     </div>
   </section>
 </main>
@@ -323,6 +446,102 @@ footer a:hover { color: var(--fg); }
   for (let i = 0; i < 52; i++) { const s = document.createElement('span'); if (i < 7) s.className = 'on'; if (i === 6) s.style.background = 'linear-gradient(90deg, var(--amber) 50%, var(--line) 50%)'; w.appendChild(s); }
   // Tag site visitors so the lead sheet shows they came from the landing page
   document.querySelectorAll('[data-demo]').forEach(a => a.href = 'demo/?ad=site');
+  // ---- scroll motion ----
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('motion');
+    // stagger FAQ rows
+    document.querySelectorAll('details.rv').forEach((d, i) => d.style.setProperty('--d', (i * 0.06) + 's'));
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+      if (e.target.id === 'weeks') lightWeeks();
+      if (e.target.classList.contains('big')) countUp();
+      if (e.target.classList.contains('ex')) startCarousel();
+    }), { threshold: 0.18, rootMargin: '0px 0px -6% 0px' });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+    // weeks light up one at a time
+    function lightWeeks() {
+      const on = [...w.children].slice(0, 7);
+      on.forEach((s, i) => { s.style.background = ''; s.style.transitionDelay = (0.25 + i * 0.12) + 's'; if (i === 6) s.classList.add('half'); });
+    }
+    // 0 to 5 hours
+    function countUp() {
+      const el = document.getElementById('count'), t0 = performance.now();
+      const tick = t => { const k = Math.min(1, (t - t0) / 900); el.textContent = Math.round(5 * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+      el.textContent = '0'; requestAnimationFrame(tick);
+    }
+    // chat plays like a real text thread, with typing dots before each AI reply
+    const msgs = document.querySelector('.msgs'), items = [...msgs.children];
+    let timers = [];
+    function playChat() {
+      timers.forEach(clearTimeout); timers = [];
+      msgs.querySelectorAll('.typing').forEach(t => t.remove());
+      items.forEach(x => x.classList.remove('on'));
+      let t = 300;
+      items.forEach(x => {
+        if (x.classList.contains('out')) {
+          const dots = document.createElement('div'); dots.className = 'typing on'; dots.innerHTML = '<i></i><i></i><i></i>';
+          timers.push(setTimeout(() => msgs.insertBefore(dots, x), t)); t += 1100;
+          timers.push(setTimeout(() => { dots.remove(); x.classList.add('on'); }, t)); t += 500;
+        } else {
+          timers.push(setTimeout(() => x.classList.add('on'), t)); t += x.classList.contains('tag') ? 700 : 600;
+        }
+      });
+      return t;
+    }
+    window.__playSlide = (slide, i) => {
+      if (i === 0) return playChat() + 2200;
+      const st = [...slide.querySelectorAll('.st')];
+      slide.classList.remove('show'); void slide.offsetWidth;
+      st.forEach((x, k) => x.style.transitionDelay = (0.25 + k * 0.45) + 's');
+      slide.classList.add('show');
+      return 600 + st.length * 450 + 2600;
+    };
+
+    // progress bar + slow glow drift
+    const bar = document.getElementById('progress'), blobs = document.querySelectorAll('.glow i');
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(() => {
+        const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+        bar.style.transform = 'scaleX(' + (max > 0 ? y / max : 0) + ')';
+        blobs[0].style.transform = 'translate(' + y * 0.04 + 'px,' + y * 0.12 + 'px)';
+        blobs[1].style.transform = 'translate(' + -y * 0.06 + 'px,' + -y * 0.08 + 'px)';
+        blobs[2].style.transform = 'translateY(' + -y * 0.1 + 'px)';
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  // example carousel: tap a chip, swipe, or let it auto-advance
+  const track = document.getElementById('track'), slides = [...track.children];
+  const chips = [...document.querySelectorAll('.chip')], dotEls = [...document.querySelectorAll('#dots i')];
+  let cur = 0, auto = null, userTouched = false, started = false;
+  function mark(i) { chips.forEach((c, k) => c.classList.toggle('on', k === i)); dotEls.forEach((d, k) => d.classList.toggle('on', k === i)); }
+  function play(i) {
+    cur = i; mark(i); clearTimeout(auto);
+    const ms = window.__playSlide ? window.__playSlide(slides[i], i) : 6000;
+    if (!userTouched) auto = setTimeout(() => go((cur + 1) % slides.length), ms);
+  }
+  function go(i, user) { if (user) userTouched = true; track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' }); if (i !== cur || user) play(i); }
+  function startCarousel() { if (!started) { started = true; play(0); } }
+  chips.forEach(c => c.addEventListener('click', () => go(+c.dataset.i, true)));
+  document.getElementById('replay').addEventListener('click', () => play(cur));
+  let st;
+  track.addEventListener('scroll', () => { clearTimeout(st); st = setTimeout(() => {
+    const i = Math.round(track.scrollLeft / track.clientWidth);
+    if (i !== cur) { userTouched = true; play(i); }
+  }, 120); }, { passive: true });
+  if (!document.documentElement.classList.contains('motion')) startCarousel();
+  // cards glow where the cursor is
+  document.querySelectorAll('.job').forEach(c => c.addEventListener('pointermove', e => {
+    const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }));
+
 </script>
 </body>
 </html>
