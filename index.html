@@ -88,14 +88,18 @@ section { padding-block: clamp(72px, 11vw, 132px); }
 .time { text-align: center; font: 500 11px/1 var(--mono); color: var(--muted); margin-bottom: 4px; }
 
 /* stat */
-.stat { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+.stat { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: center; }
 .big { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; }
 .big small { font-size: .32em; letter-spacing: -.03em; margin-left: .1em; }
 /* both rows share one size: the big number's font size, set on .stat-top and .stat-row */
 .stat-top, .stat-row { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; display: flex; align-items: flex-end; }
 .stat-top { gap: .09em; }
-.stat-top .big { font-size: 1em; }
+.stat-top .big { font-size: 1em; color: var(--amber); }
+.frac { display: inline-flex; flex-direction: column; align-items: center; font-size: .42em; line-height: 1; margin: 0 .12em 0 .06em; vertical-align: .22em; letter-spacing: 0; }
+.frac i { font-style: normal; }
+.frac i:first-child { border-bottom: .09em solid currentColor; padding: 0 .08em .06em; margin-bottom: .06em; }
 .stat-side { font-size: .25em; line-height: .98; letter-spacing: -.035em; padding-bottom: .02em; }
+.stat-top .stat-side { font-size: .3em; line-height: 1.28; padding-bottom: 0; margin-bottom: -.14em; white-space: nowrap; }
 .stat-row { margin-top: .2em; gap: .06em; flex-wrap: wrap; }
 .stat-row .hl { font-size: .32em; letter-spacing: -.04em; }
 .stat-row .stat-side { padding-bottom: .1em; }
@@ -361,9 +365,9 @@ footer a:hover { color: var(--fg); }
         <p class="label"><b>02</b>The math</p>
         <div class="stat-top">
           <div class="big rv"><span id="count">5</span><small>hrs</small></div>
-          <p class="stat-side rv" style="--d:.1s">a week<br>on one<br>task</p>
+          <p class="stat-side rv" style="--d:.1s">a week on<br>one task</p>
         </div>
-        <h2 class="stat-row rv" style="--d:.15s"><span class="stat-side">is</span><span class="hl">6½ weeks</span><span class="stat-side">a year.</span></h2>
+        <h2 class="stat-row rv" style="--d:.15s"><span class="stat-side">is</span><span class="hl">6<span class="frac" aria-label="and a half"><i>1</i><i>2</i></span> weeks</span><span class="stat-side">a year.</span></h2>
       </div>
       <div>
         <div class="year rv" id="weeks" style="--d:.2s">
