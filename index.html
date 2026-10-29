@@ -544,5 +544,14 @@ footer a:hover { color: var(--fg); }
   }));
 
 </script>
+<script>
+// Menu links drop their #section from the URL after scrolling, so refresh and shared links start at the top
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (location.hash) { history.replaceState(null, '', location.pathname + location.search); }
+window.scrollTo(0, 0);
+window.addEventListener('hashchange', function () {
+  history.replaceState(null, '', location.pathname + location.search);
+});
+</script>
 </body>
 </html>
