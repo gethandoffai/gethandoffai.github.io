@@ -88,12 +88,17 @@ section { padding-block: clamp(72px, 11vw, 132px); }
 .time { text-align: center; font: 500 11px/1 var(--mono); color: var(--muted); margin-bottom: 4px; }
 
 /* stat */
-.stat { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
+.stat { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center; }
 .big { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; }
 .big small { font-size: .32em; letter-spacing: -.03em; margin-left: .1em; }
-.stat-top { display: flex; align-items: flex-end; gap: 22px; }
-.stat-side { font: 700 clamp(22px, 2.6vw, 34px)/1.08 var(--display); letter-spacing: -.03em; max-width: 6em; padding-bottom: .25em; }
-.stat h2 { margin-top: 30px; font-size: clamp(44px, 6.4vw, 84px); line-height: 1.08; letter-spacing: -.04em; }
+/* both rows share one size: the big number's font size, set on .stat-top and .stat-row */
+.stat-top, .stat-row { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; display: flex; align-items: flex-end; }
+.stat-top { gap: .09em; }
+.stat-top .big { font-size: 1em; }
+.stat-side { font-size: .25em; line-height: .98; letter-spacing: -.035em; padding-bottom: .02em; }
+.stat-row { margin-top: .2em; gap: .06em; flex-wrap: wrap; }
+.stat-row .hl { font-size: .32em; letter-spacing: -.04em; }
+.stat-row .stat-side { padding-bottom: .1em; }
 .year { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 30px 28px; display: grid; gap: 22px; min-width: 0; }
 .yr-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .yr-num { font: 700 64px/1 var(--display); letter-spacing: -.04em; color: var(--amber); }
@@ -356,9 +361,9 @@ footer a:hover { color: var(--fg); }
         <p class="label"><b>02</b>The math</p>
         <div class="stat-top">
           <div class="big rv"><span id="count">5</span><small>hrs</small></div>
-          <p class="stat-side rv" style="--d:.1s">a week on one task</p>
+          <p class="stat-side rv" style="--d:.1s">a week<br>on one<br>task</p>
         </div>
-        <h2 class="rv" style="--d:.15s">is <span class="hl">6½ weeks</span> a year.</h2>
+        <h2 class="stat-row rv" style="--d:.15s"><span class="stat-side">is</span><span class="hl">6½ weeks</span><span class="stat-side">a year.</span></h2>
       </div>
       <div>
         <div class="year rv" id="weeks" style="--d:.2s">
