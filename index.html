@@ -46,7 +46,7 @@ h1 { font-weight: 700; font-size: clamp(50px, 9vw, 112px); line-height: .95; let
 h2 { font-weight: 700; font-size: clamp(36px, 5.6vw, 64px); line-height: 1.02; letter-spacing: -.035em; }
 h3 { font-weight: 600; font-size: 22px; line-height: 1.2; letter-spacing: -.01em; }
 em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
-.hl { display: inline-block; white-space: nowrap; background: var(--amber); color: var(--ink); padding: 0 .12em .04em; border-radius: .08em; }
+.hl { display: inline-block; white-space: nowrap; background: var(--amber); color: var(--ink); padding: .02em .12em .16em; line-height: 1; border-radius: .08em; }
 .hl.blue { background: var(--blue); }
 p { margin: 0; max-width: 60ch; }
 .muted { color: var(--muted); }
@@ -88,10 +88,12 @@ section { padding-block: clamp(72px, 11vw, 132px); }
 .time { text-align: center; font: 500 11px/1 var(--mono); color: var(--muted); margin-bottom: 4px; }
 
 /* stat */
-.stat { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+.stat { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
 .big { font: 700 clamp(110px, 20vw, 240px)/.82 var(--display); letter-spacing: -.06em; }
 .big small { font-size: .32em; letter-spacing: -.03em; margin-left: .1em; }
-.stat h2 { margin-top: 26px; }
+.stat-top { display: flex; align-items: flex-end; gap: 22px; }
+.stat-side { font: 700 clamp(22px, 2.6vw, 34px)/1.08 var(--display); letter-spacing: -.03em; max-width: 6em; padding-bottom: .25em; }
+.stat h2 { margin-top: 30px; font-size: clamp(44px, 6.4vw, 84px); line-height: 1.08; letter-spacing: -.04em; }
 .year { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 30px 28px; display: grid; gap: 22px; min-width: 0; }
 .yr-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .yr-num { font: 700 64px/1 var(--display); letter-spacing: -.04em; color: var(--amber); }
@@ -352,8 +354,11 @@ footer a:hover { color: var(--fg); }
     <div class="wrap stat">
       <div>
         <p class="label"><b>02</b>The math</p>
-        <div class="big rv"><span id="count">5</span><small>hrs</small></div>
-        <h2 class="rv" style="--d:.15s">a week on one task is <em>6½ work weeks</em> a year.</h2>
+        <div class="stat-top">
+          <div class="big rv"><span id="count">5</span><small>hrs</small></div>
+          <p class="stat-side rv" style="--d:.1s">a week on one task</p>
+        </div>
+        <h2 class="rv" style="--d:.15s">is <span class="hl">6½ weeks</span> a year.</h2>
       </div>
       <div>
         <div class="year rv" id="weeks" style="--d:.2s">
