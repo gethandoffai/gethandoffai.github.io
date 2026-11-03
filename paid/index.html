@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Invoice Chaser</title>
+<meta property="og:title" content="Invoice Chaser demo · Handoff">
+<meta property="og:description" content="See who owes you, who to chase, and the reminder already written. Demo built on sample data.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f1f3; --card:#fff; --ink:#1b1b1b; --mute:#6b7280; --line:#e6e7eb; --soft:#f6f7f9;
+  --blue:#4f7bff; --gold:#e8962e; --red:#e5484d; --green:#2f9e5b; --teal:#1fa7b8; --violet:#7c5ce0; --grey:#9aa1ad;
+  --display:'Outfit',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body)}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;align-items:center;gap:8px;font:700 18px var(--display);padding:4px 8px 18px;text-decoration:none;color:inherit}
+.logo img{width:26px;height:26px}
+nav a:not(.logo){display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+nav a.on{background:var(--soft);color:var(--ink);font-weight:600}
+nav a .ic{width:18px;text-align:center}
+nav a .badge{margin-left:auto;background:var(--blue);color:#fff;font:600 11px var(--mono);border-radius:99px;padding:1px 7px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.me .av{width:32px;height:32px;border-radius:9px;background:#14365c;color:#ffd27a;display:grid;place-items:center;font:700 14px var(--display)}
+.me b{display:block;font-size:13px}.me small{color:var(--mute);font-size:11px}
+main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.top{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font:700 28px/1.1 var(--display);letter-spacing:-.01em}
+.top p{margin:4px 0 0;color:var(--mute)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font:500 12px var(--mono);color:var(--mute)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #2f9e5b22}
+.sample{font:600 11px var(--mono);color:var(--gold);border:1px solid #e8962e55;border-radius:99px;padding:6px 10px}
+.topcta{background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:99px;padding:7px 12px;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi small{color:var(--mute);font-size:12px;font-weight:500}
+.kpi b{display:block;font:700 32px/1.1 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi span{font:500 12px var(--mono);color:var(--mute)}
+.kpi.hot{background:var(--red);border-color:var(--red);color:#fff}
+.kpi.hot small,.kpi.hot span{color:#ffe1e2}
+.kpi.good b{color:var(--green)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card h2{margin:0 0 2px;font:700 17px var(--display)}
+.card .sub{color:var(--mute);font-size:12px;margin-bottom:12px}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.col{background:var(--soft);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:330px;min-width:0}
+.col h3{margin:0;font:600 11.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);display:flex;justify-content:space-between}
+.col h3 b{color:var(--c);font-weight:600}
+.inv{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:10px;padding:9px 10px;display:block;transition:box-shadow .15s,transform .15s}
+.inv:hover{box-shadow:0 4px 12px #0001}
+.inv b{display:block;font:600 12.5px/1.2 var(--body)}
+.inv .amt{font:600 15px var(--mono);display:block;margin:3px 0}
+.inv small{color:var(--mute);font-size:11px;display:block}
+.flash{box-shadow:inset 0 0 0 2px var(--c,#4f7bff),0 6px 18px #0002!important;background:color-mix(in srgb,var(--c,#4f7bff) 8%,#fff)!important}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.dt-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.dt-h h2{margin:0;font:800 22px/1.1 var(--display)}
+.dt-h .big{margin-left:auto;text-align:right;font:700 28px/1 var(--display)}
+.dt-h .big small{display:block;font:600 12px var(--mono);color:var(--red);margin-top:4px}
+.tl{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.tl li{display:flex;gap:10px;font-size:13px;color:#3d434d}
+.tl li i{width:9px;height:9px;border-radius:50%;background:var(--grey);margin-top:5px;flex:none}
+.tl li small{margin-left:auto;color:var(--mute);font:500 11px var(--mono);white-space:nowrap}
+.msg{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);font-size:13px;min-height:96px;white-space:pre-wrap;margin-bottom:8px}
+.msg .lab{display:block;font:600 11px var(--mono);text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.caret{display:inline-block;width:2px;height:14px;background:var(--blue);vertical-align:-2px;margin-left:1px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.br{display:grid;grid-template-columns:96px minmax(0,1fr) 72px;align-items:center;gap:10px;font-size:12px;font-weight:500;margin:8px 0}
+.br .tr{height:16px;background:var(--soft);border-radius:8px;overflow:hidden}
+.br .tr i{display:block;height:100%;background:var(--c);border-radius:8px;width:var(--w)}
+.br b{font:600 12px var(--mono);text-align:right}
+.moves{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mv{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .2s}
+.mv .n{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 14px var(--display)}
+.mv h3{margin:0;font:700 15px var(--display)}
+.mv p{margin:0;color:#3d434d;font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:8px;overflow-x:auto}
+.wd b{display:flex;justify-content:space-between;font:600 11px var(--mono);color:var(--mute);text-transform:uppercase;margin-bottom:6px}
+.wc{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.wc .pv{aspect-ratio:4/5;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;background:var(--pb,#14365c);color:#fff}
+.wc .pv small{font:600 8.5px var(--mono);opacity:.8}
+.wc .pv strong{font:800 13px/1.05 var(--display);text-transform:uppercase}
+.wc .mt{padding:6px 8px;font-size:10.5px;color:var(--mute)}
+.wslot{border:1.5px dashed var(--line);border-radius:10px;padding:12px 8px;font-size:11px;color:var(--mute);text-align:center}
+.cta{background:#1b1b1b;color:#fff;border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;font:700 20px var(--display)}.cta p{margin:4px 0 0;color:#c9cdd6;font-size:13px}
+.cta a{margin-left:auto;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:12px;padding:12px 16px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:500;box-shadow:0 10px 30px #0003;z-index:9}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .logo{padding:4px 12px 4px 0}
+  nav a:not(.logo){white-space:nowrap}
+  .me{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2,.moves{grid-template-columns:minmax(0,1fr)}
+  .board{grid-template-columns:repeat(5,minmax(170px,1fr));overflow-x:auto}
+  .pill{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <a class="logo" href="/"><img src="mark.png" alt="">Handoff</a>
+    <a href="#top" class="on"><span class="ic">◎</span>Overview</a>
+    <a href="#board"><span class="ic">▤</span>Open invoices</a>
+    <a href="#detail"><span class="ic">✉</span>Reminders<span class="badge">6</span></a>
+    <a href="#aging"><span class="ic">$</span>Who owes what</a>
+    <a href="#brief"><span class="ic">✦</span>Monday brief</a>
+    <a href="#calendar"><span class="ic">▦</span>Content calendar</a>
+    <a href="/" data-back><span class="ic">‹</span>Back to gethandoff.net</a>
+    <div class="me"><div class="av">R</div><div><b>Ridgeline Mechanical</b><small>Sample company</small></div></div>
+  </nav>
+  <main>
+    <div class="top" id="top">
+      <div><h1>Here's who owes you.</h1><p>Invoice Chaser · Ridgeline Mechanical</p></div>
+      <span class="sample">DEMO · SAMPLE DATA</span>
+      <a class="topcta" data-cta href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=paid_contractor" target="_blank" rel="noopener">Get one built for your business</a>
+      <div class="pill" id="checked"><i></i>Synced today 6:00 AM</div>
+    </div>
+    <div class="kpis" id="kpis">
+      <div class="kpi hot" id="kOwed"><small>Owed to you</small><b id="vOwed">$0</b><span>across <i id="vOpen" style="font-style:normal">0</i> open invoices</span></div>
+      <div class="kpi"><small>Past due</small><b id="vLate">$0</b><span>oldest 74 days</span></div>
+      <div class="kpi good"><small>Collected this month</small><b id="vPaid">$0</b><span>since the 1st</span></div>
+      <div class="kpi"><small>Reminders ready</small><b id="vReady">0</b><span>waiting for your OK</span></div>
+    </div>
+    <section class="card" id="board">
+      <h2>Open invoices, sorted by how late they are</h2>
+      <div class="sub">Read from your invoicing app every morning. Tap one to see the history and the reminder.</div>
+      <div class="board" id="cols"></div>
+    </section>
+    <section class="card" id="detail"></section>
+    <div class="grid2">
+      <section class="card" id="aging"><h2>Who owes what</h2><div class="sub">Biggest balances first.</div><div id="owes"></div></section>
+      <section class="card" id="brief"><h2>Monday brief</h2><div class="sub">What to do first this week.</div><div class="moves" id="moves" style="grid-template-columns:minmax(0,1fr)"></div></section>
+    </div>
+    <section class="card" id="calendar">
+      <h2>Content calendar · Week of Nov 2</h2>
+      <div class="sub">Every Handoff tool lives next to your content calendar, so posts are planned in the same place.</div>
+      <div class="week" id="week"></div>
+    </section>
+    <section class="cta" id="ctaBox"><div><h2>Want this for your business?</h2><p>We build it around your invoicing app, your customers and your voice. You see it working before you buy.</p></div><a data-cta href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=paid_contractor" target="_blank" rel="noopener">Get one built</a></section>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const money = n => '$' + Math.round(n).toLocaleString();
+const COLS = [
+  { id:'cur', name:'Not due yet', c:'#1fa7b8' },
+  { id:'d30', name:'1 to 30 days', c:'#e8962e' },
+  { id:'d60', name:'31 to 60 days', c:'#e5702e' },
+  { id:'d90', name:'61+ days', c:'#e5484d' },
+  { id:'paid', name:'Paid', c:'#2f9e5b' },
+];
+const INV = [
+  { id:'i1042', who:'Harborview Apartments', job:'Boiler replacement', amt:8200, days:41, col:'d60', no:'INV-1042', contact:'Dana' },
+  { id:'i1038', who:'Mill Street Dental', job:'Rooftop unit service', amt:3450, days:52, col:'d60', no:'INV-1038', contact:'Priya' },
+  { id:'i1029', who:'Oak Ridge HOA', job:'Clubhouse repipe', amt:12300, days:74, col:'d90', no:'INV-1029', contact:'Tom', call:true },
+  { id:'i1033', who:'Castellano Bakery', job:'Walk-in cooler', amt:2800, days:63, col:'d90', no:'INV-1033', contact:'Gina' },
+  { id:'i1047', who:'Sunset Self Storage', job:'Office HVAC', amt:4850, days:18, col:'d30', no:'INV-1047', contact:'Marcus' },
+  { id:'i1051', who:'Bright Kids Daycare', job:'Water heater', amt:1920, days:9, col:'d30', no:'INV-1051', contact:'Ana' },
+  { id:'i1049', who:'Riverside Auto', job:'Shop heaters', amt:3100, days:24, col:'d30', no:'INV-1049', contact:'Luis' },
+  { id:'i1055', who:'Elm Court Condos', job:'Backflow testing', amt:1400, days:0, col:'cur', no:'INV-1055', contact:'June' },
+  { id:'i1056', who:'Fifth Ave Barbers', job:'Sink and drain', amt:900, days:0, col:'cur', no:'INV-1056', contact:'Ray' },
+  { id:'i1021', who:'Lakeview Motel', job:'Heat pump install', amt:6400, days:0, col:'paid', no:'INV-1021', contact:'Sam', was:true },
+];
+const by = Object.fromEntries(INV.map(x => [x.id, x]));
+const FRIENDLY = i => `Hi ${i.contact}, hope the week's going well. Quick note on ${i.no} for the ${i.job.toLowerCase()}: ${money(i.amt)}, now ${i.days} days out. Can you tell me when it's scheduled? Happy to resend it. Thanks, Ridgeline Mechanical`;
+const FIRM = i => `Hi ${i.contact}, following up on ${i.no}. It's ${i.days + 7} days past due and I haven't heard back. Please send payment by Friday, or call me today so we can sort it out together.`;
+const MOVES = [
+  ['#e5484d','Call Oak Ridge HOA first','$12,300, 74 days out, and two reminders with no reply. A call will do more than a third email.'],
+  ['#e5702e','Approve 4 friendly reminders','Harborview, Mill Street, Castellano and Riverside are written and ready for your OK.'],
+  ['#2f9e5b','Ask for a deposit at Harborview','They paid late on their last 2 jobs. Their next quote asks for 30% up front.'],
+];
+const WEEK = [
+  ['Mon',2,'Before and after: boiler swap','#14365c'],['Tue',3,'Why your water heater is loud','#7a4b2a'],['Wed',4,null],['Thu',5,'Reel: 6am at the shop','#1f2f4a'],['Fri',6,'Fall tune up special','#2f6b4f'],['Sat',7,null],['Sun',8,null],
+];
+const state = { sel:'i1042', moved:{}, shown:null, approved:{} };
+
+function renderBoard(){
+  $('#cols').innerHTML = COLS.map(c => {
+    const list = INV.filter(i => (state.moved[i.id] || i.col) === c.id && (!state.shown || state.shown.has(i.id)));
+    const sum = list.reduce((t, i) => t + i.amt, 0);
+    return `<div class="col" id="col-${c.id}" style="--c:${c.c}"><h3>${c.name}<b>${money(sum)}</b></h3>${list.map(i => `<button class="inv" id="${i.id}" data-inv="${i.id}" style="--c:${c.c}"><b>${i.who}</b><span class="amt">${money(i.amt)}</span><small>${c.id === 'paid' ? 'Paid ✓' : i.days ? i.days + ' days out' : 'Due in 12 days'} · ${i.no}</small></button>`).join('')}</div>`;
+  }).join('');
+}
+function totals(k = 1){
+  const open = INV.filter(i => (state.moved[i.id] || i.col) !== 'paid');
+  const owed = open.reduce((t, i) => t + i.amt, 0), late = open.filter(i => i.days > 0).reduce((t, i) => t + i.amt, 0);
+  const paid = INV.filter(i => (state.moved[i.id] || i.col) === 'paid').reduce((t, i) => t + i.amt, 0) + 12000;
+  return { owed: owed * k, late: late * k, paid: paid * k, open: Math.round(open.length * k), ready: Math.round(6 * k) };
+}
+function renderKpis(t){
+  $('#vOwed').textContent = money(t.owed); $('#vLate').textContent = money(t.late); $('#vPaid').textContent = money(t.paid);
+  $('#vOpen').textContent = t.open; $('#vReady').textContent = t.ready;
+}
+function renderDetail(type1 = 1, type2 = 1){
+  const i = by[state.sel] || INV[0], app = state.approved[i.id];
+  const part = (s, k) => s.slice(0, Math.round(s.length * Math.min(1, Math.max(0, k))));
+  const caret = k => k > 0 && k < 1 ? '<span class="caret"></span>' : '';
+  $('#detail').innerHTML = `<div class="dt-h"><div><h2>${i.who}</h2><div class="sub" style="margin:2px 0 0">${i.no} · ${i.job}</div></div><div class="big">${money(i.amt)}<small>${i.days ? i.days + ' days out' : 'Not due yet'}</small></div></div>
+    <div class="grid2"><div><h3 style="margin:0 0 8px;font:600 13px var(--display)">History</h3><ul class="tl">
+      <li><i></i>Job finished, invoice sent<small>${i.days + 30}d ago</small></li><li><i></i>Customer opened the invoice<small>${i.days + 28}d ago</small></li><li><i></i>Payment due date passed<small>${i.days}d ago</small></li><li><i style="background:var(--red)"></i>No payment and no reply<small>today</small></li></ul></div>
+    <div id="msgs"><div class="msg" id="mFriendly"><span class="lab">Reminder 1 · friendly</span>${part(FRIENDLY(i), type1)}${caret(type1)}</div>
+      <div class="msg" id="mFirm" ${type2 <= 0 ? 'style="opacity:.35"' : ''}><span class="lab">Reminder 2 · if they go quiet</span>${part(FIRM(i), type2)}${caret(type2)}</div>
+      <div class="row"><button class="btn ${app ? 'ok' : 'pri'}" id="apBtn" data-ap="${i.id}">${app ? 'Approved ✓' : 'Approve email'}</button><button class="btn" data-call="${i.id}">Needs a call instead</button></div></div></div>`;
+}
+function renderOwes(){
+  const list = INV.filter(i => (state.moved[i.id] || i.col) !== 'paid').sort((a, b) => b.amt - a.amt).slice(0, 6), mx = Math.max(...list.map(i => i.amt));
+  $('#owes').innerHTML = list.map(i => `<div class="br"><span>${i.who.split(' ').slice(0, 2).join(' ')}</span><div class="tr"><i style="--c:${(COLS.find(c => c.id === (state.moved[i.id] || i.col)) || {}).c};--w:${i.amt / mx * 100}%"></i></div><b>${money(i.amt)}</b></div>`).join('');
+}
+$('#moves').innerHTML = MOVES.map(([c, h, p], i) => `<div class="mv" id="m${i}" style="--c:${c};flex-direction:row;align-items:flex-start;gap:10px"><div class="n" style="flex:none">${i + 1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+$('#week').innerHTML = WEEK.map(([d, n, h, c]) => `<div class="wd"><b>${d}<span>${n}</span></b>${h ? `<div class="wc"><div class="pv" style="--pb:${c}"><small>POST</small><strong>${h}</strong></div><div class="mt">Scheduled</div></div>` : '<div class="wslot">Open</div>'}</div>`).join('');
+function all(){ renderBoard(); renderKpis(totals()); renderDetail(); renderOwes(); }
+all();
+
+let tT;
+function toast(m){ const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tT); tT = setTimeout(() => t.hidden = true, 2600); }
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-inv]');
+  if (c) { state.sel = c.dataset.inv; renderDetail(); $('#detail').scrollIntoView({ block:'center' }); return; }
+  const a = e.target.closest('[data-ap]');
+  if (a) { const id = a.dataset.ap; state.approved[id] = true; renderDetail(); toast(`Reminder to ${by[id].who} sent. In this demo, they pay a moment later.`); setTimeout(() => { state.moved[id] = 'paid'; all(); toast(`${by[id].who} paid ${money(by[id].amt)}. It moved to Paid.`); }, 1800); return; }
+  const k = e.target.closest('[data-call]');
+  if (k) toast(`Added to your call list for today: ${by[k.dataset.call].who}.`);
+});
+
+// Everything the reel needs, set from one state object so any moment can be redrawn exactly.
+window.DASH = {
+  apply(s){
+    document.documentElement.style.scrollBehavior = 'auto';
+    state.sel = s.sel || 'i1042';
+    state.moved = s.moved || {};
+    state.shown = s.shown ? new Set(s.shown) : null;
+    state.approved = s.approved || {};
+    renderBoard();
+    renderKpis(s.kpi != null ? totals(s.kpi) : totals());
+    if (s.owed != null) $('#vOwed').textContent = money(s.owed);
+    renderDetail(s.type1 == null ? 1 : s.type1, s.type2 == null ? 1 : s.type2);
+    renderOwes();
+    (s.flash || []).forEach(id => document.getElementById(id)?.classList.add('flash'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (s.nav || 'top')));
+  },
+  rect(id){ const r = document.getElementById(id).getBoundingClientRect(); return { x:r.left, y:r.top, w:r.width, h:r.height }; },
+  owed(){ return totals().owed; },
+};
+})();
+</script>
+</body></html>
