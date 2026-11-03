@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Competitor Watch</title>
+<meta property="og:title" content="Competitor Watch demo · Handoff">
+<meta property="og:description" content="See what every competitor near you did this week. Demo built on sample data.">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f1f3; --card:#fff; --ink:#1b1b1b; --mute:#6b7280; --line:#e6e7eb; --soft:#f6f7f9;
+  --blue:#4f7bff; --gold:#e8962e; --red:#e5484d; --green:#2f9e5b; --teal:#1fa7b8; --violet:#7c5ce0; --grey:#9aa1ad;
+  --display:'Outfit',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body)}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;align-items:center;gap:8px;font:700 18px var(--display);padding:4px 8px 18px}
+.logo img{width:26px;height:26px}
+nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+nav a.on{background:var(--soft);color:var(--ink);font-weight:600}
+nav a .ic{width:18px;text-align:center}
+nav a .badge{margin-left:auto;background:var(--blue);color:#fff;font:600 11px var(--mono);border-radius:99px;padding:1px 7px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.me .av{width:32px;height:32px;border-radius:9px;background:#23423a;color:#f3ead8;display:grid;place-items:center;font:700 14px var(--display)}
+.me b{display:block;font-size:13px}.me small{color:var(--mute);font-size:11px}
+main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.top{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font:700 28px/1.1 var(--display);letter-spacing:-.01em}
+.top p{margin:4px 0 0;color:var(--mute)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font:500 12px var(--mono);color:var(--mute)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #2f9e5b22}
+.sample{font:600 11px var(--mono);color:var(--gold);border:1px solid #e8962e55;border-radius:99px;padding:6px 10px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi small{color:var(--mute);font-size:12px;font-weight:500}
+.kpi b{display:block;font:700 32px/1.1 var(--display);margin-top:6px}
+.kpi span{font:500 12px var(--mono);color:var(--mute)}
+.kpi.hot{background:var(--blue);border-color:var(--blue);color:#fff}
+.kpi.hot small,.kpi.hot span{color:#dbe4ff}
+.grid2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card h2{margin:0 0 2px;font:700 17px var(--display)}
+.card .sub{color:var(--mute);font-size:12px;margin-bottom:12px}
+.hd{display:flex;align-items:baseline;gap:10px}
+.hd .more{margin-left:auto;color:var(--blue);font-weight:600;font-size:12px;background:none;border:0}
+.feed .it{display:flex;gap:12px;align-items:center;padding:10px 8px;border-radius:12px;border-bottom:1px solid var(--line);transition:background .2s}
+.feed .it:last-child{border-bottom:0}
+.lg{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 13px var(--display);flex:none}
+.feed .tx{flex:1;min-width:0}
+.feed .tx b{display:block;font-size:13px}
+.feed .tx span{color:#3d434d;font-size:13px}
+.tag{font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:6px;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);white-space:nowrap}
+.when{color:var(--mute);font:500 11px var(--mono);width:44px;text-align:right}
+.flash{background:color-mix(in srgb,var(--c, #4f7bff) 12%,#fff)!important;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c, #4f7bff) 60%,#fff)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:right;color:var(--mute);font:600 11px var(--mono);text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;font:500 13px var(--mono);transition:background .2s}
+td:first-child{font:600 13px var(--body)}
+td .d{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:8px}
+tr.you td{background:#eef2ff}
+td.up{color:var(--red);font-weight:600}
+td .was{color:var(--grey);text-decoration:line-through;margin-right:6px;font-weight:500}
+.bars{display:flex;flex-direction:column;gap:9px}
+.br{display:grid;grid-template-columns:120px minmax(0,1fr) 52px;align-items:center;gap:10px;font-size:12px;font-weight:500}
+.br .tr{height:16px;background:var(--soft);border-radius:8px;overflow:hidden}
+.br .tr i{display:block;height:100%;background:var(--c);border-radius:8px;transform-origin:left;width:var(--w)}
+.br b{font:600 12px var(--mono);text-align:right}
+.br.you{color:var(--blue)}
+.stars{display:flex;flex-direction:column;gap:8px}
+.st{display:grid;grid-template-columns:120px 44px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:12px;font-weight:500}
+.st b{font:600 12px var(--mono)}
+.st svg{width:100%;height:24px}
+.st .ch{font:600 11px var(--mono);text-align:right}
+.moves{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mv{border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;background:#fff;transition:box-shadow .2s,transform .2s}
+.mv .n{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 14px var(--display)}
+.mv h3{margin:0;font:700 16px var(--display)}
+.mv p{margin:0;color:#3d434d;font-size:13px}
+.mv .why{font:500 11px var(--mono);color:var(--mute)}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px;transition:all .2s}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.mv .btn{margin-top:auto;align-self:flex-start}
+.drafts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:12px}
+.dr{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fff;transition:box-shadow .2s}
+.dr .kind{display:flex;align-items:center;gap:8px;font:600 11px var(--mono);color:var(--mute);text-transform:uppercase}
+.dr .kind i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.ig{aspect-ratio:1;border-radius:12px;background:#23423a;color:#f3ead8;padding:18px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.ig small{font:600 10px var(--mono);letter-spacing:.1em;color:#e7a44b}
+.ig b{font:800 26px/1 var(--display);text-transform:uppercase}
+.ig em{font-style:normal;background:#e7a44b;color:#23423a;padding:0 6px;border-radius:4px}
+.ig span{font-size:11px;opacity:.85}
+.ig:after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;border:14px solid #e7a44b33}
+.fly{aspect-ratio:1;border-radius:12px;background:#f3ead8;color:#23423a;padding:18px;display:flex;flex-direction:column;gap:6px;justify-content:center;text-align:center;border:1px solid #e9dcc1}
+.fly small{font:600 10px var(--mono);letter-spacing:.12em}
+.fly b{font:800 28px/1 var(--display);text-transform:uppercase}
+.fly span{font-size:12px}
+.fly .seat{display:flex;justify-content:center;gap:4px;margin-top:6px}
+.fly .seat i{width:10px;height:10px;border-radius:3px;background:#23423a}
+.reels{display:flex;flex-direction:column;gap:6px;aspect-ratio:1}
+.reels div{flex:1;border-radius:10px;background:var(--soft);display:flex;gap:10px;align-items:center;padding:0 12px;font-size:12px;font-weight:500}
+.reels div b{width:22px;height:22px;border-radius:6px;background:var(--teal);color:#fff;display:grid;place-items:center;font:700 11px var(--display);flex:none}
+.cap{font-size:12.5px;color:#3d434d;min-height:54px}
+.cap .caret{display:inline-block;width:2px;height:14px;background:var(--blue);vertical-align:-2px;margin-left:1px}
+.dr .row{display:flex;gap:8px;align-items:center}
+.dr .row small{margin-left:auto;color:var(--green);font:600 11px var(--mono)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:500;box-shadow:0 10px 30px #0003}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .logo{padding:4px 12px 4px 0}
+  nav a{white-space:nowrap}
+  .me{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2,.moves,.drafts{grid-template-columns:minmax(0,1fr)}
+  .pill{margin-left:0}
+  .table-wrap{overflow-x:auto}
+}
+.cta{background:#1b1b1b;color:#fff;border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;font:700 20px var(--display)}.cta p{margin:4px 0 0;color:#c9cdd6;font-size:13px}
+.cta a{margin-left:auto;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:12px;padding:12px 16px;white-space:nowrap}
+.topcta{background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:99px;padding:7px 12px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="logo"><img src="mark.png" alt="">Handoff</div>
+    <a href="#top" class="on"><span class="ic">◎</span>Overview</a>
+    <a href="#changes"><span class="ic">↻</span>What changed</a>
+    <a href="#prices"><span class="ic">$</span>Prices</a>
+    <a href="#social"><span class="ic">▶</span>Social</a>
+    <a href="#brief"><span class="ic">✦</span>Monday brief</a>
+    <a href="#drafts"><span class="ic">✎</span>Drafts<span class="badge">3</span></a>
+    <a href="map.html"><span class="ic">⌖</span>Map</a>
+    <div class="me"><div class="av">J</div><div><b>Juniper Coffee</b><small>Sample shop</small></div></div>
+  </nav>
+  <main>
+    <div class="top" id="top">
+      <div><h1>Good morning. Here's your week.</h1><p>Competitor Watch · 6 coffee shops within 2 miles</p></div>
+      <span class="sample">DEMO · SAMPLE DATA</span>
+      <a class="topcta" href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=spy_coffee" target="_blank" rel="noopener">Get one built for your business</a>
+      <div class="pill"><i></i>Checked today 6:00 AM</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><small>Shops watched</small><b>6</b><span>within 2 miles</span></div>
+      <div class="kpi"><small>Changes this week</small><b>9</b><span>4 worth acting on</span></div>
+      <div class="kpi"><small>Your review rank</small><b>#5 of 7</b><span>276 reviews · ★ 4.5</span></div>
+      <div class="kpi hot"><small>Moves ready</small><b>3</b><span>drafts done</span></div>
+    </div>
+    <div class="grid2">
+      <section class="card feed" id="changes">
+        <div class="hd"><h2>What changed this week</h2><button class="more">See all 9</button></div>
+        <div class="sub">Read from their posts, menus, reviews and websites.</div>
+        <div id="feed"></div>
+      </section>
+      <section class="card" id="prices">
+        <div class="hd"><h2>Price board</h2></div>
+        <div class="sub">Menu prices, checked daily.</div>
+        <div class="table-wrap"><table id="ptable"></table></div>
+      </section>
+    </div>
+    <div class="grid2" id="social">
+      <section class="card" id="viewscard"><div class="hd"><h2>Instagram views this week</h2></div><div class="sub">Reels and posts combined.</div><div class="bars" id="views"></div></section>
+      <section class="card" id="revcard"><div class="hd"><h2>Reviews, last 30 days</h2></div><div class="sub">Star average over time.</div><div class="stars" id="stars"></div></section>
+    </div>
+    <section class="card" id="brief">
+      <div class="hd"><h2>Monday brief · 3 moves this week</h2><button class="more">Past briefs</button></div>
+      <div class="sub">Based on what your competitors did. Each one comes with the drafts done.</div>
+      <div class="moves" id="moves"></div>
+    </section>
+    <section class="card" id="drafts">
+      <div class="hd"><h2>Drafts, ready for your OK</h2></div>
+      <div class="sub">Written in Juniper Coffee's voice and colors. Approve, edit, or let them post on their own.</div>
+      <div class="drafts">
+        <div class="dr" id="d1" style="--c:#e5484d">
+          <div class="kind"><i></i>Post + story · for move 1</div>
+          <div class="ig"><small>JUNIPER COFFEE · THIS WEEK</small><b>Afternoon<br>refill. <em>$1 off</em></b><span>Any drink, 2 to 4pm · Tue to Thu</span></div>
+          <div class="cap" id="cap1"></div>
+          <div class="row"><button class="btn pri" data-ap="d1">Approve</button><button class="btn">Edit</button><small></small></div>
+        </div>
+        <div class="dr" id="d2" style="--c:#7c5ce0">
+          <div class="kind"><i></i>Flyer + sign up · for move 2</div>
+          <div class="fly"><small>JUNIPER COFFEE PRESENTS</small><b>Latte art<br>night</b><span>Saturday, Nov 7 · 6pm · $25</span><div class="seat"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>12 seats</span></div>
+          <div class="cap">Learn to pour a heart, a tulip and a rosetta. Coffee and pastries included. Grab a seat at the link.</div>
+          <div class="row"><button class="btn pri" data-ap="d2">Approve</button><button class="btn">Edit</button><small></small></div>
+        </div>
+        <div class="dr" id="d3" style="--c:#1fa7b8">
+          <div class="kind"><i></i>4 reel scripts · for move 3</div>
+          <div class="reels"><div><b>1</b>Oat milk pour, slow motion</div><div><b>2</b>"Rate my latte art" with regulars</div><div><b>3</b>Behind the bar at 6am</div><div><b>4</b>What your order says about you</div></div>
+          <div class="cap">Each one has the shots, the on screen text and a trending sound picked for it.</div>
+          <div class="row"><button class="btn pri" data-ap="d3">Approve</button><button class="btn">Edit</button><small></small></div>
+        </div>
+      </div>
+    </section>
+    <section class="cta"><div><h2>Want this for your business?</h2><p>We build it around your shop, your competitors and your voice. You see it working before you buy.</p></div><a href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=spy_coffee" target="_blank" rel="noopener">Get one built</a></section>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const SH = [
+  { id:'you', name:'Juniper Coffee', c:'#4f7bff', ab:'J', latte:5.00, cold:4.50, drip:3.00, views:1.1, stars:[4.5,4.5,4.5,4.5,4.5], rev:276 },
+  { id:'ember', name:'Ember & Oak', c:'#e8962e', ab:'E', latte:5.25, was:4.75, cold:4.75, drip:3.25, views:6.4, stars:[4.5,4.6,4.6,4.6,4.6], rev:812 },
+  { id:'grind', name:'Daily Grind', c:'#e5484d', ab:'D', latte:4.75, cold:4.25, drip:2.75, views:3.2, stars:[4.2,4.2,4.3,4.2,4.2], rev:390 },
+  { id:'fox', name:'Little Fox', c:'#1fa7b8', ab:'L', latte:5.00, cold:4.75, drip:3.00, views:18.2, stars:[4.4,4.4,4.5,4.5,4.5], rev:533 },
+  { id:'north', name:'Northside', c:'#7c5ce0', ab:'N', latte:5.75, cold:5.25, drip:3.50, views:7.9, stars:[4.8,4.8,4.8,4.8,4.8], rev:1204 },
+  { id:'corner', name:'Corner Cup', c:'#2f9e5b', ab:'C', latte:4.95, cold:4.50, drip:3.00, views:2.0, stars:[4.4,4.4,4.4,4.4,4.4], rev:301 },
+  { id:'bean', name:'Bean There', c:'#9aa1ad', ab:'B', latte:4.50, cold:4.00, drip:2.50, views:0, stars:[4.2,4.1,4.0,4.0,3.9], rev:214 },
+];
+const by = Object.fromEntries(SH.map(s => [s.id, s]));
+const FEED = [
+  ['grind','New promo','Happy hour, 2 to 4pm. Every drink $3.','Mon'],
+  ['ember','Price up','Latte went from $4.75 to $5.25.','Tue'],
+  ['fox','Trending','Oat milk menu reel: 12.4k views.','Today'],
+  ['north','Sold out','Saturday cupping class sold out in 6 hours.','Thu'],
+  ['corner','New hours','Now open until 9pm, Thu to Sat.','Wed'],
+  ['bean','Reviews down','4 new 2 star reviews about slow service.','Fri'],
+];
+$('#feed').innerHTML = FEED.map(([id, tag, tx, w], i) => `<div class="it" id="f${i}" style="--c:${by[id].c}"><div class="lg">${by[id].ab}</div><div class="tx"><b>${by[id].name}</b><span>${tx}</span></div><span class="tag">${tag}</span><span class="when">${w}</span></div>`).join('');
+$('#ptable').innerHTML = `<tr><th>Shop</th><th>Latte</th><th>Cold brew</th><th>Drip</th></tr>` + SH.map(s =>
+  `<tr class="${s.id === 'you' ? 'you' : ''}" id="p-${s.id}"><td><span class="d" style="--c:${s.c}"></span>${s.name}${s.id === 'you' ? ' (you)' : ''}</td><td class="${s.was ? 'up' : ''}">${s.was ? `<span class="was">$${s.was.toFixed(2)}</span>` : ''}$${s.latte.toFixed(2)}</td><td>$${s.cold.toFixed(2)}</td><td>$${s.drip.toFixed(2)}</td></tr>`).join('');
+const vmax = Math.max(...SH.map(s => s.views));
+$('#views').innerHTML = [...SH].sort((a, b) => b.views - a.views).map(s => `<div class="br ${s.id === 'you' ? 'you' : ''}" id="v-${s.id}"><span>${s.name}</span><div class="tr"><i style="--c:${s.c};--w:${Math.max(1, s.views / vmax * 100)}%"></i></div><b>${s.views ? s.views + 'k' : '0'}</b></div>`).join('');
+$('#stars').innerHTML = SH.map(s => { const pts = s.stars.map((v, i) => `${i * 25},${24 - (v - 3.7) * 18}`).join(' '); const d = s.stars[4] - s.stars[0];
+  return `<div class="st"><span>${s.name}</span><b>★ ${s.stars[4].toFixed(1)}</b><svg viewBox="0 0 100 24" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${s.c}" stroke-width="2.4" vector-effect="non-scaling-stroke"/></svg><span class="ch" style="color:${d < 0 ? 'var(--red)' : d > 0 ? 'var(--green)' : 'var(--mute)'}">${d > 0 ? '+' : ''}${d.toFixed(1)}</span></div>`; }).join('');
+const MOVES = [
+  ['grind','Win your afternoons back','Daily Grind started a $3 happy hour from 2 to 4pm, your slowest hours too. Run "Afternoon refill, $1 off" Tue to Thu.','Post + story drafted','d1'],
+  ['north','People want classes','Northside\'s cupping class sold out in 6 hours. Host a Saturday latte art night: 12 seats at $25.','Flyer + sign up drafted','d2'],
+  ['fox','Show up on Reels','Little Fox got 18.2k views from 3 reels. You posted once. Here are 4 reels in your voice.','4 reel scripts ready','d3'],
+];
+$('#moves').innerHTML = MOVES.map(([id, h, p, why, d], i) => `<div class="mv" id="m${i}" style="--c:${by[id].c}"><div class="n">${i + 1}</div><h3>${h}</h3><p>${p}</p><span class="why">✓ ${why}</span><button class="btn" data-go="${d}">Open draft</button></div>`).join('');
+
+const CAP1 = 'Slow afternoon? Not here. Swing by between 2 and 4 this week for $1 off any drink. Bring a friend. ☕';
+const approved = {};
+function setApproved(id, on){
+  approved[id] = on; const r = $('#' + id + ' .row'), b = r.querySelector('[data-ap]');
+  b.className = 'btn ' + (on ? 'ok' : 'pri'); b.textContent = on ? 'Approved ✓' : 'Approve';
+  r.querySelector('small').textContent = on ? ({ d1:'Tue 1:30 PM', d2:'Posts Wed 9 AM', d3:'1 per day' })[id] : '';
+}
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+document.addEventListener('click', e => {
+  const ap = e.target.closest('[data-ap]'); if (ap) { const id = ap.dataset.ap, on = !approved[id]; setApproved(id, on); if (on) toast(({ d1:'Post + story scheduled for Tue 1:30 PM', d2:'Flyer posts Wed 9 AM. Sign up page is live.', d3:'4 reels scheduled, one a day' })[id]); }
+  const go = e.target.closest('[data-go]'); if (go) { const el = $('#' + go.dataset.go); el.scrollIntoView({ block:'center' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1400); }
+});
+document.querySelectorAll('nav a[href^="#"]').forEach(a => a.addEventListener('click', () => { document.querySelectorAll('nav a').forEach(x => x.classList.remove('on')); a.classList.add('on'); }));
+
+// typed caption: in normal use it types once on load
+function typeCap(k){ const n = Math.round(CAP1.length * Math.min(1, Math.max(0, k))); $('#cap1').innerHTML = CAP1.slice(0, n) + (k > 0 && k < 1 ? '<span class="caret"></span>' : ''); }
+typeCap(1);
+
+// API for the reel renderer: everything is set from one state object, so any moment can be redrawn exactly
+window.DASH = {
+  apply(s){
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, s.scroll || 0);
+    document.querySelectorAll('.flash').forEach(el => el.classList.remove('flash'));
+    (s.flash || []).forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('flash'); });
+    const bk = s.bars == null ? 1 : s.bars;
+    document.querySelectorAll('.br .tr i').forEach((el, i) => el.style.transform = `scaleX(${Math.min(1, Math.max(0, bk * 1.6 - i * .1))})`);
+    typeCap(s.type == null ? 1 : s.type);
+    ['d1','d2','d3'].forEach(id => setApproved(id, !!(s.approved || {})[id]));
+    const t = $('#toast'); if (s.toast) { t.textContent = s.toast; t.hidden = false; } else t.hidden = true;
+    document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (s.nav || 'top')));
+  },
+  rect(id){ const r = document.getElementById(id).getBoundingClientRect(); return { x:r.left, y:r.top, w:r.width, h:r.height }; },
+  top(id){ return document.getElementById(id).getBoundingClientRect().top + window.scrollY; },
+  apSel: id => document.querySelector(`#${id} [data-ap]`),
+};
+})();
+</script>
+</body></html>
