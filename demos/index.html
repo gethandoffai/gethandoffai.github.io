@@ -45,12 +45,13 @@ p { margin: 0; max-width: 60ch; }
 .muted { color: var(--muted); }
 header { padding-block: 56px 32px; display: grid; gap: 16px; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding-bottom: 48px; }
-.demo { background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; min-width: 0; transition: transform .2s, border-color .2s; }
+.demo { background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; flex: 1; text-decoration: none; color: inherit; min-width: 0; transition: transform .2s, border-color .2s; }
 .demo:hover { transform: translateY(-3px); border-color: var(--blue); }
 .demo:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
 .demo img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; }
 .demo div { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.demo .for { font: 500 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
+.item { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.for { margin: 0; font: 700 clamp(22px, 2.6vw, 28px)/1.15 var(--display); letter-spacing: -.02em; color: var(--amber); }
 .demo p { font-size: 15.5px; color: var(--muted); }
 .demo .go { margin-top: auto; padding-top: 10px; font-weight: 600; font-size: 15px; color: var(--blue); }
 .end { border-top: 1px solid var(--line); padding-block: 40px 64px; display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
@@ -71,10 +72,10 @@ header { padding-block: 56px 32px; display: grid; gap: 16px; }
     <p class="muted">Each one walks you through in 6 quick steps and works on your phone. They run on sample data, and we build yours around your business.</p>
   </header>
   <div class="grid">
-    <a class="demo" href="/week/"><img src="/week/og.jpg" alt="" loading="lazy"><div><span class="for">Any business</span><h2>Week of Content</h2><p>Hit one button and a whole week of posts fills in, in your voice or the style of a page you like.</p><span class="go">Try this demo &rarr;</span></div></a>
-    <a class="demo" href="/spy/"><img src="/spy/og.jpg" alt="" loading="lazy"><div><span class="for">Coffee shops and local businesses</span><h2>Competitor Watch</h2><p>See what every competitor near you did this week, and get 3 moves to make every Monday.</p><span class="go">Try this demo &rarr;</span></div></a>
-    <a class="demo" href="/chair/"><img src="/chair/og.jpg" alt="" loading="lazy"><div><span class="for">Salons and barbers</span><h2>Empty Chair Filler</h2><p>See every empty chair tomorrow, who could take it, and let it text them automatically.</p><span class="go">Try this demo &rarr;</span></div></a>
-    <a class="demo" href="/paid/"><img src="/paid/og.jpg" alt="" loading="lazy"><div><span class="for">Contractors and trades</span><h2>Invoice Chaser</h2><p>See who owes you, who to chase first, and the reminder already written.</p><span class="go">Try this demo &rarr;</span></div></a>
+    <div class="item"><p class="for">Any business</p><a class="demo" href="/week/"><img src="/week/og.jpg" alt="" loading="lazy"><div><h2>Week of Content</h2><p>Hit one button and a whole week of posts fills in, in your voice or the style of a page you like.</p><span class="go">Try this demo &rarr;</span></div></a></div>
+    <div class="item"><p class="for">Coffee shops and local businesses</p><a class="demo" href="/spy/"><img src="/spy/og.jpg" alt="" loading="lazy"><div><h2>Competitor Watch</h2><p>See what every competitor near you did this week, and get 3 moves to make every Monday.</p><span class="go">Try this demo &rarr;</span></div></a></div>
+    <div class="item"><p class="for">Salons and barbers</p><a class="demo" href="/chair/"><img src="/chair/og.jpg" alt="" loading="lazy"><div><h2>Empty Chair Filler</h2><p>Turn tomorrow's empty chairs into extra money. It finds who could take each one and texts them automatically.</p><span class="go">Try this demo &rarr;</span></div></a></div>
+    <div class="item"><p class="for">Contractors and trades</p><a class="demo" href="/paid/"><img src="/paid/og.jpg" alt="" loading="lazy"><div><h2>Invoice Chaser</h2><p>See who owes you, who to chase first, and the reminder already written.</p><span class="go">Try this demo &rarr;</span></div></a></div>
   </div>
   <div class="end">
     <div><h2>Don't see your business?</h2><p class="muted">Tell us what eats your week. We'll build it before you buy.</p></div>
