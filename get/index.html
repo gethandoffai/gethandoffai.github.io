@@ -128,6 +128,7 @@ footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
         <li>30 days of adjustments</li>
       </ul>
       <p class="fine">Needs a Claude Pro plan ($20/mo, paid to Anthropic). Move up to Managed within 90 days and your $375 counts toward the setup.</p>
+      <p class="fine">Today: $375, paid in full. After you pay, we email you within one business day to get started.</p>
       <a class="btn" data-form data-pay="kit" href="/demo/?ad=get">Get the Kit &rarr;</a>
     </div>
     <div class="plan">
@@ -141,15 +142,15 @@ footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
         <li>Texts you when something needs your OK</li>
         <li>We watch it, fix it and keep improving it</li>
       </ul>
-      <p class="fine">Month to month. Cancel anytime with 30 days notice.</p>
+      <p class="fine">Today: $1,750 (setup plus your first month), then $250 a month. Month to month. Cancel anytime with 30 days notice. After you pay, we email you within one business day to get started.</p>
       <a class="btn" data-form data-pay="managed" href="/demo/?ad=get">Start Managed &rarr;</a>
     </div>
   </div>
-  <footer>Questions? Email gethandoff.ai@gmail.com and we'll get back to you the same day.</footer>
+  <footer>Questions? Email gethandoff.ai@gmail.com and we'll get back to you the same day. By buying you agree to our <a href="/terms/">Terms of Service</a>.</footer>
 </main>
 <script>
-// Add the live Stripe links here once Stripe is live. Until then these buttons go to the form.
-const PAY = { kit: '', managed: '' };
+// Live Stripe links
+const PAY = { kit: 'https://buy.stripe.com/8x2bJ1bxc9ticpJ3qT2oE01', managed: 'https://buy.stripe.com/8x214n58OgVK61l9Ph2oE00' };
 const DEMOS = {
   spy: { name: 'Competitor Watch', path: '/spy/' },
   paid: { name: 'Invoice Chaser', path: '/paid/' },
