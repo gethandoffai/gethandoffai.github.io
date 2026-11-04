@@ -55,7 +55,7 @@ nav a.hx-navget{justify-content:center;background:#4f7bff;color:#fff;font-weight
 
 // Buy buttons that are always on the page
 const nav = document.querySelector('nav .me');
-if (nav) nav.insertAdjacentHTML('beforebegin', `<a class="hx-navget" href="${GET}">Get one built</a>`);
+if (nav) nav.insertAdjacentHTML('beforebegin', `<a href="/demos/"><span class="ic">⊞</span>See other demos</a><a class="hx-navget" href="${GET}">Get one built</a>`);
 (D.bands || []).forEach(([after, text]) => {
   const el = document.querySelector(after);
   if (el) el.insertAdjacentHTML('afterend', `<div class="hx-band"><span>${text}</span><a href="${GET}">Get one built</a></div>`);

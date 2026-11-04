@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Live Demos · Handoff</title>
+<meta name="description" content="Pick the one closest to your business and click around. Each demo runs on sample data.">
+<meta property="og:title" content="Live demos · Handoff">
+<meta property="og:description" content="Pick the one closest to your business and click around.">
+<meta property="og:url" content="https://gethandoff.net/demos/">
+<meta property="og:image" content="https://gethandoff.net/get/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#161617">
+<link rel="icon" href="../mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Instrument+Serif:ital@1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Every live demo in one place. Same look as the landing page. */
+:root {
+  --bg: #161617; --card: #1f1f21; --line: #2f2f33; --fg: #f2f2f3; --muted: #a3a5ab;
+  --blue: #4f7bff; --amber: #ffb347; --purple: #9a6cf0; --ink: #161617;
+  --display: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body); overflow-x: hidden; }
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.glow i { position: absolute; border-radius: 50%; filter: blur(110px); opacity: .2; }
+.glow i:nth-child(1) { width: 60vw; height: 60vw; left: -20vw; top: -10vw; background: var(--blue); }
+.glow i:nth-child(2) { width: 50vw; height: 50vw; right: -18vw; top: 30vh; background: var(--purple); opacity: .14; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+nav { border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 700 21px/1 var(--display); text-decoration: none; color: inherit; letter-spacing: -.01em; }
+.brand img { width: 34px; height: 34px; }
+.back { font-size: 14px; color: var(--muted); text-decoration: none; }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-weight: 700; font-size: clamp(38px, 6.5vw, 68px); line-height: 1.02; letter-spacing: -.04em; }
+h2 { font-weight: 700; font-size: 26px; line-height: 1.12; letter-spacing: -.02em; }
+em { font-family: var(--serif); font-style: italic; font-weight: 400; }
+p { margin: 0; max-width: 60ch; }
+.muted { color: var(--muted); }
+header { padding-block: 56px 32px; display: grid; gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding-bottom: 48px; }
+.demo { background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; min-width: 0; transition: transform .2s, border-color .2s; }
+.demo:hover { transform: translateY(-3px); border-color: var(--blue); }
+.demo:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+.demo img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; }
+.demo div { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.demo .for { font: 500 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
+.demo p { font-size: 15.5px; color: var(--muted); }
+.demo .go { margin-top: auto; padding-top: 10px; font-weight: 600; font-size: 15px; color: var(--blue); }
+.end { border-top: 1px solid var(--line); padding-block: 40px 64px; display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.btn { display: inline-flex; font: 600 16px/1 var(--body); text-decoration: none; border-radius: 12px; padding: 17px 22px; background: var(--blue); color: var(--ink); }
+@media (max-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr); } header { padding-block: 36px 24px; } }
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"><i></i><i></i></div>
+<nav><div class="wrap">
+  <a class="brand" href="/"><img src="../mark.png" alt="">Handoff</a>
+  <a class="back" href="/">‹ Back to gethandoff.net</a>
+</div></nav>
+<main class="wrap">
+  <header>
+    <p class="label">Live demos</p>
+    <h1>Pick the one closest to <em>your business.</em></h1>
+    <p class="muted">Each one walks you through in 6 quick steps and works on your phone. They run on sample data, and we build yours around your business.</p>
+  </header>
+  <div class="grid">
+    <a class="demo" href="/week/"><img src="/week/og.jpg" alt="" loading="lazy"><div><span class="for">Any business</span><h2>Week of Content</h2><p>Hit one button and a whole week of posts fills in, in your voice or the style of a page you like.</p><span class="go">Try this demo &rarr;</span></div></a>
+    <a class="demo" href="/spy/"><img src="/spy/og.jpg" alt="" loading="lazy"><div><span class="for">Coffee shops and local businesses</span><h2>Competitor Watch</h2><p>See what every competitor near you did this week, and get 3 moves to make every Monday.</p><span class="go">Try this demo &rarr;</span></div></a>
+    <a class="demo" href="/chair/"><img src="/chair/og.jpg" alt="" loading="lazy"><div><span class="for">Salons and barbers</span><h2>Empty Chair Filler</h2><p>See every empty chair tomorrow, who could take it, and let it text them automatically.</p><span class="go">Try this demo &rarr;</span></div></a>
+    <a class="demo" href="/paid/"><img src="/paid/og.jpg" alt="" loading="lazy"><div><span class="for">Contractors and trades</span><h2>Invoice Chaser</h2><p>See who owes you, who to chase first, and the reminder already written.</p><span class="go">Try this demo &rarr;</span></div></a>
+  </div>
+  <div class="end">
+    <div><h2>Don't see your business?</h2><p class="muted">Tell us what eats your week. We'll build it before you buy.</p></div>
+    <a class="btn" href="/get/?from=demos">See your options &rarr;</a>
+  </div>
+</main>
+</body></html>

@@ -184,11 +184,11 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
       <div class="brandc">
         <div class="bi" id="bColors"><small>Your colors</small><div class="sw2"><i style="background:#c9771e"></i><i style="background:#f6e7cf"></i><i style="background:#3a2412"></i></div></div>
         <div class="bi" id="bPrices"><small>Your prices</small><b>Croissant $4.25</b><p>Sourdough $9 · Dozen cupcakes $36</p></div>
-        <div class="bi" id="bVoice"><small>The way you talk</small><p>Warm and a little funny. Says "y'all". Never says "artisanal".</p></div>
+        <div class="bi" id="bVoice"><small>Your voice, or a page you like</small><p>Warm and a little funny. Says "y'all". Want a different feel? Pick pages you like and it writes in that style.</p></div>
       </div>
     </section>
     <section class="card" id="board">
-      <div class="calhd"><div><h2>Content calendar · Week of Nov 2</h2><div class="sub">Every post in your brand, your voice and your photos.</div></div><button class="btn pri" id="buildBtn">Build my week</button></div>
+      <div class="calhd"><div><h2>Content calendar · Week of Nov 2</h2><div class="sub">Every post in your brand and your photos, in your voice or the style of a page you like.</div></div><button class="btn pri" id="buildBtn">Build my week</button></div>
       <div class="wk" id="wk"></div>
     </section>
     <section class="card" id="detail"></section>
@@ -261,10 +261,10 @@ window.HANDOFF_DEMO = {
   id: 'week',
   bands: [['#board', 'This is a sample bakery. Yours would use your brand, your photos and your prices.']],
   steps: [
-    { el: '#brand', title: 'It learns your business', body: 'Your colors, your prices and the way you talk. We set this up once, so every post sounds like you. This one is a sample bakery.' },
+    { el: '#brand', title: 'It learns your business', body: 'Your colors, your prices and your voice, or the style of pages you like. We set this up once. This one is a sample bakery.' },
     { el: '#buildBtn', wait: '#buildBtn', waitMs: 2400, title: 'One button', body: 'This is the whole job. Tap <b>Build my week</b> and watch.' },
     { el: '#wk', title: 'A full week, in your brand', body: 'Posts, carousels, reels and animated videos, with reels and videos mixed through the week.', enter: () => window.WEEK.build() },
-    { el: '#detail', title: 'Every caption is written', body: 'Tap any post on the calendar to open it. It\'s in your voice, and it uses your real prices.' },
+    { el: '#detail', title: 'Every caption is written', body: 'Tap any post on the calendar to open it. It\'s in your voice or a style you picked, and it uses your real prices.' },
     { el: '#apBtn', wait: '[data-ap]', waitMs: 700, title: 'You\'re the CEO', body: 'Change what you want and approve the rest. Tap <b>Approve</b>.' },
     { el: '#brief', title: 'Then it gets smarter', body: 'Every Monday it tells you what worked and what to post next. Want this built for your business?' },
   ],

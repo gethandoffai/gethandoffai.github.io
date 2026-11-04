@@ -84,7 +84,7 @@ footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
 <div class="glow" aria-hidden="true"><i></i><i></i></div>
 <nav><div class="wrap">
   <a class="brand" href="/"><img src="../mark.png" alt="">Handoff</a>
-  <a class="back" id="back" href="/" hidden>‹ Back to the demo</a>
+  <a class="back" id="back" href="/" hidden>‹ Back to the demo</a><a class="back" id="allDemos" href="/demos/">See all demos</a>
 </div></nav>
 <main class="wrap">
   <header>
@@ -165,6 +165,7 @@ if (demo) {
   const back = document.getElementById('back');
   back.href = demo.path;
   back.hidden = false;
+  document.getElementById('allDemos').hidden = true;
   document.querySelectorAll('[data-form]').forEach(a => a.href = '/demo/?ad=demo-' + from);
 }
 document.querySelectorAll('[data-pay]').forEach(a => { if (PAY[a.dataset.pay]) a.href = PAY[a.dataset.pay]; });
