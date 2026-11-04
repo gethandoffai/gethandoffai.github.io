@@ -112,6 +112,8 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
   .board{grid-template-columns:repeat(5,minmax(170px,1fr));overflow-x:auto}
   .pill{margin-left:0}
 }
+.wc .pv{position:relative;background-size:cover;background-position:center;color:#fff}
+.wc .play{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#000000a0;display:grid;place-items:center;font-size:10px;color:#fff}
 </style>
 </head>
 <body>
@@ -191,7 +193,7 @@ const MOVES = [
   ['#2f9e5b','Ask for a deposit at Harborview','They paid late on their last 2 jobs. Their next quote asks for 30% up front.'],
 ];
 const WEEK = [
-  ['Mon',2,'Before and after: boiler swap','#14365c'],['Tue',3,'Why your water heater is loud','#7a4b2a'],['Wed',4,null],['Thu',5,'Reel: 6am at the shop','#1f2f4a'],['Fri',6,'Fall tune up special','#2f6b4f'],['Sat',7,null],['Sun',8,null],
+  ['Mon',2,'Before and after: boiler swap','POST','10:00 AM'],['Tue',3,'Why your water heater is loud','REEL','11:00 AM'],['Wed',4,'What that drip is costing you','POST','9:00 AM'],['Thu',5,'6am at the shop','REEL','8:00 AM'],['Fri',6,'Fall tune up special','POST','10:00 AM'],['Sat',7,'Meet your tech','POST','9:00 AM'],['Sun',8,null],
 ];
 const state = { sel:'i1042', moved:{}, shown:null, approved:{} };
 
@@ -228,7 +230,7 @@ function renderOwes(){
   $('#owes').innerHTML = list.map(i => `<div class="br"><span>${i.who.split(' ').slice(0, 2).join(' ')}</span><div class="tr"><i style="--c:${(COLS.find(c => c.id === (state.moved[i.id] || i.col)) || {}).c};--w:${i.amt / mx * 100}%"></i></div><b>${money(i.amt)}</b></div>`).join('');
 }
 $('#moves').innerHTML = MOVES.map(([c, h, p], i) => `<div class="mv" id="m${i}" style="--c:${c};flex-direction:row;align-items:flex-start;gap:10px"><div class="n" style="flex:none">${i + 1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
-$('#week').innerHTML = WEEK.map(([d, n, h, c]) => `<div class="wd"><b>${d}<span>${n}</span></b>${h ? `<div class="wc"><div class="pv" style="--pb:${c}"><small>POST</small><strong>${h}</strong></div><div class="mt">Scheduled</div></div>` : '<div class="wslot">Open</div>'}</div>`).join('');
+$('#week').innerHTML = WEEK.map(([d, n, h, k, t]) => `<div class="wd"><b>${d}<span>${n}</span></b>${h ? `<div class="wc"><div class="pv" style="background-image:linear-gradient(#0000 35%,#000000c4),url(cal/${d.toLowerCase()}.jpg)">${k === 'REEL' ? '<span class="play">▶</span>' : ''}<small>${k}</small><strong>${h}</strong></div><div class="mt">${t} · Scheduled</div></div>` : '<div class="wslot">Open</div>'}</div>`).join('');
 function all(){ renderBoard(); renderKpis(totals()); renderDetail(); renderOwes(); }
 all();
 

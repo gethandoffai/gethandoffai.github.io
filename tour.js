@@ -28,7 +28,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 .hx-pulse{animation:hxp 1.3s ease-in-out infinite;position:relative;z-index:51}
 @keyframes hxp{0%,100%{box-shadow:0 0 0 0 #4f7bffaa}50%{box-shadow:0 0 0 9px #4f7bff00}}
 body.hx-on .toast{z-index:70;top:16px;bottom:auto}
-#hx-bar{position:fixed;z-index:40;right:24px;bottom:24px;display:flex;align-items:center;gap:8px;background:#1b1b1b;color:#fff;border-radius:16px;padding:10px 10px 10px 16px;box-shadow:0 14px 40px #0005;font:600 14px 'IBM Plex Sans',system-ui,sans-serif}
+#hx-bar{position:fixed;z-index:40;right:24px;top:calc(16px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:8px;background:#1b1b1b;color:#fff;border-radius:16px;padding:10px 10px 10px 16px;box-shadow:0 14px 40px #0005;font:600 14px 'IBM Plex Sans',system-ui,sans-serif}
+#hx-bar.hx-away{display:none}
 #hx-bar a,#hx-bar button{font:600 13px 'IBM Plex Sans',system-ui,sans-serif;border-radius:10px;padding:9px 12px;text-decoration:none;white-space:nowrap;border:0;cursor:pointer}
 .hx-get{background:#4f7bff;color:#fff!important}
 .hx-book{background:#ffffff1c;color:#fff!important}
@@ -44,7 +45,7 @@ nav a.hx-navget{justify-content:center;background:#4f7bff;color:#fff;font-weight
   #hx-coach{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));width:auto;padding:14px 16px}
   #hx-coach h3{font-size:17px}
   #hx-coach p{font-size:13.5px}
-  #hx-bar{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:8px}
+  #hx-bar{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:8px}
   #hx-bar>span{display:none}
   #hx-bar .hx-get{flex:1;text-align:center}
   nav a.hx-navget{display:none}
@@ -65,6 +66,14 @@ bar.id = 'hx-bar';
 bar.hidden = true;
 bar.innerHTML = `<span>${D.bar || 'Want this for your business?'}</span><a class="hx-get" href="${GET}">Get one built</a><a class="hx-book" href="${BOOK}" target="_blank" rel="noopener">Book a call</a><button class="hx-re" aria-label="Show the steps again">↺ Steps</button>`;
 document.body.append(bar);
+
+// Steps aside while the page's own buy buttons are on screen, so the two never overlap
+const own = new Set();
+const io = new IntersectionObserver(list => {
+  list.forEach(e => e.isIntersecting ? own.add(e.target) : own.delete(e.target));
+  bar.classList.toggle('hx-away', own.size > 0);
+});
+document.querySelectorAll('.top,.cta').forEach(el => io.observe(el));
 
 // The guided steps
 const spot = document.createElement('div');
