@@ -6,6 +6,11 @@
 <meta property="og:title" content="Competitor Watch demo · Handoff">
 <meta property="og:description" content="See what every competitor near you did this week. Demo built on sample data.">
 
+<meta property="og:url" content="https://gethandoff.net/spy/">
+<meta property="og:image" content="https://gethandoff.net/spy/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
@@ -163,7 +168,7 @@ td .was{color:var(--grey);text-decoration:line-through;margin-right:6px;font-wei
     <div class="top" id="top">
       <div><h1>Good morning. Here's your week.</h1><p>Competitor Watch · 6 coffee shops within 2 miles</p></div>
       <span class="sample">DEMO · SAMPLE DATA</span>
-      <a class="topcta" href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=spy_coffee" target="_blank" rel="noopener">Get one built for your business</a>
+      <a class="topcta" href="/get/?from=spy">Get one built for your business</a>
       <div class="pill" id="checked"><i></i>Checked today 6:00 AM</div>
     </div>
     <div class="kpis">
@@ -222,7 +227,7 @@ td .was{color:var(--grey);text-decoration:line-through;margin-right:6px;font-wei
       <div class="sub">Everything you approve lands here, next to the rest of your week. Approve a draft above and watch its slot fill.</div>
       <div class="week" id="week"></div>
     </section>
-    <section class="cta"><div><h2>Want this for your business?</h2><p>We build it around your shop, your competitors and your voice. You see it working before you buy.</p></div><a href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=spy_coffee" target="_blank" rel="noopener">Get one built</a></section>
+    <section class="cta"><div><h2>Want this for your business?</h2><p>We build it around your shop, your competitors and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=spy">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
   </main>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -320,4 +325,23 @@ window.DASH = {
 };
 })();
 </script>
+<script>
+window.HANDOFF_DEMO = {
+  id: 'spy',
+  bands: [
+    ['#social', 'This is a sample coffee shop. Yours would watch your real competitors.'],
+    ['#drafts', 'Those drafts would be in your voice and your colors.'],
+  ],
+  steps: [
+    { el: '.kpis', title: 'Your week at a glance', body: 'Every morning it checks the businesses you compete with and adds up what changed. This one is a sample coffee shop.' },
+    { el: '#changes', title: 'What they did this week', body: 'New promos, price changes, bad reviews and posts that took off, all in one list. You stop checking 6 pages by hand.' },
+    { el: '#prices', title: 'Every price, side by side', body: 'Wherever a menu is online, you see who went up. Ember &amp; Oak just raised their latte 50 cents.' },
+    { el: '#brief', title: '3 moves every Monday', body: 'It turns all of that into what to do this week, and why. You just pick.' },
+    { el: '#d1', wait: '[data-ap="d1"]', waitMs: 900, title: 'The posts are already written', body: 'Each move comes with the post ready to go. You\'re the CEO. Tap <b>Approve</b> on this one.' },
+    { el: '#calendar', title: 'It lands on your calendar', body: 'That post is now on Tuesday, next to the rest of your week. Want this built for your business?',
+      enter: () => { const b = document.querySelector('[data-ap="d1"]'); if (!b.classList.contains('ok')) b.click(); } },
+  ],
+};
+</script>
+<script src="/tour.js"></script>
 </body></html>

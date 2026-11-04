@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Get Yours Built · Handoff</title>
+<meta name="description" content="We build it around your business, and you see it working before you buy.">
+<meta property="og:title" content="Get yours built · Handoff">
+<meta property="og:description" content="We build it around your business, and you see it working before you buy.">
+<meta property="og:url" content="https://gethandoff.net/get/">
+<meta property="og:image" content="https://gethandoff.net/get/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#161617">
+<link rel="icon" href="../mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Instrument+Serif:ital@1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Where every demo button lands. Same look as the landing page. */
+:root {
+  --bg: #161617; --card: #1f1f21; --line: #2f2f33; --fg: #f2f2f3; --muted: #a3a5ab;
+  --blue: #4f7bff; --amber: #ffb347; --purple: #9a6cf0;
+  --ink: #161617;
+  --display: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body); overflow-x: hidden; }
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.glow i { position: absolute; border-radius: 50%; filter: blur(110px); opacity: .2; }
+.glow i:nth-child(1) { width: 60vw; height: 60vw; left: -20vw; top: -10vw; background: var(--blue); }
+.glow i:nth-child(2) { width: 50vw; height: 50vw; right: -18vw; top: 30vh; background: var(--purple); opacity: .14; }
+.wrap { max-width: 1000px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; }
+nav { border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 700 21px/1 var(--display); text-decoration: none; letter-spacing: -.01em; }
+.brand img { width: 34px; height: 34px; }
+.back { font-size: 14px; color: var(--muted); text-decoration: none; }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-weight: 700; font-size: clamp(38px, 6.5vw, 68px); line-height: 1.02; letter-spacing: -.04em; }
+h2 { font-weight: 700; font-size: clamp(26px, 4vw, 36px); line-height: 1.1; letter-spacing: -.02em; }
+h3 { font-weight: 600; font-size: 22px; line-height: 1.2; }
+em { font-family: var(--serif); font-style: italic; font-weight: 400; }
+p { margin: 0; max-width: 60ch; }
+.muted { color: var(--muted); }
+header { padding-block: 56px 32px; display: grid; gap: 16px; }
+.ways { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; padding-bottom: 48px; }
+.way { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 28px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.way.feat { border-color: var(--blue); }
+.way .btn { margin-top: auto; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding-block: 16px 56px; }
+.steps div { border-top: 1px solid var(--line); padding-top: 14px; font-size: 15px; color: var(--muted); }
+.steps b { display: block; color: var(--fg); font: 600 17px/1.3 var(--display); margin-bottom: 4px; }
+.plans { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-block: 20px 40px; }
+.plan { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 30px 28px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.plan.feat { border-color: var(--amber); }
+.pill { align-self: flex-start; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; background: var(--amber); color: var(--ink); padding: 7px 10px; border-radius: 6px; }
+.pill.blue { background: var(--blue); }
+.price { font: 700 50px/1 var(--display); letter-spacing: -.03em; }
+.price s { font-size: .45em; color: var(--muted); font-weight: 500; margin-left: 8px; }
+.price small { font-size: .36em; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+.plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 15.5px; }
+.plan li { padding-left: 24px; position: relative; }
+.plan li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; border-radius: 2px; background: var(--blue); }
+.plan.feat li::before { background: var(--amber); }
+.fine { font-size: 14px; color: var(--muted); margin-top: auto; }
+.btn { display: flex; justify-content: center; align-items: center; gap: 10px; font: 600 16px/1 var(--body); text-decoration: none; border-radius: 12px; padding: 17px 22px; background: var(--blue); color: var(--ink); text-align: center; }
+.btn.line { background: none; border: 1px solid var(--line); color: var(--fg); }
+.plan.feat .btn { background: var(--amber); }
+.btn:hover { filter: brightness(1.08); }
+.btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
+@media (max-width: 760px) {
+  .ways, .plans, .steps { grid-template-columns: 1fr; }
+  header { padding-block: 36px 24px; }
+}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"><i></i><i></i></div>
+<nav><div class="wrap">
+  <a class="brand" href="/"><img src="../mark.png" alt="">Handoff</a>
+  <a class="back" id="back" href="/" hidden>‹ Back to the demo</a>
+</div></nav>
+<main class="wrap">
+  <header>
+    <p class="label" id="kicker">Your next step</p>
+    <h1>Want this for <em>your business?</em></h1>
+    <p class="muted" id="lead">We build it around your business, your customers and your voice. You see it working before you buy.</p>
+  </header>
+
+  <div class="ways">
+    <div class="way feat">
+      <h2>Get your free demo</h2>
+      <p class="muted">Tell us what eats your week. It's a 5 minute form. We build it on your examples, then show you on a short call.</p>
+      <a class="btn" data-form href="/demo/?ad=get">Start the form &rarr;</a>
+    </div>
+    <div class="way">
+      <h3>Rather talk first?</h3>
+      <p class="muted">Pick a time for a 30 minute call. Ask us anything and we'll tell you what we'd build.</p>
+      <a class="btn line" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a>
+    </div>
+  </div>
+
+  <p class="label">How it works</p>
+  <div class="steps">
+    <div><b>1. Tell us what eats your week</b>A short form. Pick the one job you'd hand off first.</div>
+    <div><b>2. Watch it work</b>A working demo on your own examples. No slides.</div>
+    <div><b>3. Decide, then hand it off</b>Like it? We set it up on your accounts and tune it with you for 30 days.</div>
+  </div>
+
+  <h2>What it <em>costs.</em></h2>
+  <div class="plans">
+    <div class="plan feat">
+      <span class="pill">Next 5 businesses</span>
+      <h3>The Kit</h3>
+      <div class="price">$375<s>$750</s></div>
+      <p class="muted">One time. Your assistant runs in your own Claude app, on your computer and phone.</p>
+      <ul>
+        <li>Built around your business, your voice and your rules</li>
+        <li>3 jobs from day one: answers your customers, writes a week of posts, and handles one back-office job you pick</li>
+        <li>A growth brief every Monday</li>
+        <li>Connected to the tools you already use</li>
+        <li>30 days of adjustments</li>
+      </ul>
+      <p class="fine">Needs a Claude Pro plan ($20/mo, paid to Anthropic). Move up to Managed within 90 days and your $375 counts toward the setup.</p>
+      <a class="btn" data-form data-pay="kit" href="/demo/?ad=get">Get the Kit &rarr;</a>
+    </div>
+    <div class="plan">
+      <span class="pill blue">Done for you</span>
+      <h3>Managed</h3>
+      <div class="price">$1,500 <small>setup + $250/mo</small></div>
+      <p class="muted">We run it for you. Always on, even when your computer's off.</p>
+      <ul>
+        <li>Everything in the Kit</li>
+        <li>Runs 24/7 on our system</li>
+        <li>Texts you when something needs your OK</li>
+        <li>We watch it, fix it and keep improving it</li>
+      </ul>
+      <p class="fine">Month to month. Cancel anytime with 30 days notice.</p>
+      <a class="btn" data-form data-pay="managed" href="/demo/?ad=get">Start Managed &rarr;</a>
+    </div>
+  </div>
+  <footer>Questions? Email gethandoff.ai@gmail.com and we'll get back to you the same day.</footer>
+</main>
+<script>
+// Add the live Stripe links here once Stripe is live. Until then these buttons go to the form.
+const PAY = { kit: '', managed: '' };
+const DEMOS = {
+  spy: { name: 'Competitor Watch', path: '/spy/' },
+  paid: { name: 'Invoice Chaser', path: '/paid/' },
+};
+const from = new URLSearchParams(location.search).get('from');
+const demo = DEMOS[from];
+if (demo) {
+  document.getElementById('kicker').textContent = 'You just tried ' + demo.name;
+  document.getElementById('lead').textContent = 'That demo runs on sample data. We build yours around your business, your customers and your voice, and you see it working before you buy.';
+  const back = document.getElementById('back');
+  back.href = demo.path;
+  back.hidden = false;
+  document.querySelectorAll('[data-form]').forEach(a => a.href = '/demo/?ad=demo-' + from);
+}
+document.querySelectorAll('[data-pay]').forEach(a => { if (PAY[a.dataset.pay]) a.href = PAY[a.dataset.pay]; });
+</script>
+</body></html>

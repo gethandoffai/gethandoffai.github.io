@@ -5,6 +5,11 @@
 <title>Invoice Chaser</title>
 <meta property="og:title" content="Invoice Chaser demo · Handoff">
 <meta property="og:description" content="See who owes you, who to chase, and the reminder already written. Demo built on sample data.">
+<meta property="og:url" content="https://gethandoff.net/paid/">
+<meta property="og:image" content="https://gethandoff.net/paid/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
@@ -126,7 +131,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
     <div class="top" id="top">
       <div><h1>Here's who owes you.</h1><p>Invoice Chaser · Ridgeline Mechanical</p></div>
       <span class="sample">DEMO · SAMPLE DATA</span>
-      <a class="topcta" data-cta href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=paid_contractor" target="_blank" rel="noopener">Get one built for your business</a>
+      <a class="topcta" href="/get/?from=paid">Get one built for your business</a>
       <div class="pill" id="checked"><i></i>Synced today 6:00 AM</div>
     </div>
     <div class="kpis" id="kpis">
@@ -150,7 +155,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
       <div class="sub">Every Handoff tool lives next to your content calendar, so posts are planned in the same place.</div>
       <div class="week" id="week"></div>
     </section>
-    <section class="cta" id="ctaBox"><div><h2>Want this for your business?</h2><p>We build it around your invoicing app, your customers and your voice. You see it working before you buy.</p></div><a data-cta href="https://gethandoff.net/demo/?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=paid_contractor" target="_blank" rel="noopener">Get one built</a></section>
+    <section class="cta" id="ctaBox"><div><h2>Want this for your business?</h2><p>We build it around your invoicing app, your customers and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=paid">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
   </main>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -259,4 +264,20 @@ window.DASH = {
 };
 })();
 </script>
+<script>
+window.HANDOFF_DEMO = {
+  id: 'paid',
+  bands: [['#detail', 'This is a sample company. Yours would read your real invoices.']],
+  steps: [
+    { el: '#kpis', title: 'Everything you\'re owed', body: 'Every open invoice, added up in one place the moment you open it. This one is a sample mechanical contractor.' },
+    { el: '#board', title: 'Sorted by how late they are', body: 'It reads your invoicing app every morning and lines them up, so you can see who to chase first.' },
+    { el: '#msgs', title: 'The reminder is already written', body: 'A friendly one first, and a firmer one if they go quiet, both in your voice.' },
+    { el: '#apBtn', wait: '[data-ap]', waitMs: 600, title: 'You decide', body: 'You\'re the CEO. You pick who gets an email and who needs a call. Tap <b>Approve email</b>.' },
+    { el: '#kpis', title: 'Watch the number drop', body: 'In this demo they pay a moment later. The invoice moves to Paid and what you\'re owed goes down.',
+      enter: () => { const b = document.getElementById('apBtn'); if (b && !b.classList.contains('ok')) b.click(); } },
+    { el: '#brief', title: 'Every Monday, what to do first', body: 'Who to call, who to email, and who should pay a deposit next time. Want this built for your business?' },
+  ],
+};
+</script>
+<script src="/tour.js"></script>
 </body></html>
