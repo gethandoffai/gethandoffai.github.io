@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Store Hunter</title>
+<meta property="og:title" content="Store Hunter demo · Handoff">
+<meta property="og:description" content="Find the stores that fit your product, with the pitch already written. Demo built on sample data.">
+<meta property="og:url" content="https://gethandoff.net/stores/">
+<meta property="og:image" content="https://gethandoff.net/stores/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f1f3; --card:#fff; --ink:#1b1b1b; --mute:#6b7280; --line:#e6e7eb; --soft:#f6f7f9;
+  --blue:#4f7bff; --gold:#e8962e; --red:#e5484d; --green:#2f9e5b; --pink:#d6248f;
+  --display:'Outfit',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body)}
+button{font:inherit;cursor:pointer;color:inherit}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;align-items:center;gap:8px;font:700 18px var(--display);padding:4px 8px 18px;text-decoration:none;color:inherit}
+.logo img{width:26px;height:26px}
+nav a:not(.logo){display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+nav a.on{background:var(--soft);color:var(--ink);font-weight:600}
+nav a .ic{width:18px;text-align:center}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.me .av{width:32px;height:32px;border-radius:9px;background:#c9302c;color:#ffe2a8;display:grid;place-items:center;font:700 14px var(--display)}
+.me b{display:block;font-size:13px}.me small{color:var(--mute);font-size:11px}
+main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.top{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font:700 28px/1.1 var(--display);letter-spacing:-.01em}
+.top p{margin:4px 0 0;color:var(--mute)}
+.sample{margin-left:auto;font:600 11px var(--mono);color:var(--gold);border:1px solid #e8962e55;border-radius:99px;padding:6px 10px}
+.topcta{background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:99px;padding:7px 12px;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.kpi small{color:var(--mute);font-size:12px;font-weight:500}
+.kpi b{display:block;font:700 32px/1.1 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi span{font:500 12px var(--mono);color:var(--mute)}
+.kpi.hot{background:#1b1b1b;border-color:#1b1b1b;color:#fff}.kpi.hot small,.kpi.hot span{color:#ffe2a8}
+.kpi.good b{color:var(--green)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card h2{margin:0 0 2px;font:700 17px var(--display)}
+.card .sub{color:var(--mute);font-size:12px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.flash{box-shadow:0 0 0 3px var(--blue),0 8px 22px #0002!important}
+.grid50{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:4px;margin-bottom:12px}
+.t{aspect-ratio:1;border-radius:5px;background:#eef0f4;color:#9aa1ad;display:grid;place-items:center;font:600 10px var(--mono);transition:background .25s,color .25s}
+.t.on{background:#1b1b1b;color:#ffc24d}.t.new{background:var(--pink);color:#fff}.t.x{background:none}
+.pr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.pr .sc{width:34px;height:34px;border-radius:9px;background:#1b1b1b;color:#ffc24d;display:grid;place-items:center;font:700 14px var(--mono)}
+.pr b{display:block;font:600 13.5px var(--body)}.pr small{color:var(--mute);font-size:12px}
+.pr i{font:600 11px var(--mono);font-style:normal;color:var(--mute);text-transform:uppercase}
+.pr.sel{border-color:var(--blue);background:#eef2ff}.pr.ok i{color:var(--green)}
+.empty{border:1.5px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--mute)}
+.msg{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);font-size:13.5px;min-height:130px;white-space:pre-wrap;margin-bottom:10px}
+.msg .lab{display:block;font:600 11px var(--mono);text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;gap:4px;background:var(--soft);border-radius:10px;padding:3px;margin-bottom:10px;width:max-content;max-width:100%}
+.seg button{border:0;background:none;border-radius:8px;padding:6px 10px;font-weight:600;font-size:12.5px;color:var(--mute)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0002}
+.fu{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 2px;font-size:13px}
+.fu:last-child{border-bottom:0}.fu span{min-width:0}.fu b{display:block}.fu small{color:var(--mute);font-size:12px}
+.fu button{white-space:nowrap;flex:none}
+.moves{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.mv{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
+.mv .n{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 14px var(--display);flex:none}
+.mv h3{margin:0;font:700 15px var(--display)}.mv p{margin:0;color:#3d434d;font-size:13px}
+.rv{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;font-size:13.5px}
+.rv .st{color:var(--gold);letter-spacing:1px}.rv small{color:var(--mute)}
+.cta{background:#1b1b1b;color:#fff;border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;font:700 20px var(--display)}.cta p{margin:4px 0 0;color:#c9cdd6;font-size:13px}
+.cta a{margin-left:auto;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:12px;padding:12px 16px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:500;box-shadow:0 10px 30px #0003;z-index:9;max-width:calc(100vw - 32px)}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .logo{padding:4px 12px 4px 0}
+  nav a:not(.logo){white-space:nowrap}
+  .me{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .sample{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <a class="logo" href="/"><img src="mark.png" alt="">Handoff</a>
+    <a href="#top" class="on"><span class="ic">◎</span>Overview</a>
+    <a href="#mapc"><span class="ic">▦</span>States</a>
+    <a href="#ranked"><span class="ic">★</span>Best fits</a>
+    <a href="#detail"><span class="ic">✎</span>Pitch</a>
+    <a href="#fuc"><span class="ic">↻</span>Follow ups</a>
+    <a href="#reviews"><span class="ic">☆</span>Reviews</a>
+    <a href="#brief"><span class="ic">✦</span>Monday brief</a>
+    <div class="me"><div class="av">L</div><div><b>Little Fire</b><small>Sample brand</small></div></div>
+  </nav>
+  <main>
+    <div class="top" id="top">
+      <div><h1>Your next stores.</h1><p>Store Hunter · Sample brand: Little Fire Hot Sauce</p></div>
+      <span class="sample">DEMO · SAMPLE DATA</span>
+      <a class="topcta" href="/get/?from=stores">Get one built</a>
+    </div>
+    <div class="kpis" id="kpis">
+      <div class="kpi hot"><small>Stores carrying you</small><b>12</b><span>across 3 states</span></div>
+      <div class="kpi"><small>Stores found</small><b id="vFound">0</b><span>that fit your product</span></div>
+      <div class="kpi good"><small>Pitches ready</small><b id="vReady">0</b><span>to review</span></div>
+      <div class="kpi"><small>Approved</small><b id="vOk">0</b><span>this week</span></div>
+    </div>
+    <div class="grid2">
+      <section class="card" id="mapc"><h2>Where you are, and where you're not</h2><div class="sub">Dark means you're on the shelf. Pink means a target this week.</div><div class="grid50" id="grid"></div><button class="btn pri" id="findBtn">Find my stores</button></section>
+      <section class="card" id="ranked"><h2>Best fits first</h2><div class="sub">Ranked by what they already sell and who shops there. Tap one to read its pitch.</div><div id="list"></div></section>
+    </div>
+    <section class="card" id="detail"><h2 id="dName"></h2><div class="sub" id="dSub"></div>
+      <div class="seg" id="voice"><button data-v="you" class="on">In your voice</button><button data-v="page">Style of a page you like</button></div>
+      <div class="msg" id="mCap"></div>
+      <div class="row"><button class="btn pri" id="apBtn">Approve</button><button class="btn" id="chBtn">Change it</button></div></section>
+    <div class="grid2">
+      <section class="card" id="fuc"><h2>Follow ups and reorders</h2><div class="sub">Sample stores. Nothing is sent until you tap.</div><div id="fu"></div></section>
+      <section class="card" id="reviews"><h2>Reviews, handled too</h2><div class="sub">Comes with every tool we build. The reply is already written.</div>
+        <div class="rv"><div class="st">★★☆☆☆</div><b>Bottle leaked in shipping.</b> <small>Sample review · Priya K.</small></div>
+        <div class="msg" id="rvMsg" style="min-height:90px"><span class="lab">Reply, in your voice</span>Priya, that's on us and we're sorry. A new bottle ships today at no charge, and we've changed how we pack them. Thanks for telling us.</div>
+        <button class="btn pri" id="rvBtn">Approve reply</button></section>
+    </div>
+    <section class="card" id="brief"><h2>Monday brief</h2><div class="sub">Who to call first, and what changed. Sample data.</div><div class="moves" id="moves"></div></section>
+    <section class="cta" id="ctaBox"><div><h2>Want this for your product?</h2><p>We build it around your product, your numbers and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=stores">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const ROWS=[['AK',,,,,,,,,,'ME'],[,,,,,'WI',,,,'VT','NH'],['WA','ID','MT','ND','MN','IL','MI',,'NY','MA',],['OR','NV','WY','SD','IA','IN','OH','PA','NJ','CT','RI'],['CA','UT','CO','NE','MO','KY','WV','VA','MD','DE',],[,'AZ','NM','KS','AR','TN','NC','SC',,,],[,,,'OK','LA','MS','AL','GA',,,],['HI',,,'TX',,,,,'FL',,]];
+const ON=new Set(['CA','NV','OR']), NEW=['AZ','CO','TX'];
+const P=[
+ ['98','Greenleaf Market','Phoenix, AZ · Local grocer','Dana','Greenleaf carries a lot of local makers, and nobody on your shelf has a sauce like ours yet.'],
+ ['95','Mesa Street Provisions','Denver, CO · Specialty foods','Tom','Your hot sauce shelf is mostly national brands, and your customers come in looking for something small batch.'],
+ ['93','Harbor Pantry','Austin, TX · Gourmet shop','Ana','Austin takes hot sauce seriously, and your gift section would be a good home for ours.'],
+ ['90','The Corner Larder','Tucson, AZ · Specialty foods','Ruth','You already feature makers from the Southwest, and we would fit right next to them.'],
+ ['88','Red River Grocers','Dallas, TX · Local grocer','Luis','Your local section is growing, and we can ship by the case with no minimum on the first order.'],
+ ['84','Fig and Salt','Boulder, CO · Gift shop','Maya','Our gift pack would sit well with your food gifts, especially heading into the holidays.'],
+];
+const FU=[['Harbor Pantry','Pitch sent 4 days ago','Send follow up','Follow up sent to Harbor Pantry.'],['Mesa Street Provisions','Asked for pricing','Send pricing','Wholesale sheet sent to Mesa Street.'],['Bay Street Market','Last order 62 days ago · due to reorder','Send reorder','Reorder note sent to Bay Street Market.'],['Oak and Vine','Sold through 24 bottles · due to reorder','Send reorder','Reorder note sent to Oak and Vine.']];
+const MOVES=[['#d6248f','Call Greenleaf Market first','Best fit this week, and close to your strongest store.'],['#1fa7b8','A competitor dropped its price','A rival sauce went down $1 a bottle this week. Your small batch story is still the answer.'],['#e8962e','Reorders are due','Two stores are about to run out. Both notes are drafted.']];
+const S={found:false,sel:0,voice:'you',ok:{},fu:{},rv:false};
+let tT=0;
+const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tT);tT=setTimeout(()=>t.hidden=true,2600);};
+const pitch=(p,v)=>v==='you'
+ ?`Hi ${p[3]}, I'm with Little Fire Hot Sauce. We make small batch hot sauce, and we're on the shelf in 12 stores across 3 states. ${p[4]} Can I send you a sample case and our wholesale sheet?`
+ :`${p[3]}, quick one. Small batch hot sauce. 12 stores. 3 states. Zero complaints about the heat.\n\n${p[4]}\n\nWant a sample case? I'll send it this week.`;
+$('#grid').innerHTML=ROWS.flatMap(r=>Array.from({length:11},(_,i)=>r[i]?`<div class="t ${ON.has(r[i])?'on':''}" id="s${r[i]}">${r[i]}</div>`:'<div class="t x"></div>')).join('');
+$('#moves').innerHTML=MOVES.map(([c,h,p],i)=>`<div class="mv" id="m${i}" style="--c:${c}"><div class="n">${i+1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+function render(){
+  const n=Object.keys(S.ok).length;
+  $('#vFound').textContent=S.found?480:0; $('#vReady').textContent=S.found?6-n:0; $('#vOk').textContent=n;
+  NEW.forEach(x=>$('#s'+x).classList.toggle('new',S.found));
+  const f=$('#findBtn'); f.className='btn '+(S.found?'ok':'pri'); f.textContent=S.found?'480 stores found ✓':'Find my stores';
+  $('#list').innerHTML=S.found?P.map((p,i)=>`<button class="pr ${i===S.sel?'sel':''} ${S.ok[i]?'ok':''}" data-p="${i}"><div class="sc">${p[0]}</div><div><b>${p[1]}</b><small>${p[2]}</small></div><i>${S.ok[i]?'Approved':'Pitch ready'}</i></button>`).join(''):'<div class="empty">Tap <b>Find my stores</b> and your best fits land here.</div>';
+  const p=P[S.sel]; $('#dName').textContent='Pitch · '+p[1]; $('#dSub').textContent='Sample store · '+p[2].split(' · ')[0]+' · Buyer: '+p[3];
+  $('#mCap').innerHTML=S.found?`<span class="lab">${S.voice==='you'?'Written in your voice':'In the style of a page you like'}</span>${pitch(p,S.voice)}`:'<span class="lab">Pitch</span>Find your stores first, and the pitch to each buyer is written here.';
+  document.querySelectorAll('#voice button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.voice));
+  const a=$('#apBtn'); a.disabled=!S.found; a.className='btn '+(S.ok[S.sel]?'ok':'pri'); a.textContent=S.ok[S.sel]?'Approved ✓':'Approve';
+  $('#fu').innerHTML=FU.map(([w,d,l],i)=>`<div class="fu" id="f${i}"><span><b>${w}</b><small>${d}</small></span><button class="btn ${S.fu[i]?'ok':''}" data-f="${i}">${S.fu[i]?'Done ✓':l}</button></div>`).join('');
+  const r=$('#rvBtn'); r.className='btn '+(S.rv?'ok':'pri'); r.textContent=S.rv?'Reply approved ✓':'Approve reply';
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#findBtn')&&!S.found){S.found=true;render();toast('480 stores fit your product. Your best 6 are ready.');return;}
+  const p=e.target.closest('[data-p]'); if(p){S.sel=+p.dataset.p;render();if(innerWidth<=900&&!document.body.classList.contains('hx-on'))$('#detail').scrollIntoView({behavior:'smooth',block:'start'});return;}
+  const v=e.target.closest('[data-v]'); if(v){S.voice=v.dataset.v;render();return;}
+  if(e.target.closest('#apBtn')&&S.found){S.ok[S.sel]=true;render();toast(`Pitch to ${P[S.sel][1]} approved. Follow ups are tracked from here.`);return;}
+  if(e.target.closest('#chBtn')){toast('In your real one, tell it what to change and it rewrites the pitch.');return;}
+  const f=e.target.closest('[data-f]'); if(f){const i=+f.dataset.f;S.fu[i]=true;render();toast(FU[i][3]);return;}
+  if(e.target.closest('#rvBtn')){S.rv=true;render();toast('Reply approved. This is sample data, so nothing was sent.');}
+});
+render();
+window.__stores=S;
+})();
+</script>
+<script>
+window.HANDOFF_DEMO = {
+  id: 'stores',
+  bands: [['#detail', 'This is a sample brand. Yours would use your product, your numbers and your voice.']],
+  steps: [
+    { el: '#kpis', title: 'You make something great', body: 'This sample hot sauce is in 12 stores. Thousands of others have never heard of it. Here is what changes that.' },
+    { el: '#findBtn', wait: '#findBtn', waitMs: 900, title: 'One button', body: 'It finds the stores that fit your product, state by state. Tap <b>Find my stores</b>.' },
+    { el: '#ranked', title: 'Best fits first', body: 'Every store is ranked, so you know who to go after. Tap any one to see its pitch.' },
+    { el: '#apBtn', wait: '#apBtn', waitMs: 800, title: 'You\'re the CEO', body: 'The pitch is written in your voice, or the style of a page you like. Change what you want, then tap <b>Approve</b>.' },
+    { el: '#fuc', title: 'Nothing slips', body: 'It tracks every follow up and flags the stores due to reorder. Review replies come with it too.' },
+    { el: '#brief', title: 'Every Monday', body: 'It tells you who to call first and what your competitors changed. Want this built for your product?' },
+  ],
+};
+</script>
+<script src="/tour.js"></script>
+</body></html>
