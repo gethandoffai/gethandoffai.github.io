@@ -5,7 +5,7 @@
 (() => {
 const D = window.HANDOFF_DEMO;
 if (!D) return;
-const GET = `/get/?from=${D.id}`;
+const GET = `/get/?from=${D.from || D.id}`;
 const BOOK = 'https://calendar.app.google/x9bPju4vi61FBud66';
 const SEEN = `handoff-tour-${D.id}`;
 const remember = () => { try { localStorage.setItem(SEEN, '1'); } catch (e) {} };
