@@ -267,6 +267,15 @@ window.DASH = {
 <script>
 window.HANDOFF_DEMO = {
   id: 'chair',
+  ask: {
+    title: 'What\'s your salon called?',
+    body: 'We\'ll build this with your real services and prices and send it to you to try. Free. No call needed.',
+    ph: 'Your salon\'s name', btn: 'Build mine →', toBtn: 'Build mine',
+    note: '<a class="hx-prices" href="/get/?from=chair">Not a salon, or want prices first? See options</a>',
+    then: 'Got it. Where do we send it?', thenBody: 'Whatever you actually check: Instagram, phone or email.', thenPh: '@yoursalon, phone or email', thenBtn: 'Send it to me',
+    thanksTitle: 'We\'re on it.', thanks: 'We\'ll send your {name} demo there. The schedule and clients stay sample data until you say go.',
+    business: 'Hair salon', task: 'Personal demo from /chair',
+  },
   bands: [['#detail', 'This is a sample salon. Yours would read your real schedule and clients.']],
   steps: [
     { el: '#kpis', title: 'What tomorrow is missing', body: 'Every empty chair tomorrow, added up the moment you open it. This one is a sample salon.' },

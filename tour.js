@@ -1,6 +1,7 @@
 // Guided steps and buy buttons for the demo pages.
 // A demo sets window.HANDOFF_DEMO = { id, bar, bands, steps } and loads this file.
 // Step: { el, title, body, wait, enter }. el is highlighted, wait is what they should tap, enter runs on arrival.
+// Optional D.ask: buy buttons open one short question instead of going to /get. See ask() below.
 (() => {
 const D = window.HANDOFF_DEMO;
 if (!D) return;
@@ -10,13 +11,14 @@ const SEEN = `handoff-tour-${D.id}`;
 const remember = () => { try { localStorage.setItem(SEEN, '1'); } catch (e) {} };
 const seen = () => { try { return localStorage.getItem(SEEN) === '1'; } catch (e) { return false; } };
 
-// Step counts for the funnel, same beacon as the get page: demo:open, demo:3, demo:close, demo:cta, demo:book. No personal details.
+// Step counts for the funnel, same beacon as the get page: demo:open, demo:3, demo:close, demo:cta, demo:book, demo:ask, demo:capture, demo:contact, demo:prices. No personal details.
 const FUNNEL = 'https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec';
 const visit = Math.random().toString(36).slice(2, 10);
 const source = new URLSearchParams(location.search).get('utm_content') || 'direct';
+const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 const logged = new Set();
 const log = name => {
-  if (logged.has(name) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  if (logged.has(name) || LOCAL) return;
   logged.add(name);
   try { navigator.sendBeacon(FUNNEL, JSON.stringify({ event: 'step', visit, step: `${D.id}:${name}`, source })); } catch (e) {}
 };
@@ -53,7 +55,14 @@ nav a.hx-navget{justify-content:center;background:#4f7bff;color:#fff;font-weight
 .cta .hx-acts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .cta .hx-acts a{margin-left:0}
 .cta .hx-acts a.hx-book{background:#ffffff1c}
+#hx-coach form{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+#hx-coach input{width:100%;font:16px 'IBM Plex Sans',system-ui,sans-serif;padding:12px 14px;border-radius:10px;border:1px solid #ffffff33;background:#ffffff14;color:#fff}
+#hx-coach input::placeholder{color:#9aa1ad}
+#hx-coach form .hx-go{margin:0;padding:13px 14px}
+#hx-coach .hx-note{font-size:12.5px;color:#9aa1ad;margin-top:10px}
+#hx-coach .hx-note a{color:#c9cdd6}
 @media (max-width:900px){
+  #hx-coach:focus-within{top:calc(12px + env(safe-area-inset-top,0px));bottom:auto}
   #hx-coach{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));width:auto;padding:14px 16px}
   #hx-coach h3{font-size:17px}
   #hx-coach p{font-size:13.5px}
@@ -135,7 +144,7 @@ function show(i){
   coach.innerHTML = `<div class="hx-top"><span class="hx-n">Step ${i + 1} of ${D.steps.length}</span><button class="hx-x" aria-label="Close the steps">×</button></div>
     <div class="hx-bar"><i style="width:${(i + 1) / D.steps.length * 100}%"></i></div>
     <h3>${s.title}</h3><p>${s.body}</p>
-    <div class="hx-act">${i ? '<button class="hx-back">Back</button>' : ''}${last ? `<a class="hx-go" href="${GET}">Get one built →</a>` : `<button class="hx-go hx-next">${i ? 'Next' : 'Show me'} →</button>`}</div>
+    <div class="hx-act">${i ? '<button class="hx-back">Back</button>' : ''}${last ? (D.ask ? `<button class="hx-go hx-toask">${D.ask.toBtn || 'Get one built'} →</button>` : `<a class="hx-go" href="${GET}">Get one built →</a>`) : `<button class="hx-go hx-next">${i ? 'Next' : 'Show me'} →</button>`}</div>
     ${last ? '<button class="hx-more">Keep clicking around</button>' : ''}`;
   coach.hidden = spot.hidden = false;
   bar.hidden = true;
@@ -145,6 +154,47 @@ function show(i){
   cancelAnimationFrame(loop);
   place();
 }
+
+// The ask: one question, saved the moment it's answered. Contact comes second and is optional.
+// D.ask = { title, body, ph, btn, known, then, thenBody, thenPh, thenBtn, thanks, note, task, business }. known skips straight to contact.
+let askName = '';
+const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+function saveLead(contact){
+  if (LOCAL) return;
+  try { navigator.sendBeacon(FUNNEL, JSON.stringify({ name: askName, company: askName, email: contact || 'not given yet', business: D.ask.business || '', task: D.ask.task || `Personal demo, asked from ${D.id}`, source })); } catch (e) {}
+}
+function askView(title, body, form, note){
+  coach.innerHTML = `<div class="hx-top"><span class="hx-n">Your turn</span><button class="hx-x" aria-label="Close">×</button></div><h3>${title}</h3><p>${body}</p>${form}${note ? `<p class="hx-note">${note}</p>` : ''}`;
+}
+function ask(){
+  const A = D.ask;
+  clearTimeout(waitT);
+  clearPulse();
+  cancelAnimationFrame(loop);
+  at = -1;
+  spot.hidden = true;
+  bar.hidden = true;
+  document.body.classList.add('hx-on');
+  coach.hidden = false;
+  log('ask');
+  remember();
+  if (A.known) { askName = A.known; return askContact(); }
+  askView(A.title, A.body, `<form data-hx="name"><input name="v" required minlength="2" maxlength="80" autocomplete="organization" aria-label="${esc(A.ph)}" placeholder="${esc(A.ph)}"><button class="hx-go">${A.btn}</button></form>`, A.note);
+}
+function askContact(){
+  const A = D.ask;
+  askView(A.then, A.thenBody, `<form data-hx="contact"><input name="v" required minlength="3" maxlength="80" autocomplete="off" aria-label="${esc(A.thenPh)}" placeholder="${esc(A.thenPh)}"><button class="hx-go">${A.thenBtn}</button></form>`, A.known ? A.note : 'Only used to send you your demo.');
+}
+document.addEventListener('submit', e => {
+  const f = e.target.closest('#hx-coach form');
+  if (!f) return;
+  e.preventDefault();
+  const v = f.elements.v.value.trim();
+  if (f.dataset.hx === 'name') { askName = v; saveLead(); log('capture'); return askContact(); }
+  saveLead(v);
+  log('contact');
+  askView(D.ask.thanksTitle || 'Got it.', D.ask.thanks.replace('{name}', esc(askName)), '');
+});
 
 function end(){
   clearTimeout(waitT);
@@ -159,7 +209,10 @@ function end(){
 }
 
 document.addEventListener('click', e => {
-  if (e.target.closest('a[href^="/get/"]')) log('cta');
+  const get = e.target.closest('a[href^="/get/"]');
+  if (get && get.matches('.hx-prices')) log('prices');
+  else if (get) { log('cta'); if (D.ask) { e.preventDefault(); return ask(); } }
+  if (e.target.closest('.hx-toask')) { log('cta'); return ask(); }
   if (e.target.closest(`a[href="${BOOK}"]`)) log('book');
   if (e.target.closest('.hx-re')) return show(0);
   if (e.target.closest('.hx-x') || e.target.closest('.hx-more')) return end();
