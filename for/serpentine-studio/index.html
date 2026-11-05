@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Demo for Serpentine Studio</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f1f3; --card:#fff; --ink:#1b1b1b; --mute:#6b7280; --line:#e6e7eb; --soft:#f6f7f9;
+  --blue:#4f7bff; --gold:#e8962e; --red:#e5484d; --green:#2f9e5b; --plum:#7a2e5d;
+  --display:'Outfit',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body)}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;align-items:center;gap:8px;font:700 18px var(--display);padding:4px 8px 18px;text-decoration:none;color:inherit}
+.logo img{width:26px;height:26px}
+nav a:not(.logo){display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+nav a.on{background:var(--soft);color:var(--ink);font-weight:600}
+nav a .ic{width:18px;text-align:center}
+nav a .badge{margin-left:auto;background:var(--red);color:#fff;font:600 11px var(--mono);border-radius:99px;padding:1px 7px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.me .av{width:32px;height:32px;border-radius:9px;background:var(--plum);color:#ffe3f1;display:grid;place-items:center;font:700 14px var(--display)}
+.me b{display:block;font-size:13px}.me small{color:var(--mute);font-size:11px}
+main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.top{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font:700 28px/1.1 var(--display);letter-spacing:-.01em}
+.top p{margin:4px 0 0;color:var(--mute)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font:500 12px var(--mono);color:var(--mute)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #2f9e5b22}
+.sample{font:600 11px var(--mono);color:var(--gold);border:1px solid #e8962e55;border-radius:99px;padding:6px 10px}
+.topcta{background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:99px;padding:7px 12px;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi small{color:var(--mute);font-size:12px;font-weight:500}
+.kpi b{display:block;font:700 32px/1.1 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi span{font:500 12px var(--mono);color:var(--mute)}
+.kpi.hot{background:var(--red);border-color:var(--red);color:#fff}
+.kpi.hot small,.kpi.hot span{color:#ffe1e2}
+.kpi.good b{color:var(--green)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card h2{margin:0 0 2px;font:700 17px var(--display)}
+.card .sub{color:var(--mute);font-size:12px;margin-bottom:12px}
+.sched{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.col{background:var(--soft);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.col h3{margin:0;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.sl{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:3px solid #c7b5c0;border-radius:10px;padding:8px 10px;display:block;min-height:60px}
+.sl b{display:block;font:600 12.5px/1.2 var(--body)}
+.sl small{color:var(--mute);font-size:11px;display:block;margin-top:2px}
+.sl .t{font:600 11px var(--mono);color:var(--mute);display:block}
+.sl.gap{background:#fff0f0;border:1.5px dashed var(--red);border-left:3px solid var(--red);transition:background .25s}
+.sl.gap b{color:var(--red)}
+.sl.gap.quiet{background:#fff;border:1px solid var(--line);border-left:3px solid #c7b5c0}
+.sl.gap.quiet b,.sl.gap.quiet .amt{visibility:hidden}
+.sl.gap .amt{font:600 14px var(--mono);color:var(--red);display:block}
+.sl.done{background:#eaf7ef;border:1.5px solid var(--green);border-left:3px solid var(--green)}
+.sl.done b,.sl.done .amt{color:var(--green)}
+.flash{box-shadow:0 0 0 3px var(--blue),0 8px 22px #0002!important}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.dt-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.dt-h h2{margin:0;font:800 22px/1.1 var(--display)}
+.dt-h .big{margin-left:auto;text-align:right;font:700 28px/1 var(--display)}
+.dt-h .big small{display:block;font:600 12px var(--mono);color:var(--red);margin-top:4px}
+.who{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.who li{display:flex;gap:10px;align-items:center;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.who li i{width:30px;height:30px;border-radius:9px;background:var(--plum);color:#fff;display:grid;place-items:center;font:700 13px var(--display);font-style:normal;flex:none}
+.who li b{display:block}.who li small{color:var(--mute);font-size:11.5px}
+.who li.pick{border-color:var(--blue);background:#eef2ff}
+.msg{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);font-size:13px;min-height:112px;white-space:pre-wrap;margin-bottom:8px}
+.msg .lab{display:block;font:600 11px var(--mono);text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.caret{display:inline-block;width:2px;height:14px;background:var(--blue);vertical-align:-2px;margin-left:1px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.auto{margin-bottom:8px;font-size:13px;font-weight:500}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.storyw{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+.story{position:relative;width:190px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#2a1a24 center/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;flex:none}
+.story small{font:600 10px var(--mono);letter-spacing:.08em}
+.story strong{font:800 24px/1.02 var(--display);text-transform:uppercase}
+.story strong em{font-style:normal;color:#ffc2de}
+.story span{font-size:11.5px;margin-top:6px}
+.storyt{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.storyt p{margin:0;color:#3d434d;font-size:13px}
+.moves{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.mv{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
+.mv .n{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 14px var(--display);flex:none}
+.mv h3{margin:0;font:700 15px var(--display)}
+.mv p{margin:0;color:#3d434d;font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:8px;overflow-x:auto}
+.wd b{display:flex;justify-content:space-between;font:600 11px var(--mono);color:var(--mute);text-transform:uppercase;margin-bottom:6px}
+.wc{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.wc .pv{position:relative;aspect-ratio:4/5;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;color:#fff}
+.wc .pv small{font:600 8.5px var(--mono);opacity:.85}
+.wc .pv strong{font:800 13px/1.05 var(--display);text-transform:uppercase}
+.wc .play{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#000000a0;display:grid;place-items:center;font-size:10px;color:#fff}
+.wc .mt{padding:6px 8px;font-size:10.5px;color:var(--mute)}
+.wslot{border:1.5px dashed var(--line);border-radius:10px;padding:12px 8px;font-size:11px;color:var(--mute);text-align:center}
+.cta{background:#1b1b1b;color:#fff;border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;font:700 20px var(--display)}.cta p{margin:4px 0 0;color:#c9cdd6;font-size:13px}
+.cta a{margin-left:auto;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:12px;padding:12px 16px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:500;box-shadow:0 10px 30px #0003;z-index:9}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .logo{padding:4px 12px 4px 0}
+  nav a:not(.logo){white-space:nowrap}
+  .me{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .sched{grid-template-columns:repeat(4,minmax(150px,1fr));overflow-x:auto}
+  .pill{margin-left:0}
+}
+.forbar{background:#eef2ff;border:1px solid #d6e0ff;border-radius:14px;padding:12px 14px;font-size:13px}
+.sched{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:900px){.sched{grid-template-columns:repeat(2,minmax(150px,1fr))}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <a class="logo" href="/"><img src="/chair/mark.png" alt="">Handoff</a>
+    <a href="#top" class="on"><span class="ic">◎</span>Overview</a>
+    <a href="#board"><span class="ic">▤</span>Tomorrow</a>
+    <a href="#detail"><span class="ic">✉</span>Fill a gap<span class="badge">6</span></a>
+    <a href="#storyc"><span class="ic">▶</span>Story post</a>
+    <a href="#brief"><span class="ic">✦</span>Monday brief</a>
+        <a href="/" data-back><span class="ic">‹</span>About Handoff</a>
+    <div class="me"><div class="av">S</div><div><b>Serpentine Studio</b><small>Private demo</small></div></div>
+  </nav>
+  <main>
+    <div class="top" id="top">
+      <div><h1>Tomorrow has empty chairs.</h1><p>Empty Chair Filler · Serpentine Studio</p></div>
+      <span class="sample">DEMO · SAMPLE DATA</span>
+      <a class="topcta" href="/get/?from=chair">Get one built for your business</a>
+      <div class="pill" id="checked"><i></i>Sample schedule</div>
+    </div>
+    <div class="forbar" id="forbar">A private demo for <b>Serpentine Studio</b>. The services and prices and stylist names come from your public pages (checked Nov 5 2026). The schedule, clients and numbers are made-up sample data. Nothing here is connected to your salon.</div>
+    <div class="kpis" id="kpis">
+      <div class="kpi hot" id="kRisk"><small>Open tomorrow</small><b id="vRisk">$0</b><span>at your starting prices</span></div>
+      <div class="kpi"><small>Open spots</small><b id="vGaps">0</b><span>on the sample schedule</span></div>
+      <div class="kpi"><small>Sample waitlist</small><b id="vWait">0</b><span>plus clients due back</span></div>
+      <div class="kpi good"><small>Sample, filled this week</small><b id="vFill">$0</b><span>from gaps</span></div>
+    </div>
+    <section class="card" id="board">
+      <h2>Tomorrow's schedule</h2>
+      <div class="sub">Your services and prices on a sample schedule. Red means an empty chair. Tap one to see who could take it.</div>
+      <div class="sched" id="cols"></div>
+    </section>
+    <section class="card" id="detail"></section>
+    <div class="grid2">
+      <section class="card" id="storyc"><h2>Story post, ready for your OK</h2><div class="sub">Sample post, written from what's open on the sample schedule.</div>
+        <div class="storyw"><div class="story" id="story" style="background-image:linear-gradient(#3a2431,#14090f)"><small>SERPENTINE STUDIO</small><strong>Spots <em>open</em> tomorrow</strong><span>Tap to book. First come, first served.</span></div>
+        <div class="storyt"><p>A few chairs just opened up for tomorrow. Reply or tap the link and it's yours.</p><div class="row"><button class="btn pri" id="stBtn">Approve story</button></div></div></div>
+      </section>
+      <section class="card" id="brief"><h2>Monday brief</h2><div class="sub">A sample, based only on the sample schedule above.</div><div class="moves" id="moves"></div></section>
+    </div>
+    <section class="cta" id="ctaBox"><div><h2>Want this running at Serpentine Studio?</h2><p>We look at what your booking app allows and tune the texts to how you talk. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=chair">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const money = n => '$' + Math.round(n).toLocaleString();
+const COLS = [["Bianca", [["9:00", "Jordan L.", "Womans Haircut"], ["g1", "10:30", 70, "Blowdry and Style", false], ["12:30", "Sam R.", "Root Touch Up + Blowdry"], ["g2", "2:00", 160, "All Over Color", true], ["4:30", "Priya K.", "Mini Highlight"]]], ["Jessica", [["9:30", "Ana M.", "Womans Haircut"], ["11:00", "Lena W.", "Blowdry and Style"], ["g3", "1:00", 150, "Root Touch Up + Blowdry", false], ["3:00", "Becca T.", "All Over Color"], ["g4", "5:00", 145, "Mini Highlight", true]]]];
+const GAPS = {};
+COLS.forEach(([st, list]) => list.forEach(x => { if (x[0][0] === 'g') GAPS[x[0]] = { id:x[0], stylist:st, time:x[1], amt:x[2], svc:x[3], from:x[4] }; }));
+const CANDS = {"g1": [["A", "Alyssa M.", "On the sample waitlist"], ["K", "Kayla R.", "Sample client, due back after 9 weeks"]], "g2": [["D", "Dani F.", "Sample client, asked about afternoons"], ["H", "Hannah S.", "On the sample waitlist"]], "g3": [["R", "Rosa T.", "Sample client, comes in monthly"], ["M", "Megan P.", "On the sample waitlist"]], "g4": [["T", "Tess L.", "Sample client, due back after 10 weeks"], ["E", "Elle G.", "On the sample waitlist"]]};
+const TEXT = g => { const name = CANDS[g.id][0][1].split(' ')[0]; return `Hi ${name}, it's Serpentine Studio. A ${g.time} spot with ${g.stylist} just opened up tomorrow, and you were at the top of my list. Want it? Just reply yes and it's yours.`; };
+const MOVES = [
+  ['#e5484d','Fill afternoons first','On this sample schedule most gaps land after lunch. It would ask the waitlist first.'],
+  ['#e8962e','Text clients who are due back','On your real data it would find who is past their usual visit and write each text for your OK.'],
+  ['#2f9e5b','Post what is still open','It would turn the open spots into a story, ready for your OK.'],
+];
+const state = { sel:'g1', filled:{}, shown:null, sent:{} };
+
+function renderBoard(){
+  $('#cols').innerHTML = COLS.map(([st, list]) => `<div class="col"><h3>${st}</h3>${list.map(x => {
+    if (x[0][0] !== 'g') return `<div class="sl"><span class="t">${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>`;
+    const g = GAPS[x[0]], f = state.filled[g.id], quiet = state.shown && !state.shown.has(g.id);
+    return `<button class="sl gap ${f ? 'done' : ''} ${quiet ? 'quiet' : ''}" id="${g.id}" data-gap="${g.id}"><span class="t">${g.time}</span><b>${f ? 'Booked ✓' : 'Empty chair'}</b><span class="amt">${money(g.amt)}${g.from ? "+" : ""}</span></button>`;
+  }).join('')}</div>`).join('');
+}
+function totals(k = 1){
+  const all = Object.values(GAPS), open = all.filter(g => !state.filled[g.id]);
+  return { risk:open.reduce((t, g) => t + g.amt, 0) * k, gaps:Math.round(open.length * k), wait:Math.round(9 * k), fill:(640 + all.filter(g => state.filled[g.id]).reduce((t, g) => t + g.amt, 0)) * k };
+}
+function renderKpis(t){ $('#vRisk').textContent = money(t.risk); $('#vGaps').textContent = t.gaps; $('#vWait').textContent = t.wait; $('#vFill').textContent = money(t.fill); }
+function renderDetail(type1 = 1){
+  const g = GAPS[state.sel], f = state.filled[g.id], sent = state.sent[g.id], s = TEXT(g), n = Math.round(s.length * Math.min(1, Math.max(0, type1)));
+  $('#detail').innerHTML = `<div class="dt-h"><div><h2>${g.time} with ${g.stylist}</h2><div class="sub" style="margin:2px 0 0">${g.svc} · Tomorrow</div></div><div class="big">${money(g.amt)}${g.from ? "+" : ""}<small>${f ? 'Booked' : 'Empty chair'}</small></div></div>
+    <div class="grid2"><div><h3 style="margin:0 0 8px;font:600 13px var(--display)">Who could take it</h3><ul class="who" id="who">${CANDS[g.id].map((c, i) => `<li class="${i ? '' : 'pick'}" id="c${i}"><i>${c[0]}</i><div><b>${c[1]}</b><small>${c[2]}</small></div></li>`).join('')}</ul></div>
+    <div id="msgs"><div class="msg" id="mText"><span class="lab">Text · sample wording</span>${s.slice(0, n)}${type1 > 0 && type1 < 1 ? '<span class="caret"></span>' : ''}</div>
+      <div class="auto" id="autoRow">You OK every text before it goes out.</div>
+      <div class="row"><button class="btn ${sent ? 'ok' : 'pri'}" id="apBtn" data-ap="${g.id}">${sent ? 'Sent ✓' : 'Approve text'}</button><button class="btn" data-next="${g.id}">Ask someone else</button></div></div></div>`;
+}
+$('#moves').innerHTML = MOVES.map(([c, h, p], i) => `<div class="mv" id="m${i}" style="--c:${c}"><div class="n">${i + 1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+function all(){ renderBoard(); renderKpis(totals()); renderDetail(); }
+all();
+
+let tT;
+function toast(m){ const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tT); tT = setTimeout(() => t.hidden = true, 2600); }
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-gap]');
+  if (c) { state.sel = c.dataset.gap; renderDetail(); $('#detail').scrollIntoView({ block:'center' }); return; }
+  const a = e.target.closest('[data-ap]');
+  if (a) { const id = a.dataset.ap, name = CANDS[id][0][1]; if (state.sent[id]) return; state.sent[id] = true; renderDetail(); toast(`Sample text sent. ${name} says yes in a moment.`); setTimeout(() => { state.filled[id] = true; all(); toast(`${name} booked. ${money(GAPS[id].amt)} is back on the schedule.`); }, 1800); return; }
+  const n = e.target.closest('[data-next]');
+  if (n) { toast(`Next up on the list: ${CANDS[n.dataset.next][1][1]}.`); return; }
+  if (e.target.closest('#stBtn')) { const b = $('#stBtn'); b.className = 'btn ok'; b.textContent = 'Approved ✓'; toast('Story scheduled for tonight at 6 PM.'); }
+});
+
+// Everything the reel needs, set from one state object so any moment can be redrawn exactly.
+window.DASH = {
+  apply(s){
+    document.documentElement.style.scrollBehavior = 'auto';
+    state.sel = s.sel || 'g1';
+    state.filled = s.filled || {};
+    state.shown = s.shown ? new Set(s.shown) : null;
+    state.sent = s.sent || {};
+    renderBoard();
+    renderKpis(s.kpi != null ? totals(s.kpi) : totals());
+    if (s.risk != null) $('#vRisk').textContent = money(s.risk);
+    renderDetail(s.type1 == null ? 1 : s.type1);
+    document.querySelectorAll('.flash').forEach(el => el.classList.remove('flash'));
+    (s.flash || []).forEach(id => document.getElementById(id)?.classList.add('flash'));
+    const b = $('#stBtn'); b.className = 'btn ' + (s.story ? 'ok' : 'pri'); b.textContent = s.story ? 'Approved ✓' : 'Approve story';
+    document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (s.nav || 'top')));
+  },
+  rect(id){ const r = document.getElementById(id).getBoundingClientRect(); return { x:r.left, y:r.top, w:r.width, h:r.height }; },
+  risk(){ return totals().risk; },
+};
+})();
+</script>
+
+<script>
+window.HANDOFF_DEMO = {
+  id: "for-serpentine-studio",
+  from: 'chair',
+  ask: {
+    known: "Serpentine Studio", toBtn: 'I want this',
+    then: "Want this running at Serpentine Studio?", thenBody: 'Tell us where to reach you and we\'ll show you what it takes to connect your real schedule.', thenPh: 'Instagram, phone or email', thenBtn: 'Talk to me',
+    note: '<a class="hx-prices" href="/get/?from=chair">See what it costs</a> · <a href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a>',
+    thanksTitle: 'Got it.', thanks: 'We\'ll reach out there about {name}. Nothing runs on your real schedule until you say go.',
+    business: 'Hair salon', task: "Replied from personal demo, serpentine-studio",
+  },
+  bands: [['#detail', "Real services and prices from your public pages. Sample schedule and clients."]],
+  steps: [
+    { el: '#forbar', title: "Built for Serpentine Studio", body: 'Your services and prices, on a made-up schedule with made-up clients. Takes about a minute.' },
+    { el: '#board', title: 'Every gap, in red', body: 'What tomorrow could look like, with each empty chair and what it\'s worth at your prices.' },
+    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first. You OK it before it goes. Tap <b>Approve text</b>.' },
+    { el: '#board', title: 'The gap turns green', body: "Alyssa is a sample client, so they say yes a moment later. The chair is booked and what is open goes down. Want this for real?",
+      enter: () => { const b = document.getElementById('apBtn'); if (b && !b.classList.contains('ok')) b.click(); } },
+  ],
+};
+</script>
+<script src="/tour.js"></script>
+</body></html>
