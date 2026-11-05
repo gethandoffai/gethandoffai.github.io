@@ -78,7 +78,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
 .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
 .btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
 .btn.ok{background:var(--green);border-color:var(--green);color:#fff}
-.auto{margin-bottom:8px;font-size:13px;font-weight:500}
+.auto{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;font-weight:500}.sw{width:38px;height:22px;border-radius:12px;border:0;background:#c9ccd3;position:relative;padding:0;flex:none}.sw.on{background:var(--green)}.sw::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff}.sw.on::after{left:18px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .storyw{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
 .story{position:relative;width:190px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#2a1a24 center/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;flex:none}
@@ -177,10 +177,10 @@ const CANDS = {"g1": [["A", "Alyssa M.", "On the sample waitlist"], ["K", "Kayla
 const TEXT = g => { const name = CANDS[g.id][0][1].split(' ')[0]; return `Hi ${name}, it's Miwahairdesigns. A ${g.time} spot with ${g.stylist} just opened up tomorrow, and you were at the top of my list. Want it? Just reply yes and it's yours.`; };
 const MOVES = [
   ['#e5484d','Fill afternoons first','On this sample schedule most gaps land after lunch. It would ask the waitlist first.'],
-  ['#e8962e','Text clients who are due back','On your real data it would find who is past their usual visit and write each text for your OK.'],
+  ['#e8962e','Text clients who are due back','On your real data it would find who is past their usual visit and write each text, and you decide which ones need your OK.'],
   ['#2f9e5b','Post what is still open','It would turn the open spots into a story, ready for your OK.'],
 ];
-const state = { sel:'g1', filled:{}, shown:null, sent:{} };
+const state = { sel:'g1', filled:{}, shown:null, sent:{}, auto:false };
 
 function renderBoard(){
   $('#cols').innerHTML = COLS.map(([st, list]) => `<div class="col"><h3>${st}</h3>${list.map(x => {
@@ -199,8 +199,8 @@ function renderDetail(type1 = 1){
   $('#detail').innerHTML = `<div class="dt-h"><div><h2>${g.time} with ${g.stylist}</h2><div class="sub" style="margin:2px 0 0">${g.svc} · Tomorrow</div></div><div class="big">${money(g.amt)}${g.from ? "+" : ""}<small>${f ? 'Booked' : 'Empty chair'}</small></div></div>
     <div class="grid2"><div><h3 style="margin:0 0 8px;font:600 13px var(--display)">Who could take it</h3><ul class="who" id="who">${CANDS[g.id].map((c, i) => `<li class="${i ? '' : 'pick'}" id="c${i}"><i>${c[0]}</i><div><b>${c[1]}</b><small>${c[2]}</small></div></li>`).join('')}</ul></div>
     <div id="msgs"><div class="msg" id="mText"><span class="lab">Text · sample wording</span>${s.slice(0, n)}${type1 > 0 && type1 < 1 ? '<span class="caret"></span>' : ''}</div>
-      <div class="auto" id="autoRow">You OK every text before it goes out.</div>
-      <div class="row"><button class="btn ${sent ? 'ok' : 'pri'}" id="apBtn" data-ap="${g.id}">${sent ? 'Sent ✓' : 'Approve text'}</button><button class="btn" data-next="${g.id}">Ask someone else</button></div></div></div>`;
+      <div class="auto" id="autoRow"><button class="sw ${state.auto ? 'on' : ''}" id="autoSw" data-auto aria-label="Let this kind of text go out on its own" aria-pressed="${state.auto}"></button><span>You decide which texts go out on their own and which wait for your OK. In this sample, this one ${state.auto ? 'goes out on its own' : 'waits for your OK'}.</span></div>
+      <div class="row"><button class="btn ${sent ? 'ok' : 'pri'}" id="apBtn" data-ap="${g.id}">${sent ? 'Sent ✓' : state.auto ? 'Send now' : 'Approve text'}</button><button class="btn" data-next="${g.id}">Ask someone else</button></div></div></div>`;
 }
 $('#moves').innerHTML = MOVES.map(([c, h, p], i) => `<div class="mv" id="m${i}" style="--c:${c}"><div class="n">${i + 1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
 function all(){ renderBoard(); renderKpis(totals()); renderDetail(); }
@@ -213,6 +213,7 @@ document.addEventListener('click', e => {
   if (c) { state.sel = c.dataset.gap; renderDetail(); $('#detail').scrollIntoView({ block:'center' }); return; }
   const a = e.target.closest('[data-ap]');
   if (a) { const id = a.dataset.ap, name = CANDS[id][0][1]; if (state.sent[id]) return; state.sent[id] = true; renderDetail(); toast(`Sample text sent. ${name} says yes in a moment.`); setTimeout(() => { state.filled[id] = true; all(); toast(`${name} booked. ${money(GAPS[id].amt)} is back on the schedule.`); }, 1800); return; }
+  if (e.target.closest('[data-auto]')) { state.auto = !state.auto; renderDetail(); return; }
   const n = e.target.closest('[data-next]');
   if (n) { toast(`Next up on the list: ${CANDS[n.dataset.next][1][1]}.`); return; }
   if (e.target.closest('#stBtn')) { const b = $('#stBtn'); b.className = 'btn ok'; b.textContent = 'Approved ✓'; toast('Story scheduled for tonight at 6 PM.'); }
@@ -249,14 +250,14 @@ window.HANDOFF_DEMO = {
     known: "Miwahairdesigns", toBtn: 'I want this',
     then: "Want this running at Miwahairdesigns?", thenBody: 'Tell us where to reach you and we\'ll show you what it takes to connect your real schedule.', thenPh: 'Instagram, phone or email', thenBtn: 'Talk to me',
     note: '<a class="hx-prices" href="/get/?from=chair">See what it costs</a> · <a href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a>',
-    thanksTitle: 'Got it.', thanks: 'We\'ll reach out there about {name}. Nothing runs on your real schedule until you say go.',
+    thanksTitle: 'Got it.', thanks: 'We\'ll reach out there about {name}. Nothing here is connected to your salon yet.',
     business: 'Hair salon', task: "Replied from personal demo, miwa-hair-designs",
   },
   bands: [['#detail', "Real services and prices from your public pages. Sample schedule and clients."]],
   steps: [
     { el: '#forbar', title: "Built for Miwahairdesigns", body: 'Your services and prices, on a made-up schedule with made-up clients. Takes about a minute.' },
     { el: '#board', title: 'Every gap, in red', body: 'What tomorrow could look like, with each empty chair and what it\'s worth at your prices.' },
-    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first. You OK it before it goes. Tap <b>Approve text</b>.' },
+    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first. You\'re the CEO, so you decide which texts go out on their own and which wait for your OK. Tap <b>Approve text</b>.' },
     { el: '#board', title: 'The gap turns green', body: "Alyssa is a sample client, so they say yes a moment later. The chair is booked and what is open goes down. Want this for real?",
       enter: () => { const b = document.getElementById('apBtn'); if (b && !b.classList.contains('ok')) b.click(); } },
   ],
