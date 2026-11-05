@@ -10,6 +10,18 @@ const SEEN = `handoff-tour-${D.id}`;
 const remember = () => { try { localStorage.setItem(SEEN, '1'); } catch (e) {} };
 const seen = () => { try { return localStorage.getItem(SEEN) === '1'; } catch (e) { return false; } };
 
+// Step counts for the funnel, same beacon as the get page: demo:open, demo:3, demo:close, demo:cta, demo:book. No personal details.
+const FUNNEL = 'https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec';
+const visit = Math.random().toString(36).slice(2, 10);
+const source = new URLSearchParams(location.search).get('utm_content') || 'direct';
+const logged = new Set();
+const log = name => {
+  if (logged.has(name) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  logged.add(name);
+  try { navigator.sendBeacon(FUNNEL, JSON.stringify({ event: 'step', visit, step: `${D.id}:${name}`, source })); } catch (e) {}
+};
+log('open');
+
 document.head.insertAdjacentHTML('beforeend', `<style>
 #hx-spot{position:fixed;z-index:50;pointer-events:none;border-radius:16px;box-shadow:0 0 0 3px #4f7bff,0 0 0 100vmax rgba(14,17,26,.42)}
 #hx-coach{position:fixed;z-index:60;right:24px;bottom:24px;width:340px;background:#1b1b1b;color:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 18px 50px #0006;font:14px/1.45 'IBM Plex Sans',system-ui,sans-serif}
@@ -117,6 +129,7 @@ function show(i){
   clearTimeout(waitT);
   clearPulse();
   at = i;
+  log(i + 1);
   const s = step(), last = i === D.steps.length - 1;
   if (s.enter) s.enter();
   coach.innerHTML = `<div class="hx-top"><span class="hx-n">Step ${i + 1} of ${D.steps.length}</span><button class="hx-x" aria-label="Close the steps">×</button></div>
@@ -142,9 +155,12 @@ function end(){
   bar.hidden = false;
   document.body.classList.remove('hx-on');
   remember();
+  log('close');
 }
 
 document.addEventListener('click', e => {
+  if (e.target.closest('a[href^="/get/"]')) log('cta');
+  if (e.target.closest(`a[href="${BOOK}"]`)) log('book');
   if (e.target.closest('.hx-re')) return show(0);
   if (e.target.closest('.hx-x') || e.target.closest('.hx-more')) return end();
   if (e.target.closest('.hx-next')) return show(at + 1);
