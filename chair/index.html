@@ -84,7 +84,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
 .btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
 .btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
 .btn.ok{background:var(--green);border-color:var(--green);color:#fff}
-.auto{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;font-weight:500}.sw{width:38px;height:22px;border-radius:12px;border:0;background:#c9ccd3;position:relative;padding:0;flex:none}.sw.on{background:var(--green)}.sw::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff}.sw.on::after{left:18px}
+.auto{margin-bottom:8px;font-size:13px;font-weight:500}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .storyw{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
 .story{position:relative;width:190px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#2a1a24 center/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;flex:none}
@@ -144,7 +144,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
       <div><h1>Tomorrow has empty chairs.</h1><p>Empty Chair Filler · Luna Hair Studio</p></div>
       <span class="sample">DEMO · SAMPLE DATA</span>
       <a class="topcta" href="/get/?from=chair">Get one built for your business</a>
-      <div class="pill" id="checked"><i></i>Schedule read today 6:00 AM</div>
+      <div class="pill" id="checked"><i></i>Sample schedule</div>
     </div>
     <div class="kpis" id="kpis">
       <div class="kpi hot" id="kRisk"><small>Open tomorrow</small><b id="vRisk">$0</b><span>in empty chair time</span></div>
@@ -154,14 +154,14 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
     </div>
     <section class="card" id="board">
       <h2>Tomorrow's schedule</h2>
-      <div class="sub">Read from your booking app. Red means an empty chair. Tap one to see who could take it.</div>
+      <div class="sub">Sample schedule. Red means an empty chair. Tap one to see who could take it.</div>
       <div class="sched" id="cols"></div>
     </section>
     <section class="card" id="detail"></section>
     <div class="grid2">
       <section class="card" id="storyc"><h2>Story post, ready for your OK</h2><div class="sub">Written from what's still open tomorrow.</div>
-        <div class="storyw"><div class="story" id="story" style="background-image:linear-gradient(#0000 35%,#000000c9),url(cal/wed.jpg)"><small>LUNA HAIR STUDIO</small><strong>2 spots <em>open</em> tomorrow</strong><span>Tap to book. First come, first served.</span></div>
-        <div class="storyt"><p>Two chairs just opened up for tomorrow. Reply or tap the link and it's yours.</p><div class="row"><button class="btn pri" id="stBtn">Approve story</button></div></div></div>
+        <div class="storyw"><div class="story" id="story" style="background-image:linear-gradient(#0000 35%,#000000c9),url(cal/wed.jpg)"><small>LUNA HAIR STUDIO</small><strong>Spots <em>open</em> tomorrow</strong><span>Tap to book. First come, first served.</span></div>
+        <div class="storyt"><p>A few chairs just opened up for tomorrow. Reply or tap the link and it's yours.</p><div class="row"><button class="btn pri" id="stBtn">Approve story</button></div></div></div>
       </section>
       <section class="card" id="brief"><h2>Monday brief</h2><div class="sub">What to do first this week.</div><div class="moves" id="moves"></div></section>
     </div>
@@ -170,7 +170,7 @@ main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-widt
       <div class="sub">Every Handoff tool lives next to your content calendar, so posts are planned in the same place.</div>
       <div class="week" id="week"></div>
     </section>
-    <section class="cta" id="ctaBox"><div><h2>Want this for your business?</h2><p>We build it around your booking app, your clients and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=chair">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
+    <section class="cta" id="ctaBox"><div><h2>Want this for your business?</h2><p>We build it around your services, your clients and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=chair">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
   </main>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -197,11 +197,11 @@ const CANDS = {
 const TEXT = g => { const name = CANDS[g.id][0][1].split(' ')[0]; return `Hi ${name}, it's Luna Hair Studio. A ${g.time} spot with ${g.stylist} just opened up tomorrow, and you were at the top of my list. Want it? Just reply yes and it's yours.`; };
 const MOVES = [
   ['#e5484d','Fill Tuesday afternoons first','Most of your gaps land between 1 and 4. Your waitlist is mostly morning people, so we ask them first.'],
-  ['#e8962e','Text 8 clients who are due back','They usually come in every 6 weeks and it has been 9. The texts are written and ready to go.'],
+  ['#e8962e','Text 8 clients who are due back','They usually come in every 6 weeks and it has been 9. The texts are written and waiting for your OK.'],
   ['#2f9e5b','Post before and afters on Thursday','Your last three got the most replies. Two are drafted for this week.'],
 ];
-const WEEK = [['Mon',2,'Fresh cut, fresh week','POST','10:00 AM'],['Tue',3,'Blowout in 30 seconds','REEL','11:00 AM'],['Wed',4,'2 spots open tomorrow','POST','9:00 AM'],['Thu',5,'Behind the chair at Luna','REEL','8:00 AM'],['Fri',6,'What to ask for at your cut','POST','10:00 AM'],['Sat',7,'Weekend waves, how we do it','POST','9:00 AM'],['Sun',8,null]];
-const state = { sel:'g1', filled:{}, shown:null, sent:{}, auto:true };
+const WEEK = [['Mon',2,'Fresh cut, fresh week','POST','10:00 AM'],['Tue',3,'Blowout in 30 seconds','REEL','11:00 AM'],['Wed',4,'Spots open tomorrow','POST','9:00 AM'],['Thu',5,'Behind the chair at Luna','REEL','8:00 AM'],['Fri',6,'What to ask for at your cut','POST','10:00 AM'],['Sat',7,'Weekend waves, how we do it','POST','9:00 AM'],['Sun',8,null]];
+const state = { sel:'g1', filled:{}, shown:null, sent:{} };
 
 function renderBoard(){
   $('#cols').innerHTML = COLS.map(([st, list]) => `<div class="col"><h3>${st}</h3>${list.map(x => {
@@ -220,8 +220,8 @@ function renderDetail(type1 = 1){
   $('#detail').innerHTML = `<div class="dt-h"><div><h2>${g.time} with ${g.stylist}</h2><div class="sub" style="margin:2px 0 0">${g.svc} · Tomorrow</div></div><div class="big">${money(g.amt)}<small>${f ? 'Booked' : 'Empty chair'}</small></div></div>
     <div class="grid2"><div><h3 style="margin:0 0 8px;font:600 13px var(--display)">Who could take it</h3><ul class="who" id="who">${CANDS[g.id].map((c, i) => `<li class="${i ? '' : 'pick'}" id="c${i}"><i>${c[0]}</i><div><b>${c[1]}</b><small>${c[2]}</small></div></li>`).join('')}</ul></div>
     <div id="msgs"><div class="msg" id="mText"><span class="lab">Text · in your voice</span>${s.slice(0, n)}${type1 > 0 && type1 < 1 ? '<span class="caret"></span>' : ''}</div>
-      <div class="auto" id="autoRow"><button class="sw ${state.auto ? 'on' : ''}" id="autoSw" data-auto aria-label="Auto-send texts"></button>${state.auto ? 'Auto-send is on. Texts go out on their own.' : 'Auto-send is off. You approve each text first.'}</div>
-      <div class="row"><button class="btn ${sent ? 'ok' : 'pri'}" id="apBtn" data-ap="${g.id}">${sent ? 'Sent ✓' : state.auto ? 'Send now' : 'Approve text'}</button><button class="btn" data-next="${g.id}">Ask someone else</button></div></div></div>`;
+      <div class="auto" id="autoRow">You OK every text before it goes out.</div>
+      <div class="row"><button class="btn ${sent ? 'ok' : 'pri'}" id="apBtn" data-ap="${g.id}">${sent ? 'Sent ✓' : 'Approve text'}</button><button class="btn" data-next="${g.id}">Ask someone else</button></div></div></div>`;
 }
 $('#moves').innerHTML = MOVES.map(([c, h, p], i) => `<div class="mv" id="m${i}" style="--c:${c}"><div class="n">${i + 1}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
 $('#week').innerHTML = WEEK.map(([d, n, h, k, t]) => `<div class="wd"><b>${d}<span>${n}</span></b>${h ? `<div class="wc"><div class="pv" style="background-image:linear-gradient(#0000 35%,#000000c4),url(cal/${d.toLowerCase()}.jpg)">${k === 'REEL' ? '<span class="play">▶</span>' : ''}<small>${k}</small><strong>${h}</strong></div><div class="mt">${t} · Scheduled</div></div>` : '<div class="wslot">Open</div>'}</div>`).join('');
@@ -234,8 +234,7 @@ document.addEventListener('click', e => {
   const c = e.target.closest('[data-gap]');
   if (c) { state.sel = c.dataset.gap; renderDetail(); $('#detail').scrollIntoView({ block:'center' }); return; }
   const a = e.target.closest('[data-ap]');
-  if (a) { const id = a.dataset.ap, name = CANDS[id][0][1]; if (state.sent[id]) return; state.sent[id] = true; renderDetail(); toast(`Text sent to ${name}. In this demo, they say yes a moment later.`); setTimeout(() => { state.filled[id] = true; all(); toast(`${name} booked. ${money(GAPS[id].amt)} is back on the schedule.`); }, 1800); return; }
-  if (e.target.closest('[data-auto]')) { state.auto = !state.auto; renderDetail(); return; }
+  if (a) { const id = a.dataset.ap, name = CANDS[id][0][1]; if (state.sent[id]) return; state.sent[id] = true; renderDetail(); toast(`Sample text sent. ${name} says yes in a moment.`); setTimeout(() => { state.filled[id] = true; all(); toast(`${name} booked. ${money(GAPS[id].amt)} is back on the schedule.`); }, 1800); return; }
   const n = e.target.closest('[data-next]');
   if (n) { toast(`Next up on the list: ${CANDS[n.dataset.next][1][1]}.`); return; }
   if (e.target.closest('#stBtn')) { const b = $('#stBtn'); b.className = 'btn ok'; b.textContent = 'Approved ✓'; toast('Story scheduled for tonight at 6 PM.'); }
@@ -276,11 +275,11 @@ window.HANDOFF_DEMO = {
     thanksTitle: 'We\'re on it.', thanks: 'We\'ll send your {name} demo there. The schedule and clients stay sample data until you say go.',
     business: 'Hair salon', task: 'Personal demo from /chair',
   },
-  bands: [['#detail', 'This is a sample salon. Yours would read your real schedule and clients.']],
+  bands: [['#detail', 'This is a sample salon. Yours would use your stylists and your services.']],
   steps: [
     { el: '#kpis', title: 'What tomorrow is missing', body: 'Every empty chair tomorrow, added up. This is a sample salon. Yours would show your stylists and your prices.' },
     { el: '#board', title: 'Every gap, in red', body: 'Your day at a glance, with each empty chair marked.' + (innerWidth <= 900 ? ' Swipe sideways for the other stylists.' : '') },
-    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first, in your voice. Tap <b>Send now</b>.' },
+    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first, in your voice. You OK it before it goes. Tap <b>Approve text</b>.' },
     { el: '#board', title: 'The gap turns green', body: 'In this demo they say yes a moment later. The chair is booked and what\'s open tomorrow goes down. Want this for your salon?',
       enter: () => { const b = document.getElementById('apBtn'); if (b && !b.classList.contains('ok')) b.click(); } },
   ],
