@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Business Radar</title>
+<meta property="og:title" content="Business Radar demo · Handoff">
+<meta property="og:description" content="Every business that started near you this year, from real public records. Sample client.">
+<meta property="og:url" content="https://gethandoff.net/radar/">
+<meta property="og:image" content="https://gethandoff.net/radar/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f1f3; --card:#fff; --ink:#1b1b1b; --mute:#6b7280; --line:#e6e7eb; --soft:#f6f7f9;
+  --blue:#4f7bff; --gold:#e8962e; --red:#e5484d; --green:#2f9e5b; --plum:#7a2e5d;
+  --display:'Outfit',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--body)}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;align-items:center;gap:8px;font:700 18px var(--display);padding:4px 8px 18px;text-decoration:none;color:inherit}
+.logo img{width:26px;height:26px}
+nav a:not(.logo){display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+nav a.on{background:var(--soft);color:var(--ink);font-weight:600}
+nav a .ic{width:18px;text-align:center}
+nav a .badge{margin-left:auto;background:var(--red);color:#fff;font:600 11px var(--mono);border-radius:99px;padding:1px 7px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.me .av{width:32px;height:32px;border-radius:9px;background:var(--plum);color:#ffe3f1;display:grid;place-items:center;font:700 14px var(--display)}
+.me b{display:block;font-size:13px}.me small{color:var(--mute);font-size:11px}
+main{padding:26px 30px 60px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.top{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font:700 28px/1.1 var(--display);letter-spacing:-.01em}
+.top p{margin:4px 0 0;color:var(--mute)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font:500 12px var(--mono);color:var(--mute)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #2f9e5b22}
+.sample{font:600 11px var(--mono);color:var(--gold);border:1px solid #e8962e55;border-radius:99px;padding:6px 10px}
+.topcta{background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:99px;padding:7px 12px;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi small{color:var(--mute);font-size:12px;font-weight:500}
+.kpi b{display:block;font:700 32px/1.1 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi span{font:500 12px var(--mono);color:var(--mute)}
+.kpi.hot{background:var(--red);border-color:var(--red);color:#fff}
+.kpi.hot small,.kpi.hot span{color:#ffe1e2}
+.kpi.good b{color:var(--green)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card h2{margin:0 0 2px;font:700 17px var(--display)}
+.card .sub{color:var(--mute);font-size:12px;margin-bottom:12px}
+.sched{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.col{background:var(--soft);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.col h3{margin:0;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.sl{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:3px solid #c7b5c0;border-radius:10px;padding:8px 10px;display:block;min-height:60px}
+.sl b{display:block;font:600 12.5px/1.2 var(--body)}
+.sl small{color:var(--mute);font-size:11px;display:block;margin-top:2px}
+.sl .t{font:600 11px var(--mono);color:var(--mute);display:block}
+.sl.gap{background:#fff0f0;border:1.5px dashed var(--red);border-left:3px solid var(--red);transition:background .25s}
+.sl.gap b{color:var(--red)}
+.sl.gap.quiet{background:#fff;border:1px solid var(--line);border-left:3px solid #c7b5c0}
+.sl.gap.quiet b,.sl.gap.quiet .amt{visibility:hidden}
+.sl.gap .amt{font:600 14px var(--mono);color:var(--red);display:block}
+.sl.done{background:#eaf7ef;border:1.5px solid var(--green);border-left:3px solid var(--green)}
+.sl.done b,.sl.done .amt{color:var(--green)}
+.flash{box-shadow:0 0 0 3px var(--blue),0 8px 22px #0002!important}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.dt-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.dt-h h2{margin:0;font:800 22px/1.1 var(--display)}
+.dt-h .big{margin-left:auto;text-align:right;font:700 28px/1 var(--display)}
+.dt-h .big small{display:block;font:600 12px var(--mono);color:var(--red);margin-top:4px}
+.who{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.who li{display:flex;gap:10px;align-items:center;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.who li i{width:30px;height:30px;border-radius:9px;background:var(--plum);color:#fff;display:grid;place-items:center;font:700 13px var(--display);font-style:normal;flex:none}
+.who li b{display:block}.who li small{color:var(--mute);font-size:11.5px}
+.who li.pick{border-color:var(--blue);background:#eef2ff}
+.msg{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);font-size:13px;min-height:112px;white-space:pre-wrap;margin-bottom:8px}
+.msg .lab{display:block;font:600 11px var(--mono);text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.caret{display:inline-block;width:2px;height:14px;background:var(--blue);vertical-align:-2px;margin-left:1px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.auto{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;font-weight:500}.sw{width:38px;height:22px;border-radius:12px;border:0;background:#c9ccd3;position:relative;padding:0;flex:none}.sw.on{background:var(--green)}.sw::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff}.sw.on::after{left:18px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.storyw{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+.story{position:relative;width:190px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#2a1a24 center/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;flex:none}
+.story small{font:600 10px var(--mono);letter-spacing:.08em}
+.story strong{font:800 24px/1.02 var(--display);text-transform:uppercase}
+.story strong em{font-style:normal;color:#ffc2de}
+.story span{font-size:11.5px;margin-top:6px}
+.storyt{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.storyt p{margin:0;color:#3d434d;font-size:13px}
+.moves{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.mv{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px}
+.mv .n{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 14px var(--display);flex:none}
+.mv h3{margin:0;font:700 15px var(--display)}
+.mv p{margin:0;color:#3d434d;font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:8px;overflow-x:auto}
+.wd b{display:flex;justify-content:space-between;font:600 11px var(--mono);color:var(--mute);text-transform:uppercase;margin-bottom:6px}
+.wc{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.wc .pv{position:relative;aspect-ratio:4/5;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;color:#fff}
+.wc .pv small{font:600 8.5px var(--mono);opacity:.85}
+.wc .pv strong{font:800 13px/1.05 var(--display);text-transform:uppercase}
+.wc .play{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#000000a0;display:grid;place-items:center;font-size:10px;color:#fff}
+.wc .mt{padding:6px 8px;font-size:10.5px;color:var(--mute)}
+.wslot{border:1.5px dashed var(--line);border-radius:10px;padding:12px 8px;font-size:11px;color:var(--mute);text-align:center}
+.cta{background:#1b1b1b;color:#fff;border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;font:700 20px var(--display)}.cta p{margin:4px 0 0;color:#c9cdd6;font-size:13px}
+.cta a{margin-left:auto;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;border-radius:12px;padding:12px 16px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:500;box-shadow:0 10px 30px #0003;z-index:9}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-right:0;border-bottom:1px solid var(--line)}
+  .logo{padding:4px 12px 4px 0}
+  nav a:not(.logo){white-space:nowrap}
+  .me{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .sched{grid-template-columns:repeat(4,minmax(150px,1fr));overflow-x:auto}
+  .pill{margin-left:0}
+}
+
+.list{display:flex;flex-direction:column;gap:8px}
+.biz{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;color:var(--ink)}
+.biz.on{border-color:var(--blue);background:#eef2ff}
+.biz .rank{font:700 15px var(--display);color:var(--mute);width:20px;flex:none}
+.biz b{display:block;font:600 14px/1.25 var(--body)}.biz small{color:var(--mute);font-size:12px}
+.rec{margin:0;padding:0;list-style:none;font-size:13px}.rec li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}.rec li span{color:var(--mute)}.rec li b{font-weight:500;text-align:right}
+.tabs{display:flex;gap:6px;margin-bottom:8px}.tabs .btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.bars{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;height:120px;align-items:end;margin:6px 0 12px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}.bar i{display:block;width:100%;background:var(--blue);border-radius:4px 4px 0 0;order:2}.bar i.thin{background:#c5d3ff}.bar b{font:600 10px var(--mono);order:1}.bar small{font-size:10px;color:var(--mute);order:3}
+.lim{margin:0;padding-left:18px;font-size:13px}.lim li{margin:5px 0}
+.fit{font-size:13px;color:#3d434d;margin:8px 0 12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <a class="logo" href="/"><img src="/chair/mark.png" alt="">Handoff</a>
+    <a href="#top" class="on"><span class="ic">◎</span>Overview</a>
+    <a href="#ranked"><span class="ic">▤</span>Best fits</a>
+    <a href="#detail"><span class="ic">✉</span>The letter</a>
+    <a href="#limits"><span class="ic">✦</span>Limits</a>
+    <a href="/" data-back><span class="ic">‹</span>Back to gethandoff.net</a>
+    <div class="me"><div class="av">S</div><div><b>Sample Books</b><small>Sample client</small></div></div>
+  </nav>
+  <main>
+    <div class="top" id="top">
+      <div><h1>972 new business locations, 3 miles away.</h1><p>Business Radar · Sample Books, a made-up bookkeeper near Echo Park</p></div>
+      <span class="sample">SAMPLE CLIENT · REAL PUBLIC RECORDS</span>
+      <a class="topcta" href="/get/?from=radar">Get one built for your business</a>
+      <div class="pill"><i></i>City of LA records, pulled 2026-11-05</div>
+    </div>
+    <div class="kpis" id="kpis">
+      <div class="kpi hot"><small>Started in 2026</small><b>972</b><span>within 3 miles, cleaned</span></div>
+      <div class="kpi good"><small>Fit this sample client</small><b>184</b><span>our guess from the record</span></div>
+      <div class="kpi"><small>Started since June</small><b>47</b><span>of those fits</span></div>
+      <div class="kpi"><small>Owner contact details</small><b>0</b><span>we don't have them</span></div>
+    </div>
+    <section class="card" id="ranked">
+      <h2>Best fits first</h2>
+      <div class="sub">Real names from public City of LA records. Ranking is our guess. These businesses haven't been contacted. Tap one.</div>
+      <div class="list" id="list"></div>
+    </section>
+    <section class="card" id="detail"></section>
+    <section class="card" id="limits">
+      <h2>What we removed, and what we can't know</h2>
+      <div class="sub">Started in 2026, by month. Pale months are still filling in, because records appear after their start date.</div>
+      <div class="bars"><div class="bar"><i style="height:94%" class=""></i><b>140</b><small>Jan</small></div><div class="bar"><i style="height:90%" class=""></i><b>134</b><small>Feb</small></div><div class="bar"><i style="height:100%" class=""></i><b>149</b><small>Mar</small></div><div class="bar"><i style="height:99%" class=""></i><b>147</b><small>Apr</small></div><div class="bar"><i style="height:99%" class=""></i><b>147</b><small>May</small></div><div class="bar"><i style="height:61%" class="thin"></i><b>91</b><small>Jun</small></div><div class="bar"><i style="height:50%" class="thin"></i><b>75</b><small>Jul</small></div><div class="bar"><i style="height:34%" class="thin"></i><b>50</b><small>Aug</small></div><div class="bar"><i style="height:20%" class="thin"></i><b>30</b><small>Sep</small></div><div class="bar"><i style="height:5%" class="thin"></i><b>8</b><small>Oct</small></div></div>
+      <ul class="rec">
+        <li><span>Records dated 2026 in range</span><b>1,149</b></li>
+        <li><span>Dated January 1, likely batch dated</span><b>minus 176</b></li>
+        <li><span>Dated in the future</span><b>minus 1</b></li>
+        <li><span>Started in 2026, cleaned</span><b>972</b></li>
+        <li><span>Wrong type for this client</span><b>minus 677</b></li>
+        <li><span>Chains and more than one location</span><b>minus 21</b></li>
+        <li><span>Looks like a person, or an apartment</span><b>minus 90</b></li>
+        <li><span>Fits this sample client</span><b>184</b></li>
+      </ul>
+      <ul class="lim" style="margin-top:12px">
+        <li>A start date is what the record says. It doesn't prove the doors opened. It can be an older business at a new address or with a new owner. Many are dated the 1st of a month.</li>
+        <li>Records with no map point can't be found by distance, so the real count is higher. In 5 nearby ZIP codes about 31% of 2026 records have none.</li>
+        <li>City of LA only. Santa Monica, Burbank and Glendale keep their own lists.</li>
+        <li>No owner names, phones or emails. This is for mail and walk-ins.</li>
+        <li>Fit is a guess from one record. It can't tell you who needs help.</li>
+      </ul>
+    </section>
+    <section class="cta" id="ctaBox"><div><h2>Sell to other businesses?</h2><p>We build it around your offer, your area and your voice. You see it working before you buy.</p></div><div class="hx-acts"><a href="/get/?from=radar">Get one built</a><a class="hx-book" href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a call</a></div></section>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+(() => {
+const ROWS = [{"name": "Colombo Attitude", "type": "Restaurant", "record": "Limited-Service Restaurants", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-08-01", "mi": 0.6, "company": true}, {"name": "Sunset With Me", "type": "Restaurant", "record": "Full-service restaurants", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-02-01", "mi": 0.3, "company": true}, {"name": "Gomez Tacos Mexico", "type": "Restaurant", "record": "Limited-Service Restaurants", "street": "Glendale Blvd", "zip": "90026", "started": "2026-06-25", "mi": 0.3, "company": false}, {"name": "VIP Sunset Pet and Supplies", "type": "Pet store", "record": "Pet & pet supplies stores", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-07-01", "mi": 0.6, "company": false}, {"name": "Loquat Sunset Row LLC", "type": "Beverage bar", "record": "Snack and Nonalcoholic Beverage Bars", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-01-09", "mi": 1.0, "company": true}, {"name": "Rooftop On Sunset LLC", "type": "Restaurant", "record": "Full-Service Restaurants", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-04-30", "mi": 1.4, "company": true}, {"name": "Heyday", "type": "Beauty salon", "record": "Beauty salons", "street": "W Sunset Blvd", "zip": "90026", "started": "2026-05-18", "mi": 1.2, "company": true}, {"name": "Josephine", "type": "Restaurant", "record": "Full-service restaurants", "street": "Santa Monica Blvd", "zip": "90029", "started": "2026-03-30", "mi": 1.6, "company": true}];
+const $ = s => document.querySelector(s);
+const esc = v => String(v).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const when = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'long', year:'numeric' });
+const state = { sel:0, kind:'letter', ok:{} };
+const LETTER = r => `Hi, I'm Dana, a bookkeeper near you.\n\nCity of LA business records show ${r.name} started at your location in ${when(r.started)}. The first year is the easiest time to set your books up right.\n\nI do first-year setup for $300, then monthly bookkeeping for $250. If that would help, I'm happy to stop by. If not, welcome to the neighborhood.\n\nDana, Sample Books`;
+const WALK = r => `Hi, I'm Dana. I do bookkeeping for small businesses around here, and I saw on the city's records that ${r.name} started here in ${when(r.started)}.\n\nI'm not here to take your time. Here's my card. First-year setup is $300 if you ever want it.`;
+function list(){ $('#list').innerHTML = ROWS.map((r, i) => `<button class="biz ${i === state.sel ? 'on' : ''}" data-b="${i}"><span class="rank">${i + 1}</span><span><b>${esc(r.name)}</b><small>${esc(r.type)} · ${r.mi} mi · ${esc(when(r.started))}</small></span></button>`).join(''); }
+function detail(){
+  const r = ROWS[state.sel], ok = state.ok[state.sel];
+  $('#detail').innerHTML = `<div class="dt-h"><div><h2>${esc(r.name)}</h2><div class="sub" style="margin:2px 0 0">From the public record</div></div></div>
+  <ul class="rec"><li><span>Type on record</span><b>${esc(r.record)}</b></li><li><span>Street</span><b>${esc(r.street)}, ${esc(r.zip)}</b></li><li><span>Start date</span><b>${esc(r.started)}</b></li><li><span>Distance from sample client</span><b>${r.mi} miles</b></li><li><span>Owner, phone, email</span><b>Not in what we use</b></li></ul>
+  <p class="fit"><b>Why it's ranked here (our guess):</b> ${esc(r.type.toLowerCase())}, ${r.mi} miles away, started ${esc(when(r.started))}${r.company ? ', a registered company' : ''}.</p>
+  <div class="tabs"><button class="btn ${state.kind === 'letter' ? 'on' : ''}" data-k="letter">Letter</button><button class="btn ${state.kind === 'walk' ? 'on' : ''}" data-k="walk">Walk-in</button></div>
+  <div class="msg"><span class="lab">Draft · sample client's words and prices</span>${esc(state.kind === 'letter' ? LETTER(r) : WALK(r))}</div>
+  <div class="row"><button class="btn ${ok ? 'ok' : 'pri'}" id="apBtn">${ok ? 'Approved ✓' : 'Approve'}</button></div>`;
+}
+let tT;
+function toast(m){ const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tT); tT = setTimeout(() => t.hidden = true, 3000); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-b]');
+  if (b) { state.sel = +b.dataset.b; list(); detail(); $('#detail').scrollIntoView({ block:'center' }); return; }
+  const k = e.target.closest('[data-k]');
+  if (k) { state.kind = k.dataset.k; detail(); return; }
+  if (e.target.closest('#apBtn')) { state.ok[state.sel] = true; detail(); toast('Approved. The owner prints it and delivers it. This demo sends nothing.'); }
+});
+list(); detail();
+})();
+</script>
+<script>
+window.HANDOFF_DEMO = {
+  id: 'radar',
+  ask: {
+    title: 'What do you sell, and where?',
+    body: 'We\'ll run this for your area and your offer and send you the real list to look at. Free. No call needed. City of LA only for now.',
+    ph: 'Bookkeeping in Silver Lake', btn: 'Build mine →', toBtn: 'Build mine',
+    note: '<a class="hx-prices" href="/get/?from=radar">Want prices first? See options</a>',
+    then: 'Got it. Where do we send it?', thenBody: 'Whatever you actually check: Instagram, phone or email.', thenPh: '@yourbusiness, phone or email', thenBtn: 'Send it to me',
+    thanksTitle: 'We\'re on it.', thanks: 'We\'ll send your list for {name} there.',
+    task: 'Radar list from /radar',
+  },
+  bands: [['#detail', 'Sample client, sample prices. The business records are real and public. Nobody here has been contacted.']],
+  steps: [
+    { el: '#kpis', title: 'Who just started near you', body: 'Real City of LA records, 3 miles around Echo Park. The bookkeeper is a sample client. Yours would use your area.' },
+    { el: '#ranked', title: 'Best fits first', body: 'It keeps the types that fit your offer and ranks them. The ranking is a guess from one public record.' },
+    { el: '#detail', wait: '#apBtn', waitMs: 700, title: 'It writes the letter', body: 'In your voice, using only the record and your offer. You mail it or walk it in. Tap <b>Approve</b>.' },
+    { el: '#limits', title: 'What it can\'t tell you', body: 'What we removed, and what a public record can\'t know. Want this for what you sell?' },
+  ],
+};
+</script>
+<script src="/tour.js"></script>
+</body></html>
