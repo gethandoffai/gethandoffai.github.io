@@ -38,6 +38,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 #hx-coach button,#hx-coach a.hx-go{font:600 14px 'IBM Plex Sans',system-ui,sans-serif;border-radius:10px;padding:10px 14px;border:0;cursor:pointer;text-decoration:none}
 #hx-coach .hx-back{background:none;color:#c9cdd6;padding-left:0}
 #hx-coach .hx-go{margin-left:auto;background:#4f7bff;color:#fff}
+#hx-coach .hx-skip{margin-left:auto;background:none;color:#9aa1ad}
 #hx-coach .hx-more{display:block;background:none;color:#c9cdd6;font-weight:500;font-size:13px;padding:10px 0 0;margin:0 auto}
 .hx-pulse{animation:hxp 1.3s ease-in-out infinite;position:relative;z-index:51}
 @keyframes hxp{0%,100%{box-shadow:0 0 0 0 #4f7bffaa}50%{box-shadow:0 0 0 9px #4f7bff00}}
@@ -144,7 +145,7 @@ function show(i){
   coach.innerHTML = `<div class="hx-top"><span class="hx-n">Step ${i + 1} of ${D.steps.length}</span><button class="hx-x" aria-label="Close the steps">×</button></div>
     <div class="hx-bar"><i style="width:${(i + 1) / D.steps.length * 100}%"></i></div>
     <h3>${s.title}</h3><p>${s.body}</p>
-    <div class="hx-act">${i ? '<button class="hx-back">Back</button>' : ''}${last ? (D.ask ? `<button class="hx-go hx-toask">${D.ask.toBtn || 'Get one built'} →</button>` : `<a class="hx-go" href="${GET}">Get one built →</a>`) : `<button class="hx-go hx-next">${i ? 'Next' : 'Show me'} →</button>`}</div>
+    <div class="hx-act">${i ? '<button class="hx-back">Back</button>' : ''}${last ? (D.ask ? `<button class="hx-go hx-toask">${D.ask.toBtn || 'Get one built'} →</button>` : `<a class="hx-go" href="${GET}">Get one built →</a>`) : s.wait ? '<button class="hx-next hx-skip">Skip</button>' : `<button class="hx-go hx-next">${i ? 'Next' : 'Show me'} →</button>`}</div>
     ${last ? '<button class="hx-more">Keep clicking around</button>' : ''}`;
   coach.hidden = spot.hidden = false;
   bar.hidden = true;

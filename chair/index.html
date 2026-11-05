@@ -278,13 +278,11 @@ window.HANDOFF_DEMO = {
   },
   bands: [['#detail', 'This is a sample salon. Yours would read your real schedule and clients.']],
   steps: [
-    { el: '#kpis', title: 'What tomorrow is missing', body: 'Every empty chair tomorrow, added up the moment you open it. This one is a sample salon.' },
-    { el: '#board', title: 'Every gap, in red', body: 'It reads your booking app every morning and shows you exactly which chairs are empty.' },
-    { el: '#who', title: 'Who could take it', body: 'It checks your waitlist and the clients who are due back, and puts the best fit first.' },
-    { el: '#msgs', wait: '[data-ap]', waitMs: 600, title: 'It texts them automatically', body: 'It\'s in your voice and goes out on its own. You\'re the CEO, so flip the switch if you\'d rather approve each one first. Tap <b>Send now</b>.' },
-    { el: '#board', title: 'The gap turns green', body: 'In this demo they say yes a moment later. The chair is booked and what\'s open tomorrow goes down.',
+    { el: '#kpis', title: 'What tomorrow is missing', body: 'Every empty chair tomorrow, added up. This is a sample salon. Yours would show your stylists and your prices.' },
+    { el: '#board', title: 'Every gap, in red', body: 'Your day at a glance, with each empty chair marked.' + (innerWidth <= 900 ? ' Swipe sideways for the other stylists.' : '') },
+    { el: '#detail', wait: '[data-ap]', waitMs: 600, title: 'It picks who to ask and writes the text', body: 'Waitlist and clients due back come first, in your voice. Tap <b>Send now</b>.' },
+    { el: '#board', title: 'The gap turns green', body: 'In this demo they say yes a moment later. The chair is booked and what\'s open tomorrow goes down. Want this for your salon?',
       enter: () => { const b = document.getElementById('apBtn'); if (b && !b.classList.contains('ok')) b.click(); } },
-    { el: '#storyc', title: 'It writes the post too', body: 'What\'s still open becomes a story, ready for your OK. Want this built for your business?' },
   ],
 };
 </script>
