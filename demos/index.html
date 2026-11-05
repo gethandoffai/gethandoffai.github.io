@@ -84,4 +84,12 @@ header { padding-block: 56px 32px; display: grid; gap: 16px; }
     <a class="btn" href="/get/?from=demos">See your options &rarr;</a>
   </div>
 </main>
+<script>
+// Bio and post links arrive as /demos/?utm_content=bio. Carry that into each demo so tour.js logs it, and count this page. No personal details.
+(() => {
+  const source = new URLSearchParams(location.search).get('utm_content');
+  if (source) document.querySelectorAll('a.demo').forEach(a => { a.href = a.getAttribute('href') + '?utm_content=' + encodeURIComponent(source); });
+  if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) try { navigator.sendBeacon('https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec', JSON.stringify({ event: 'step', visit: Math.random().toString(36).slice(2, 10), step: 'demos:open', source: source || 'direct' })); } catch (e) {}
+})();
+</script>
 </body></html>
