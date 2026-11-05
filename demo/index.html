@@ -121,92 +121,83 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 const QUALIFIED = ['Under $500', '$500 to $1,500', '$1,500+'];  // under $500 fits the $375 founding deal
 const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec';
 const isQ = () => QUALIFIED.includes(answers.budget);
-const BRIEF = 'Build brief';
+const BRIEF = 'Optional details';
 
+// Short form first: 3 taps and contact details, then we have the lead.
+// Everything after 'done' is optional extra detail, sent as a second email.
 const STEPS = [
-  { id: 'intro' },
+  { id: 'task', type: 'single', q: 'What eats most of your week?',
+    opts: ['Answering customers and emails', 'Booking and filling empty slots', 'Chasing invoices and quotes', 'Posting on social media', 'Finding new leads or stores', 'Keeping up with competitors', 'Something else'],
+    detail: 'Tell us more (optional)', detailPh: 'Replying to every new quote request within an hour' },
   { id: 'business', type: 'single', q: 'What best describes you?',
     opts: ['Solo / freelancer', 'Local service business (salon, studio, clinic, etc.)', 'Online store / ecommerce', 'B2B company (sales, distribution, manufacturing)', 'Agency or consultant', 'Creator or personal brand', 'Something else'] },
-  { id: 'offer', type: 'short', q: 'In one sentence, what do you sell and who buys it?',
-    ph: 'We install HVAC systems for homeowners around Phoenix.' },
-  { id: 'team', type: 'single', q: 'How many people work in the business?',
-    opts: ['Just me', '2 to 5', '6 to 20', '21 to 100', 'More than 100'] },
-  { id: 'pains', type: 'multi', q: 'Where does your week disappear?', hint: 'Pick everything that applies.',
-    opts: ['Answering emails', 'Scheduling and follow-ups', 'Social media content', 'Quotes, proposals, invoices', 'Answering the same customer questions', 'Data entry and reports', 'Research and finding leads', 'Writing (listings, blogs, SOPs)'] },
-  { id: 'task', type: 'short', q: 'Name the one task you\'d hand off first.',
-    hint: 'Just one job. If it works, we do the next one after.', ph: 'Replying to every new quote request within an hour' },
-  { id: 'hours', type: 'range', q: 'Roughly how many hours a week does that task take?' },
-  { id: 'tools', type: 'multi', q: 'Which tools do you use day to day?', hint: 'This tells us what your assistant can plug into.',
-    opts: ['Gmail / Google Workspace', 'Outlook / Microsoft 365', 'Shopify', 'QuickBooks', 'A CRM (HubSpot, Salesforce, etc.)', 'Canva', 'Slack or Teams', 'Mostly paper and spreadsheets'],
-    detail: 'Anything else? (optional)', detailPh: 'Jobber, ServiceTitan, Squarespace...' },
   { id: 'budget', type: 'single', q: 'What would you invest to get that time back?',
     opts: ['Just exploring for now', 'Under $500', '$500 to $1,500', '$1,500+'] },
+  { id: 'contact', type: 'contact', q: 'Where should we reach you?' },
+  { id: 'done' },
 
-  { id: 'brief', when: isQ },
-  { id: 'trigger', type: 'single', when: isQ, stage: BRIEF, q: 'What kicks this task off?',
-    opts: ['A new email comes in', 'A form, order or booking comes in', 'A set time (every morning, every Friday...)', 'A message, call or text', 'I decide when it\'s needed'],
-    detail: 'Be specific (optional)', detailPh: 'A "New quote request" email from our website form' },
-  { id: 'steps', type: 'text', when: isQ, stage: BRIEF, min: 60, q: 'Walk us through exactly how you do it today.',
-    hint: 'Write it like instructions for a new hire. Numbered steps are perfect. This is the most important answer.',
-    ph: '1. Open the quote request email\n2. Look up the address on Google Maps to check the service area\n3. Pull our price sheet and pick the right package\n4. Write a reply with the price and 2 install dates\n5. Log it in our spreadsheet' },
-  { id: 'sources', type: 'multi', when: isQ, stage: BRIEF, q: 'Where does the information for this task come from?',
-    opts: ['An email inbox', 'A spreadsheet', 'A CRM or job software', 'Website forms or orders', 'PDFs or documents', 'Texts or phone calls', 'Researching online', 'Mostly in my head'],
-    detail: 'Name the specific inbox, sheet or app', detailPh: 'quotes@ inbox, "2026 Pricing" Google Sheet, Jobber' },
-  { id: 'outputs', type: 'multi', when: isQ, stage: BRIEF, q: 'When the task is done, what exists that didn\'t before?',
-    opts: ['An email or reply sent', 'A document (quote, proposal, report)', 'A spreadsheet or CRM updated', 'A social post or ad', 'A list of leads or research', 'A calendar event or reminder', 'A text message sent'],
-    detail: 'Where does it go and who sees it?', detailPh: 'Reply goes to the customer, copy logged in the Quotes sheet' },
-  { id: 'volume', type: 'short', when: isQ, stage: BRIEF, q: 'How often does it happen?',
-    ph: 'About 15 quote requests a week, more in summer' },
-  { id: 'example', type: 'text', when: isQ, stage: BRIEF, min: 20, q: 'Show us what a great result looks like.',
-    hint: 'Paste a real example you were happy with, like an email you sent or a quote. Swap out anything private.',
-    ph: 'Hi Sarah, thanks for reaching out! For a 2,000 sq ft home our Comfort package is $8,400 installed...' },
-  { id: 'example_link', type: 'short', optional: true, when: isQ, stage: BRIEF, q: 'Got a sample file? Paste a share link.',
-    hint: 'A template, past quote or spreadsheet in Google Drive or Dropbox, set to "anyone with the link can view." Optional, but it makes the build much closer to real.',
-    ph: 'https://drive.google.com/...' },
-  { id: 'rules', type: 'text', when: isQ, stage: BRIEF, min: 10, q: 'What judgment calls do you make, and what should it never do?',
-    hint: 'Pricing rules, who gets priority, tone of voice, anything that needs a human.',
-    ph: 'Never quote under $6k. Anything commercial goes to me. Friendly, not salesy. Don\'t promise dates without checking the calendar.' },
-  { id: 'approval', type: 'single', when: isQ, stage: BRIEF, q: 'How much should it do on its own?',
+  { id: 'hours', type: 'range', when: isQ, stage: BRIEF, optional: true, q: 'Roughly how many hours a week does that task take?' },
+  { id: 'tools', type: 'multi', when: isQ, stage: BRIEF, optional: true, q: 'Which tools do you use day to day?', hint: 'This tells us what your assistant can plug into.',
+    opts: ['Gmail / Google Workspace', 'Outlook / Microsoft 365', 'Shopify', 'QuickBooks', 'A CRM (HubSpot, Salesforce, etc.)', 'Canva', 'Slack or Teams', 'Mostly paper and spreadsheets'],
+    detail: 'Anything else? (optional)', detailPh: 'Jobber, ServiceTitan, Squarespace...' },
+  { id: 'approval', type: 'single', when: isQ, stage: BRIEF, optional: true, q: 'How much should it do on its own?',
     opts: ['Draft everything for my OK first', 'Handle the simple ones, draft the rest for me', 'Run fully on its own'] },
-  { id: 'ai', type: 'multi', when: isQ, stage: BRIEF, q: 'Which AI accounts do you already have?',
-    opts: ['None yet', 'ChatGPT (free)', 'ChatGPT Plus or Team', 'Claude', 'Gemini / Google Workspace AI', 'Microsoft Copilot'] },
-  { id: 'success', type: 'short', when: isQ, stage: BRIEF, q: 'In 30 days, how will you know it\'s working?',
-    ph: 'Every quote request gets a reply within an hour and I stop doing them at night.' },
-  { id: 'timeline', type: 'single', when: isQ, stage: BRIEF, q: 'When do you want this running?',
-    opts: ['As soon as possible', 'Within the next month', 'In the next few months'] },
-  { id: 'decider', type: 'single', when: isQ, stage: BRIEF, q: 'Who makes the call on this?',
-    opts: ['Just me', 'Me and a partner', 'I need someone else\'s approval'] },
-
-  { id: 'contact', type: 'contact', q: 'Where should we send your assistant?' },
-  { id: 'done' }
+  { id: 'steps', type: 'text', when: isQ, stage: BRIEF, optional: true, q: 'Walk us through how you do it today.',
+    hint: 'Write it like instructions for a new hire. Numbered steps are perfect.',
+    ph: '1. Open the quote request email\n2. Check the address is in our service area\n3. Pull our price sheet and pick the right package\n4. Reply with the price and 2 install dates' },
+  { id: 'example', type: 'text', when: isQ, stage: BRIEF, optional: true, q: 'Show us what a great result looks like.',
+    hint: 'Paste a real example you were happy with, or a share link to one. Swap out anything private.',
+    ph: 'Hi Sarah, thanks for reaching out! For a 2,000 sq ft home our Comfort package is $8,400 installed...' },
+  { id: 'rules', type: 'text', when: isQ, stage: BRIEF, optional: true, last: true, q: 'What should it never do?',
+    hint: 'Pricing rules, tone of voice, anything that needs a human.',
+    ph: 'Never quote under $6k. Anything commercial goes to me. Friendly, not salesy.' },
+  { id: 'thanks' }
 ];
 
-const answers = { hours: 5, pains: [], tools: [], sources: [], outputs: [], ai: [] };
+const answers = { tools: [] };
 // Which ad or link sent them: ?ad=04 or utm tags on the link
 const qs = new URLSearchParams(location.search);
 answers.source = qs.get('ad') || qs.get('utm_content') || qs.get('utm_source') || (document.referrer ? new URL(document.referrer).hostname : 'direct');
-let cur = 'intro';
+let cur = 'task';
+
+// Test copies on this computer never send real leads or step counts
+const LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+// Step counts: a random id for this visit, the step and the ad. No answers or contact details.
+const VISIT = Math.random().toString(36).slice(2, 10);
+const seen = new Set();
+function track(id) {
+  if (seen.has(id)) return;
+  seen.add(id);
+  if (LOCAL) return;
+  try { navigator.sendBeacon(ENDPOINT, JSON.stringify({ event: 'step', visit: VISIT, step: id, source: answers.source })); } catch (e) {}
+}
 
 const card = document.getElementById('card');
 const ticks = document.getElementById('ticks');
 const count = document.getElementById('count');
+
+const PITCH = '<h1>Tell us what eats your week. We\'ll build the AI that handles it, before you buy.</h1>' +
+  '<p class="sub">Takes about a minute. No AI experience needed.</p>' +
+  '<div class="deal"><b>Founding client deal</b><span><s>$750</s> $375 setup for the next 5 businesses.</span></div>';
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const visible = () => STEPS.filter(s => !s.when || s.when());
 const step = () => STEPS.find(s => s.id === cur);
 
 function progress() {
-  const qs = visible().filter(s => s.type);
+  const inDetails = !!step().stage || cur === 'thanks';
+  const qs = visible().filter(s => s.type && !!s.stage === inDetails);
   const n = qs.findIndex(s => s.id === cur) + 1;
-  const done = n || (cur === 'done' ? qs.length : 0);
-  ticks.innerHTML = qs.map((s, k) => '<span' + (k < done ? ' class="on"' : '') + '></span>').join('');
-  // Total is only known once budget decides whether the build brief appears
-  count.textContent = n ? 'Question ' + n + (answers.budget ? ' of ' + qs.length : '') : '';
+  const all = cur === 'done' || cur === 'thanks';
+  const on = all ? qs.length : n;
+  ticks.innerHTML = qs.map((s, k) => '<span' + (k < on ? ' class="on"' : '') + '></span>').join('');
+  count.textContent = n ? (inDetails ? 'Detail ' : 'Question ') + n + ' of ' + qs.length : '';
 }
 
 function nav(ok, label) {
+  if (step().last) label = 'Send details';
   return '<div class="nav">' +
-    (cur !== 'intro' && cur !== 'business' ? '<button class="btn ghost" id="back" type="button">Back</button>' : '<span></span>') +
+    (cur !== 'task' ? '<button class="btn ghost" id="back" type="button">Back</button>' : '<span></span>') +
     '<button class="btn" id="next" type="button"' + (ok ? '' : ' disabled') + '>' + (label || 'Next') + '</button></div>';
 }
 
@@ -232,23 +223,11 @@ function detailField(s) {
 function render() {
   const s = step();
   progress();
-  if (s.id === 'intro') {
-    card.innerHTML =
-      '<h1>Tell us what eats your week. We\'ll build the AI that handles it, before you buy.</h1>' +
-      '<p class="sub">Answer a few questions about one task you\'re sick of doing. We build a working AI assistant around it, then show it to you running on a short call. No AI experience needed.</p>' +
-      '<div class="deal"><b>Founding client deal</b><span><s>$750</s> $375 setup for the next 5 businesses.</span></div>' +
-      '<div class="how"><div><b>You answer</b>About 2 minutes to start.</div><div><b>We build</b>A working assistant made for your business.</div><div><b>You see it work</b>A working demo on your own examples, on a short call. Then decide.</div></div>' +
-      '<div class="nav"><span></span><button class="btn" id="next" type="button">Start</button></div>';
-  } else if (s.id === 'brief') {
-    card.innerHTML =
-      '<span class="ok">You\'re a fit</span><h2>Now the build brief. This is what lets us build it before you buy.</h2>' +
-      '<p class="sub">About 5 more minutes. The more real detail you give, the more finished your assistant will be on the call.</p>' +
-      '<ul class="checklist"><li>How the task works today, step by step</li><li>Where the info comes from and where results go</li><li>A real example of a great result</li><li>Your rules and what needs a human</li></ul>' +
-      nav(true, 'Start the brief');
-  } else if (s.type === 'single' || s.type === 'multi') {
+  track(s.id);
+  if (s.type === 'single' || s.type === 'multi') {
     const multi = s.type === 'multi';
     const sel = v => multi ? answers[s.id].includes(v) : answers[s.id] === v;
-    card.innerHTML = heading(s) +
+    card.innerHTML = (s.id === 'task' ? PITCH : '') + heading(s) +
       '<div class="options' + (multi ? ' multi' : '') + '">' +
       s.opts.map((o, k) => '<button class="opt" type="button" data-k="' + k + '" aria-pressed="' + sel(o) + '"><span class="box"></span>' + esc(o) + '</button>').join('') +
       '</div>' + detailField(s) + nav(valid(s));
@@ -261,7 +240,7 @@ function render() {
       } else {
         answers[s.id] = v;
         render();
-        if (!s.detail) setTimeout(go, 180);
+        if (!s.detail && !s.last) setTimeout(go, 180);
       }
     });
     const d = document.getElementById('f-' + s.id + '-detail');
@@ -277,7 +256,7 @@ function render() {
     t.focus();
   } else if (s.type === 'range') {
     card.innerHTML = heading(s) + '<div class="slider">' +
-      '<input type="range" id="f-hours" min="1" max="40" step="1" value="' + answers.hours + '" aria-label="Hours per week">' +
+      '<input type="range" id="f-hours" min="1" max="40" step="1" value="' + (answers.hours || 5) + '" aria-label="Hours per week">' +
       '<div class="readout"><div><span id="hw"></span><small>hours a week</small></div><div><span id="hy"></span><small>hours a year</small></div><div><span id="wd"></span><small>full work weeks a year</small></div></div>' +
       '</div>' + nav(true);
     const r = document.getElementById('f-hours');
@@ -290,31 +269,38 @@ function render() {
     r.oninput = show; show();
   } else if (s.type === 'contact') {
     const v = k => esc(answers[k] || '');
-    card.innerHTML = '<h2>' + esc(s.q) + '</h2><p class="sub">We\'ll reach out once your assistant is ready to show.</p>' +
+    card.innerHTML = '<h2>' + esc(s.q) + '</h2><p class="sub">We\'ll reach out to set up your demo.</p>' +
       '<div class="fields">' +
       '<div><label for="f-name">Your name</label><input type="text" id="f-name" autocomplete="name" value="' + v('name') + '"></div>' +
       '<div><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" value="' + v('email') + '"></div>' +
-      '<div><label for="f-company">Business name</label><input type="text" id="f-company" autocomplete="organization" value="' + v('company') + '"></div>' +
       '<div><label for="f-phone">Phone <small>(optional)</small></label><input type="tel" id="f-phone" autocomplete="tel" value="' + v('phone') + '"></div>' +
-      '<div class="full"><label for="f-website">Website or Instagram' + (isQ() ? '' : ' <small>(optional)</small>') + '</label><input type="text" id="f-website" value="' + v('website') + '"></div>' +
-      '</div><p class="err" id="err"></p>' + nav(true, 'Send my answers');
-    ['name', 'email', 'company', 'phone', 'website'].forEach(k => {
+      '<div><label for="f-website">Website or Instagram <small>(optional)</small></label><input type="text" id="f-website" value="' + v('website') + '"></div>' +
+      '</div><p class="err" id="err"></p>' + nav(true, 'Send');
+    ['name', 'email', 'phone', 'website'].forEach(k => {
       const el = document.getElementById('f-' + k);
       el.oninput = () => { answers[k] = el.value.trim(); };
     });
   } else if (s.id === 'done') {
     const r = answers.result || {};
     const first = esc((answers.name || '').split(' ')[0]);
+    const got = '<span class="ok">Got it' + (first ? ', ' + first : '') + '</span>';
     card.innerHTML = r.qualified
-      ? '<span class="ok">Got it' + (first ? ', ' + first : '') + '</span><h2>Pick a time and we\'ll have your assistant built for the call.</h2>' +
-        '<p class="sub">Grab a 30 minute slot. Before the call we build a working version from your brief, so the call is you watching it run.</p>' +
-        '<div><a class="btn" href="' + esc(r.bookingUrl || '#') + '" target="_blank" rel="noopener">Pick a time</a></div>'
-      : '<span class="ok">Got it' + (first ? ', ' + first : '') + '</span><h2>Thanks. We\'ll email you within 24 hours.</h2>' +
+      ? got + '<h2>Pick a time for your demo.</h2>' +
+        '<p class="sub">Grab a 30 minute slot and we\'ll show you how it works on your business.</p>' +
+        '<div><a class="btn" href="' + esc(r.bookingUrl || '#') + '" target="_blank" rel="noopener">Pick a time</a></div>' +
+        '<p class="sub">Want it closer to real on the call? Give us a few details. About 3 minutes, all optional.</p>' +
+        '<div class="nav"><span></span><button class="btn ghost" id="next" type="button">Add details</button></div>'
+      : got + '<h2>Thanks. We\'ll email you within 24 hours.</h2>' +
         '<p class="sub">We\'ll send a couple of simple ways to start using AI on the task you described, free. If it clicks, we can build the full version later.</p>';
+  } else if (s.id === 'thanks') {
+    const r = answers.result || {};
+    card.innerHTML = '<span class="ok">Thank you</span><h2>That gives us what we need.</h2>' +
+      '<p class="sub">If you haven\'t yet, pick a time for your demo.</p>' +
+      '<div><a class="btn" href="' + esc(r.bookingUrl || '#') + '" target="_blank" rel="noopener">Pick a time</a></div>';
   }
   const next = document.getElementById('next');
   const back = document.getElementById('back');
-  if (next) next.onclick = s.type === 'contact' ? submit : go;
+  if (next) next.onclick = s.type === 'contact' ? submit : s.last ? sendDetails : go;
   if (back) back.onclick = () => move(-1);
 }
 
@@ -325,26 +311,43 @@ function move(d) {
 }
 function go() { move(1); }
 
+// The sheet has no column for the task detail, so it travels inside the task answer
+function payload() {
+  const p = Object.assign({}, answers);
+  delete p.result;
+  if (p.task_detail) p.task = p.task + ': ' + p.task_detail;
+  return p;
+}
+
+function send(p, done, fail) {
+  if (LOCAL) return setTimeout(() => done({ qualified: isQ(), bookingUrl: '#' }), 400);
+  // Plain text body keeps this a simple request, so no Google sign-in or CORS preflight is involved
+  fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(p) })
+    .then(r => r.json()).then(j => j.ok ? done(j.result) : fail()).catch(fail);
+}
+
 function submit() {
   const err = document.getElementById('err');
   const next = document.getElementById('next');
-  if (!answers.name) return err.textContent = 'Add your name so we know who we\'re building for.';
+  if (!answers.name) return err.textContent = 'Add your name so we know who we\'re talking to.';
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(answers.email || '')) return err.textContent = 'That email doesn\'t look right. Check it and try again.';
-  if (isQ() && !answers.website) return err.textContent = 'Add your website or Instagram so we can match your brand.';
   err.textContent = '';
   next.disabled = true; next.textContent = 'Sending...';
-  const done = res => { answers.result = res; go(); };
-  const fail = () => { next.disabled = false; next.textContent = 'Send my answers'; err.textContent = 'Something went wrong sending your answers. Try again in a moment.'; };
-  if (window.google && google.script && google.script.run) {
-    google.script.run.withSuccessHandler(done).withFailureHandler(fail).submitIntake(answers);
-  } else if (location.protocol === 'file:') {
-    // Local preview: no backend, so fake the response
-    setTimeout(() => done({ qualified: isQ(), bookingUrl: '#' }), 400);
-  } else {
-    // Hosted page: plain text body keeps this a simple request, so no Google sign-in or CORS preflight is involved
-    fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(answers) })
-      .then(r => r.json()).then(j => j.ok ? done(j.result) : fail()).catch(fail);
-  }
+  send(payload(), res => { answers.result = res; go(); }, () => {
+    next.disabled = false; next.textContent = 'Send';
+    err.textContent = 'Something went wrong sending your answers. Try again in a moment.';
+  });
+}
+
+// The optional details arrive as a second row and email, marked so they're easy to spot
+function sendDetails() {
+  const next = document.getElementById('next');
+  const filled = answers.tools.length || answers.approval || answers.steps || answers.example || answers.rules;
+  if (!filled) return go();
+  next.disabled = true; next.textContent = 'Sending...';
+  const p = payload();
+  p.source = answers.source + ' (details)';
+  send(p, () => go(), () => { next.disabled = false; next.textContent = 'Try again'; });
 }
 
 render();

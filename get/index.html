@@ -96,7 +96,7 @@ footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
   <div class="ways">
     <div class="way feat">
       <h2>Get your free demo</h2>
-      <p class="muted">Tell us what eats your week. It's a 5 minute form. We build it on your examples, then show you on a short call.</p>
+      <p class="muted">Tell us what eats your week. It takes about a minute. We build it on your examples, then show you on a short call.</p>
       <a class="btn" data-form href="/demo/?ad=get">Start the form &rarr;</a>
     </div>
     <div class="way">
@@ -108,7 +108,7 @@ footer { padding-block: 8px 56px; font-size: 14px; color: var(--muted); }
 
   <p class="label">How it works</p>
   <div class="steps">
-    <div><b>1. Tell us what eats your week</b>A short form. Pick the one job you'd hand off first.</div>
+    <div><b>1. Tell us what eats your week</b>About a minute. Pick the one job you'd hand off first.</div>
     <div><b>2. Watch it work</b>A working demo on your own examples. No slides.</div>
     <div><b>3. Decide, then hand it off</b>Like it? We set it up on your accounts and tune it with you for 30 days.</div>
   </div>
@@ -170,6 +170,8 @@ if (demo) {
   document.getElementById('allDemos').hidden = true;
   document.querySelectorAll('[data-form]').forEach(a => a.href = '/demo/?ad=demo-' + from);
 }
+// Step count for the funnel: page reached, plus the demo they came from. No personal details.
+if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) try { navigator.sendBeacon('https://script.google.com/macros/s/AKfycbyKjlOzj3mMTQH7h-Zfn9RVoqlbDA0ZaeIy0lXaEQxHMpAaohFVYHPN29nLZRv7vBtKjQ/exec', JSON.stringify({ event: 'step', visit: Math.random().toString(36).slice(2, 10), step: 'get', source: from || 'direct' })); } catch (e) {}
 document.querySelectorAll('[data-pay]').forEach(a => { if (PAY[a.dataset.pay]) a.href = PAY[a.dataset.pay]; });
 </script>
 </body></html>
