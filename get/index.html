@@ -158,6 +158,7 @@ const DEMOS = {
   nails: { name: 'Empty Chair Filler for nail salons', path: '/nails/' },
   bloom: { name: 'Inquiry Desk for florists', path: '/bloom/' },
   lunch: { name: 'Opening Day for caterers', path: '/lunch/' },
+  doors: { name: 'New Doors for beauty and jewelry brands', path: '/doors/' },
   week: { name: 'Week of Content', path: '/week/' },
   listing: { name: 'One Listing, 10 Posts', path: '/listing/' },
   stores: { name: 'Store Hunter', path: '/stores/' },
@@ -167,7 +168,7 @@ const from = new URLSearchParams(location.search).get('from');
 const demo = DEMOS[from];
 if (demo) {
   document.getElementById('kicker').textContent = 'You just tried ' + demo.name;
-  document.getElementById('lead').textContent = (from === 'radar' || from === 'lunch' ? 'That demo uses a sample client and real public records.' : 'That demo runs on sample data.') + ' We build yours around your business, your customers and your voice, and you see it working before you buy.';
+  document.getElementById('lead').textContent = (from === 'radar' || from === 'lunch' || from === 'doors' ? 'That demo uses a sample client and real public records.' : 'That demo runs on sample data.') + ' We build yours around your business, your customers and your voice, and you see it working before you buy.';
   const back = document.getElementById('back');
   back.href = demo.path;
   back.hidden = false;
