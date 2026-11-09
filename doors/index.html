@@ -224,11 +224,11 @@ const PICK = { '448310':0, '446120':3, '453220':4, '448150':0 };
 // Counters roll from 0 on load, then follow the filters
 const shown = { vT:0, vC:0, vJ:0 };
 function roll(id, to, ms){
-  const el = $('#' + id), from = shown[id], t0 = performance.now();
-  shown[id] = to;
+  const el = $('#' + id), from = shown[id], t0 = Date.now();
+  shown[id] = to; clearInterval(roll[id]);
   if (from === to) { el.textContent = n(to); return; }
-  const tick = t => { const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = n(Math.round(from + (to - from) * e)); if (k < 1) requestAnimationFrame(tick); };
-  requestAnimationFrame(tick);
+  const tick = () => { const k = Math.min(1, (Date.now() - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = n(Math.round(from + (to - from) * e)); if (k >= 1) clearInterval(roll[id]); };
+  roll[id] = setInterval(tick, 16); tick();
   if (from) { const c = el.parentNode; c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 }
 const inCity = r => state.city === 'all' || r.city === state.city;
