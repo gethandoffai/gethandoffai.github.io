@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Demo for Harveys On Beverly</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#3a2116">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Gloock&family=Karla:wght@400;500;600;700&display=swap">
+<style>
+/* A lamplit showroom: walnut wall, olive panel, brass, ivory paper tags. */
+:root{--walnut:#3a2116;--walnut2:#4d2d1d;--deep:#24130c;--olive:#5d6140;--teal:#24514d;--brass:#d2a24c;--cognac:#b4592b;--ivory:#f8ecd4;--paper:#fff6e3;--ink:#2a1810;--mute:#7c6350;--line:#e2cda6;--add:#a8431f;
+  --display:'Gloock',Georgia,serif;--body:'Karla',system-ui,sans-serif;--hand:'Caveat',cursive;color-scheme:light}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ivory);font:16px/1.5 var(--body);background:var(--walnut);background-image:repeating-linear-gradient(90deg,#0000 0 86px,#1d0e0838 86px 88px),radial-gradient(90% 520px at 50% -40px,#8a5230 0,#0000 70%);min-height:100vh;overflow-x:hidden}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.label{background:var(--deep);color:#f0d9ae;text-align:center;font-weight:600;font-size:13px;line-height:1.35;padding:calc(9px + env(safe-area-inset-top,0px)) 16px 9px;text-wrap:balance;position:sticky;top:0;z-index:20;border-bottom:2px solid var(--brass)}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 16px 130px}
+.rail{display:flex;gap:6px;margin:0 0 16px;padding:0;list-style:none}
+.rail button{flex:1;min-width:0;background:none;border:0;border-top:4px solid #ffffff2b;padding:8px 0 4px;font-size:12px;font-weight:600;color:#d9bd98;text-align:left;min-height:40px}
+.rail button.past{border-color:#d2a24c99}.rail button.on{border-color:var(--brass);color:#fff}
+.rail button:disabled{cursor:default;opacity:.6}
+h1,h2{font-family:var(--display);font-weight:400;line-height:1.08;margin:0}
+h1{font-size:clamp(30px,8.4vw,50px);letter-spacing:-.01em;text-wrap:balance}
+.lead{margin:10px 0 0;color:#ecd6b4;max-width:56ch}
+.tiny{font-size:13px;line-height:1.45;color:#d9bd98;margin:12px 0 0;max-width:60ch}
+/* showroom */
+.room{position:relative;margin:18px 0 0;border-radius:20px;overflow:hidden;background:linear-gradient(#2c5753 0 66%,#1b3936 66% 67.4%,#8b5a34 67.4%);border:6px solid var(--deep);display:grid;grid-template-columns:1fr 1fr;min-height:318px}
+.room:before{content:"";position:absolute;inset:67.4% 0 0;background:repeating-linear-gradient(115deg,#0000 0 34px,#5a351c70 34px 36px)}
+.room:after{content:"";position:absolute;inset:0;background:radial-gradient(46% 60% at 24% 78%,#ffd98a40,#0000 70%),radial-gradient(46% 60% at 76% 30%,#ffd98a55,#0000 70%);pointer-events:none}
+.pick{position:relative;z-index:2;background:none;border:0;padding:0 8px 14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}
+.pick.hang{justify-content:flex-start;padding:0 8px 14px}
+.pick svg{width:100%;height:auto;max-width:300px;display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.pick:hover svg{transform:translateY(-4px)}
+.pick .tag{margin-top:10px;background:var(--paper);color:var(--ink);border-radius:8px 8px 8px 2px;padding:9px 11px;font-size:13.5px;font-weight:700;line-height:1.25;text-align:left;box-shadow:0 6px 0 #24130c66}
+.pick.hang .tag{margin-top:auto}
+.pick .tag span{display:block;margin-top:4px;color:var(--cognac);font-size:13px}
+/* paper */
+.sheet{background:var(--paper);color:var(--ink);border-radius:16px;padding:18px;margin-top:18px;box-shadow:0 14px 34px #1208047a;position:relative}
+.sheet h2{font-size:25px}
+.notes{background:#f6dfa2;color:#3a2413;border-radius:4px 4px 18px 4px;padding:26px 20px 20px;margin:24px auto 0;max-width:430px;transform:rotate(-1.4deg);font:600 24px/1.22 var(--hand);min-height:300px;white-space:pre-line;box-shadow:0 16px 30px #1208047a;position:relative}
+.notes:before{content:"";position:absolute;left:50%;top:-12px;width:92px;height:26px;margin-left:-46px;background:#ffffff8c;transform:rotate(2deg)}
+.two{display:grid;gap:18px}
+.frame{background:linear-gradient(#2c5753,#1e403d);border-radius:12px;padding:14px;display:grid;place-items:center;border:5px solid #c89a4a;min-height:190px}
+.frame svg{width:100%;max-width:290px;height:auto}
+.frame small{color:#f7e8c8;font-size:12.5px;text-align:center;margin-top:8px}
+.state{display:inline-block;font-weight:700;font-size:13px;border-radius:99px;padding:5px 11px;background:#efd9ae;color:#6a4314}
+.state.ok{background:#dfe5c4;color:#3d4a16}
+.field{margin-top:16px}.field>b{display:block;font-size:13px;color:var(--mute);font-weight:600;margin-bottom:3px}
+.ttl{font:400 26px/1.15 var(--display);margin:0}
+.txt{margin:0;white-space:pre-line}
+textarea,.edit{width:100%;background:#fff;border:2px solid var(--brass);border-radius:10px;padding:10px 12px;font-size:16px;line-height:1.45;color:var(--ink);resize:vertical}
+dl{margin:4px 0 0;display:grid}
+dl>div{display:grid;grid-template-columns:108px 1fr;gap:10px;align-items:center;border-top:1px solid var(--line);padding:8px 0;min-height:46px}
+dt{font-size:14px;color:var(--mute);font-weight:600}dd{margin:0;min-width:0;font-weight:600;overflow-wrap:anywhere}
+dd input{width:100%;background:#fff;border:2px dashed var(--add);border-radius:8px;padding:8px 10px;font-size:16px;color:var(--ink)}
+dd input::placeholder{color:var(--add);opacity:1;font-weight:600}
+dd input.has{border-style:solid;border-color:#8a9448;background:#f6f7e6}
+.key{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-top:10px}.key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--ink)}.key i.a{background:none;border:2px dashed var(--add)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tags span{background:#efdcb4;border-radius:6px;padding:4px 9px;font-size:14px;font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{border:2px solid var(--ink);background:none;color:var(--ink);border-radius:12px;padding:11px 16px;font-weight:700;min-height:48px}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.ok{background:#5f6c25;border-color:#5f6c25;color:#fff}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.day{display:flex;flex-direction:column;min-width:0}
+.day>b{font-size:13px;color:#f0d9ae;margin-bottom:5px}
+.day .tile{flex:1}#post{scroll-margin-top:74px}.tile{position:relative;border:3px solid #0000;border-radius:12px;padding:0;background:#2d1a11;overflow:hidden;min-height:132px;display:flex;flex-direction:column;color:#fff;text-align:left}
+.tile.empty{border:2px dashed #ffffff38;background:none}
+.tile.in{animation:in .4s cubic-bezier(.2,.9,.3,1)}@keyframes in{from{transform:translateY(16px);opacity:0}}
+.tile .pic{flex:1;display:grid;place-items:center;padding:6px;min-height:76px}.tile .pic svg{width:100%;height:auto;max-height:84px}
+.tile .cp{background:#24130cdb;padding:6px 8px;font-size:12px;line-height:1.25;font-weight:600}.tile .cp span{display:block;color:#e8c98f}
+.tile.sel{border-color:var(--brass)}
+.tile.done .cp{background:#5f6c25}
+.c0{background:#24514d}.c1{background:#a14d24}.c2{background:#6b2b3a}.c3{background:#7a3b2a}.c4{background:#1f3d33}.c5{background:#3c4a63}
+.hd{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;justify-content:space-between}
+.cnt{font-weight:700;color:#f0d9ae}
+.post{display:grid;gap:14px}
+.post .big{border-radius:12px;min-height:170px;display:grid;place-items:center;padding:14px;position:relative}.post .big svg{width:100%;max-width:260px;height:auto}
+.post .big em{position:absolute;left:10px;bottom:8px;font-style:normal;font-size:12.5px;color:#fff;background:#24130cb0;border-radius:6px;padding:3px 8px}
+/* end */
+.end{display:grid;gap:14px;margin-top:20px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.cta a{flex:1 1 200px;text-align:center;border-radius:14px;padding:15px 18px;font-weight:700;text-decoration:none;background:var(--brass);color:#2a1505}
+
+/* bottom action */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:linear-gradient(#24130c00,#24130c 34%);padding:26px 16px calc(14px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.bar div{max-width:1048px;margin:0 auto;display:flex;gap:10px;pointer-events:auto}
+.bar button{border:0;border-radius:14px;padding:15px 18px;font-weight:700;font-size:17px;background:var(--brass);color:#2a1505;flex:1;min-height:54px}
+.bar button.back{flex:none;background:#5a3522;color:#ffe9c2}.bar button:disabled{background:#70563f;color:#cdb491;cursor:default}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:40;background:var(--teal);color:#fff;border-radius:12px;padding:11px 16px;font-weight:700;font-size:15px;box-shadow:0 10px 26px #0007;width:max-content;max-width:calc(100% - 32px);text-align:center}
+@media(min-width:860px){.wrap{padding:30px 32px 140px}.room{min-height:470px}.two{grid-template-columns:340px minmax(0,1fr);align-items:start}.sheet{padding:28px}.weekly{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}.weekly .sheet{margin-top:24px}.post{gap:10px}.post .big{min-height:0;padding:10px}.post .big svg{max-width:170px}.bar div{justify-content:flex-end}.bar button{flex:0 0 320px}.bar button.back{flex:none}.tile{min-height:168px}.tile .pic svg{max-height:112px}.cal{gap:12px}.rail button{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div class="label">Demo made for Harveys On Beverly by Brady at Handoff. Not their site.</div>
+<div class="wrap">
+  <ol class="rail" id="rail" aria-label="Steps"></ol>
+  <main id="app"></main>
+</div>
+<div class="bar" id="bar"><div id="barIn"></div></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Drawings made for this demo. They aren't photos, and no photo of theirs is on this page.
+const ARM = `<path d="M8 127Q50 116 88 118q14 1 17 14l2 26-58 28-1 64H20Q9 190 8 127z" fill="#857b5f"/><path d="M8 127q16-3 30 0l12 59-2 64H20Q9 190 8 127z" fill="#6f674f"/>`;
+const SOFA = `<svg viewBox="0 0 734 334" aria-hidden="true"><ellipse cx="367" cy="322" rx="330" ry="9" fill="#120a06" opacity=".35"/><path d="M62 248h13v12l8 62H67zM672 248h-13v12l-8 62h16z" fill="#8a5a30"/><path d="M60 246h614v14H60z" fill="#9a6636"/><path d="M93 17Q140 32 220 33h294q80-1 127-16 0 62 16 108v60H77v-60Q100 74 93 17z" fill="#8c8265"/><path d="M93 17Q140 32 220 33h294q80-1 127-16" fill="none" stroke="#a59b7c" stroke-width="5"/><path d="M134 170q4-82 46-85l376-3q40 3 44 88z" fill="#766c57"/><path d="M134 170q4-82 46-85l376-3q40 3 44 88" fill="none" stroke="#5f5746" stroke-width="3"/><path d="M46 206h642v44H46z" fill="#716950"/>${ARM}<g transform="matrix(-1 0 0 1 734 0)">${ARM}</g><path d="M56 166q311-18 622 0 18 20 12 42H44q-6-22 12-42z" fill="#8f8568"/><path d="M44 208h646" stroke="#5c5441" stroke-width="3"/></svg>`;
+// One tall shade: three faceted frosted tiers with clear cut-outs, on a chrome cup.
+const shade = (cx, by, w, h) => { const t = h / 3, L = cx - w / 2, R = cx + w / 2; let o = `<rect x="${cx - w * .22}" y="${by - 3}" width="${w * .44}" height="${h * .06}" rx="2" fill="#b9bec0"/>`;
+  for (let i = 0; i < 3; i++) { const y = by - h + i * t; o += `<path d="M${L + w * .07} ${y}L${L} ${y + t * .34}v${t * .34}L${L + w * .07} ${y + t}H${R - w * .07}L${R} ${y + t * .68}v${-t * .34}L${R - w * .07} ${y}z" fill="#f6f2e6" stroke="#cbc4b2" stroke-width="2"/>`;
+    for (let j = 0; j < 4; j++) { const x = L + w * (.17 + j * .22), m = y + t * .52; o += `<path d="M${x - w * .085} ${m}L${x} ${m - t * .24}L${x + w * .085} ${m}L${x} ${m + t * .24}z" fill="#b7c4c2"/>`; } }
+  return o + `<ellipse cx="${cx}" cy="${by - h}" rx="${w * .42}" ry="${w * .1}" fill="#dcd9cb" stroke="#f6f2e6" stroke-width="3"/>`; };
+const rod = (x1, y1, x2, y2, w) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#59616a" stroke-width="${w + 4}"/><path d="M${x1} ${y1 - 2}L${x2} ${y2 - 2}" stroke="#d5dadd" stroke-width="${w}"/>`;
+const LAMP = `<svg viewBox="0 0 768 530" aria-hidden="true"><ellipse cx="384" cy="330" rx="370" ry="190" fill="#ffe3a1" opacity=".1"/><path d="M372 0v262" stroke="#8d949a" stroke-width="9"/><path d="M370 0v262" stroke="#e1e4e6" stroke-width="4"/>${rod(350, 345, 236, 276, 9)}${rod(394, 345, 490, 284, 9)}${shade(230, 268, 90, 128)}${shade(487, 276, 92, 130)}${rod(340, 356, 16, 360, 10)}${rod(404, 356, 744, 368, 10)}${shade(68, 350, 110, 166)}${shade(697, 360, 118, 168)}<path d="M333 260h79v88h-79z" fill="#8a4a30"/><path d="M349 260v88M368 260v88M392 260v88" stroke="#5f2f1e" stroke-width="3" opacity=".7"/><ellipse cx="372.500" cy="260" rx="39.500" ry="10" fill="#a45d3e"/><path d="M333 346h79v28h-79z" fill="#c9ced1"/><path d="M333 372h79v22q-40 14-79 0z" fill="#7a3f28"/>${rod(352, 366, 172, 512, 11)}${rod(394, 366, 640, 512, 11)}${shade(200, 486, 148, 218)}${shade(614, 490, 160, 218)}</svg>`;
+const STORE = { addr:'7801 Noble Ave, Van Nuys, CA 91405', tel:'818-387-6556', hrs:'Monday to Friday, 9AM to 4PM' };
+// Facts come only from Harveys On Beverly's own public pages and photos. Anything they don't give is a blank the owner fills in.
+const P = {
+  sofa: { art:SOFA, pick:'Model 98632 Sofa', sub:'Lawrence Peabody for Nemschoff', img:'Where your photo of the sofa goes',
+    notes:'lawrence peabody for nemschoff\nmodel 98632, arched wing back\npeabody collection for\nrichardson nemschoff\nsculptural walnut frame\nmid-century, 1960, united states\n32 tall x 76 wide x 31 deep\nseat 17.5\nsku 20N02150.4MS\n9,500, available',
+    title:'Mid-century Model 98632 Arched Wing Back Sofa by Lawrence Peabody for Nemschoff',
+    desc:`The Model 98632 arched wing back sofa by Lawrence Peabody, from The Peabody Collection for Richardson Nemschoff. It has a sculptural walnut frame. United States, 1960.\n\nIt's 32" tall, 76" wide and 31" deep, with a 17.5" seat. $9,500.00, and available for sale.\n\nCall Harveys On Beverly at ${STORE.tel} to ask about it, ${STORE.hrs}.`,
+    facts:[['Price','$9,500.00'],['Size','32" tall x 76" wide x 31" deep'],['Seat','17.5"'],['Designer','Lawrence Peabody'],['Maker','Nemschoff'],['Collection','The Peabody Collection for Richardson Nemschoff'],['Model','98632'],['Frame','Sculptural walnut'],['Year','1960'],['From','United States'],['SKU','20N02150.4MS'],['Status','Available for sale']],
+    blanks:[['cond','Condition'],['mat','Upholstery']],
+    tags:['Lawrence Peabody','Nemschoff','Model 98632','mid-century sofa','arched wing back','walnut frame','1960'] },
+  lamp: { art:LAMP, pick:'Italian Sputnik Chandelier', sub:'Rosewood, chrome, glass shades', img:'Where your photo of the chandelier goes',
+    notes:'italian sputnik chandelier\nmid-century, circa 1960\nsix chrome arms, rosewood accents\nfrosted glass shades\ntextured, clear cut-outs\n2,070',
+    title:'Italian Mid-century Sputnik Chandelier in Rosewood and Chrome with Glass Shades',
+    desc:`An Italian mid-century sputnik chandelier, circa 1960. It has six chrome arms, rosewood accents, and frosted glass shades textured with clear cut-outs.\n\n$2,070.00.\n\nCall Harveys On Beverly at ${STORE.tel} to ask about it, ${STORE.hrs}.`,
+    facts:[['Price','$2,070.00'],['Style','Mid-century sputnik'],['Origin','Italian'],['Date','Circa 1960'],['Arms','Six, chrome'],['Accents','Rosewood'],['Shades','Frosted glass, textured with clear cut-outs']],
+    blanks:[['dims','Size'],['cond','Condition'],['avail','Availability'],['wire','Wiring']],
+    tags:['sputnik chandelier','Italian lighting','mid-century','circa 1960','rosewood','chrome','frosted glass'] },
+};
+const st = { step:0, max:0, k:null, fill:{ sofa:{}, lamp:{} }, title:{}, desc:{}, edit:false, okL:{}, posts:null, shown:0, sel:0, pedit:false, typed:false };
+const other = k => k === 'sofa' ? 'lamp' : 'sofa';
+const LINE = `Call ${STORE.tel}, ${STORE.hrs}.`;
+const VISIT = `Harveys On Beverly\n${STORE.addr}\n${STORE.hrs}\n${STORE.tel}`;
+const f = (k, id) => (st.fill[k][id] || '').trim();
+const extra = k => P[k].blanks.map(([id, l]) => f(k, id) && `${l}: ${f(k, id)}.`).filter(Boolean).join(' ');
+const hash = { sofa:'#LawrencePeabody #Nemschoff #MidCenturySofa #VanNuys', lamp:'#SputnikChandelier #ItalianLighting #Rosewood #VanNuys' };
+// Each piece has its own words for every slot, written ahead of time. Only the picked piece and what the owner types change them.
+const W = {
+  sofa: {
+    photo:'The back of this sofa sweeps up into a wing at each end, and it sits on a sculptural walnut frame.\n\nModel 98632, by Lawrence Peabody for Nemschoff. United States, 1960. $9,500.00, and available for sale.',
+    size:'Measure first: 76" wide, 31" deep, 32" tall, with a 17.5" seat.\n\nThis is the Model 98632 arched wing back sofa from The Peabody Collection for Richardson Nemschoff. Walnut frame, 1960, $9,500.00. SKU 20N02150.4MS if you call.',
+    slides:'1. The whole sofa, all 76" of it.\n2. One wing of the arched back, up close.\n3. The walnut frame.\n4. Model 98632. Lawrence Peabody for Nemschoff, 1960. $9,500.00.',
+    ask:'Where would you put 76" of Lawrence Peabody: against the wall, or out in the room?\n\nModel 98632 for Nemschoff. Arched wing back, walnut frame, 1960. $9,500.00.',
+    story:'1960.\nWalnut frame.\nArched wing back.\n$9,500.00.' },
+  lamp: {
+    photo:'Six chrome arms, rosewood accents, and frosted glass shades textured with clear cut-outs.\n\nAn Italian mid-century sputnik chandelier, circa 1960. $2,070.00.',
+    size:'Chrome, rosewood and frosted glass in one fixture.\n\nIt\'s an Italian sputnik chandelier, circa 1960. Look closely at the shades: the texture is made of clear cut-outs. $2,070.00.',
+    slides:'1. All six chrome arms.\n2. One frosted shade and its clear cut-outs.\n3. The rosewood at the center.\n4. Italian sputnik, circa 1960. $2,070.00.',
+    ask:'Over the dining table, or in the entry?\n\nAn Italian sputnik chandelier, circa 1960, with six chrome arms, rosewood accents and frosted glass. $2,070.00.',
+    story:'Italian.\nCirca 1960.\nChrome, rosewood, frosted glass.\n$2,070.00.' },
+};
+function drafts(){
+  const a = st.k, b = other(a), x = k => extra(k) ? '\n' + extra(k) : '';
+  return [
+    { d:'Mon', net:'Instagram', kind:'Photo', k:a, t:() => `${W[a].photo}${x(a)}\n\n${LINE}\n\n${hash[a]}` },
+    { d:'Tue', net:'Facebook', kind:'Photo', k:b, t:() => `${W[b].size}${x(b)}\n\n${LINE}` },
+    { d:'Wed', net:'Instagram', kind:'Carousel', k:a, t:() => `Swipe through.\n\n${W[a].slides}\n\n${LINE}\n\n${hash[a]}` },
+    { d:'Thu', net:'Facebook', kind:'Question', k:b, t:() => W[b].ask },
+    { d:'Fri', net:'Instagram', kind:'Story', k:b, t:() => `${W[b].story}\n\n${VISIT}` },
+    { d:'Sat', net:'Facebook', kind:'Both pieces', k:'both', t:() => `One sofa from 1960, and one chandelier from around the same time.\n\n1. Lawrence Peabody for Nemschoff, Model 98632. Walnut frame, 76" wide. $9,500.00.\n2. Italian sputnik. Six chrome arms, rosewood, frosted glass. $2,070.00.\n\nWould you put them in the same room? ${LINE}` },
+  ];
+}
+const cap = p => p.mine != null ? p.mine : p.t();
+const art = k => k === 'both' ? `<svg viewBox="0 0 320 250" aria-hidden="true"><svg x="78" y="0" width="176" height="122" viewBox="0 0 768 530">${LAMP.replace(/<\/?svg[^>]*>/g, '')}</svg><svg x="30" y="128" width="262" height="120" viewBox="0 0 734 334">${SOFA.replace(/<\/?svg[^>]*>/g, '')}</svg></svg>` : P[k].art;
+const title = k => st.title[k] != null ? st.title[k] : P[k].title;
+const desc = k => st.desc[k] != null ? st.desc[k] : P[k].desc;
+function listingText(k){
+  const rows = P[k].facts.concat(P[k].blanks.map(([id, l]) => [l, f(k, id)]).filter(r => r[1]));
+  return `${title(k)}\n\n${desc(k)}\n\n${rows.map(r => r.join(': ')).join('\n')}\n\nTags: ${P[k].tags.join(', ')}`;
+}
+let tt; const toast = m => { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 2100); };
+async function copy(txt, m){
+  let ok = false;
+  try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+    const a = document.createElement('textarea'); a.value = txt; a.style.cssText = 'position:fixed;top:0;left:-999px'; document.body.append(a); a.select();
+    try { ok = document.execCommand('copy'); } catch (e2) {} a.remove();
+  }
+  toast(ok ? m : "Couldn't copy here. Press and hold the text.");
+}
+const STEPS = ['Piece','Notes','Listing','Week','Yours'];
+let timers = []; const later = (fn, ms) => timers.push(setTimeout(fn, ms)); const stop = () => { timers.forEach(clearTimeout); timers = []; };
+function go(n){ stop(); st.step = n; st.max = Math.max(st.max, n); st.edit = st.pedit = false; render(); window.scrollTo(0, 0); if (n === 1) typeNotes(); if (n === 3) fillWeek(); }
+function pick(k){ if (st.k !== k) { st.k = k; st.posts = null; st.shown = 0; st.sel = 0; st.typed = false; st.max = 0; } go(1); }
+function typeNotes(){
+  if (st.typed) return; const full = P[st.k].notes; let i = 0;
+  const tick = () => { const el = $('#notes'); if (!el) return; i += 1; el.textContent = full.slice(0, i); if (i < full.length) later(tick, 18); else { st.typed = true; bar(); } };
+  tick();
+}
+function fillWeek(){
+  if (!st.posts) st.posts = drafts();
+  const next = () => { if (st.shown >= 6) { renderPost(); bar(); return; } st.shown++; renderCal(true); later(next, 260); };
+  if (st.shown < 6) later(next, 350); else renderPost();
+}
+const allOk = () => st.posts && st.posts.every(p => p.ok);
+const okCount = () => (st.posts || []).filter(p => p.ok).length;
+
+const V = [
+  () => `<h1>One piece off the floor. A listing and a week of posts.</h1><p class="lead">Tap a piece to start. Five short steps.</p>
+    <div class="room"><button class="pick" data-pick="sofa">${SOFA}<span class="tag">${P.sofa.pick}<span>Start with this</span></span></button><button class="pick hang" data-pick="lamp">${LAMP}<span class="tag">${P.lamp.pick}<span>Start with this</span></span></button></div>
+    <p class="tiny">This is a scripted walkthrough. We wrote the words ahead of time from Harveys On Beverly's public pages. It isn't connected to the store, and nothing here sends or posts. The pieces are our drawings, not photos.</p>`,
+  () => `<h1>Start with rough notes.</h1><p class="lead">A few words about the piece, the way you'd text them. No full sentences.</p>
+    <div class="notes" id="notes" aria-live="polite">${st.typed ? esc(P[st.k].notes) : ''}</div>
+    <p class="tiny">Sample notes. We typed these from the public page and photo for this piece.</p>`,
+  () => { const k = st.k, p = P[k]; return `<div class="hd"><h1>The finished listing.</h1><span class="state ${st.okL[k] ? 'ok' : ''}" id="lState">${st.okL[k] ? 'Approved by you' : 'Draft, waiting on you'}</span></div>
+    <p class="lead">Every detail about the piece is in the notes. Where the notes don't say, it leaves you a blank.</p>
+    <div class="sheet two"><div class="frame"><div>${p.art}<small style="display:block">${p.img}</small></div></div><div>
+      <div class="field" style="margin-top:0"><b>Title</b>${st.edit ? `<input class="edit" id="eT" value="${esc(title(k))}" aria-label="Title">` : `<h2 class="ttl">${esc(title(k))}</h2>`}</div>
+      <div class="field"><b>Description</b>${st.edit ? `<textarea id="eD" rows="7" aria-label="Description">${esc(desc(k))}</textarea>` : `<p class="txt">${esc(desc(k))}</p>`}</div>
+      <div class="field"><b>Details</b><dl>${p.facts.map(r => `<div><dt>${r[0]}</dt><dd>${esc(r[1])}</dd></div>`).join('')}${p.blanks.map(([id, l]) => `<div><dt>${l}</dt><dd><input data-f="${id}" class="${f(k, id) ? 'has' : ''}" value="${esc(st.fill[k][id] || '')}" placeholder="Add: ${l.toLowerCase()}" aria-label="${l}" autocomplete="off"></dd></div>`).join('')}</dl><div class="key"><span><i></i>From the notes</span><span><i class="a"></i>You add</span></div></div>
+      <div class="field"><b>Tags</b><div class="tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div></div>
+      <div class="row"><button class="btn ${st.okL[k] ? 'ok' : 'pri'}" data-a="okL">${st.okL[k] ? 'Approved' : 'Approve'}</button><button class="btn" data-a="editL">${st.edit ? 'Save changes' : 'Edit'}</button><button class="btn" data-a="copyL">Copy listing</button></div>
+    </div></div>`; },
+  () => `<div class="hd"><h1>Now a week of posts.</h1><span class="cnt" id="cnt"></span></div><p class="lead">From this piece and ${st.k === 'sofa' ? 'the chandelier' : 'the sofa'}. Read each one, change what you want, approve it.</p><div class="weekly"><div class="cal" id="cal"></div><div id="post"></div></div>`,
+  () => { const n = okCount(), L = st.okL[st.k]; return `<h1>One piece, start to finish.</h1><p class="lead">${L ? 'One listing approved' : 'One listing drafted'}, and ${n} of 6 posts approved by you. Nothing went out. You'd decide what does.</p>
+    <div class="sheet"><h2>Want this set up for your showroom?</h2><p class="txt" style="margin-top:8px">We'd build it around your real pieces, your photos and the way you talk about them. You'd see it working before you pay.</p></div>
+    <div class="cta"><a href="https://calendar.app.google/x9bPju4vi61FBud66" target="_blank" rel="noopener">Book a time</a></div>
+    <p class="tiny">Facts used here: ${STORE.addr}, ${STORE.tel}, ${STORE.hrs}, and the two pieces, all from Harveys On Beverly's public pages. Harveys On Beverly didn't make this and isn't a Handoff client.</p>`; },
+];
+function rail(){ $('#rail').innerHTML = STEPS.map((s, i) => `<li style="flex:1;min-width:0;display:flex"><button class="${i === st.step ? 'on' : i < st.step ? 'past' : ''}" data-go="${i}" ${i > st.max ? 'disabled' : ''} ${i === st.step ? 'aria-current="step"' : ''}>${s}</button></li>`).join(''); }
+function bar(){
+  const B = [null, { t:'Show the listing', n:2, off:!st.typed }, { t:'Show a week of posts', n:3 }, { t: allOk() ? 'Finish' : 'Skip to the end', n:4, off: st.shown < 6 }, { t:'Try the other piece', other:true }][st.step];
+  $('#bar').hidden = !B;
+  $('#barIn').innerHTML = B ? `<button class="back" data-go="${st.step - 1}">Back</button><button ${B.other ? 'data-a="other"' : `data-go="${B.n}"`} ${B.off ? 'disabled' : ''}>${B.t}</button>` : '';
+}
+function render(){ rail(); $('#app').innerHTML = V[st.step](); bar(); if (st.step === 3) { renderCal(false); if (st.shown >= 6) renderPost(); } }
+function renderCal(anim){
+  const c = $('#cal'); if (!c || !st.posts) return;
+  c.innerHTML = st.posts.map((p, i) => `<div class="day"><b>${p.d}</b>${i < st.shown ? `<button class="tile c${i} ${st.sel === i && st.shown >= 6 ? 'sel' : ''} ${p.ok ? 'done' : ''} ${anim && i === st.shown - 1 ? 'in' : ''}" data-post="${i}" aria-label="${p.d}, ${p.net} ${p.kind}${p.ok ? ', approved' : ''}"><span class="pic">${art(p.k)}</span><span class="cp">${p.net}<span>${p.ok ? 'Approved' : p.kind}</span></span></button>` : '<div class="tile empty"></div>'}</div>`).join('');
+  $('#cnt').textContent = `${okCount()} of 6 approved`;
+}
+function renderPost(){
+  const el = $('#post'); if (!el || !st.posts) return; const i = st.sel, p = st.posts[i];
+  el.innerHTML = `<div class="sheet post"><div class="hd"><h2>${p.d}, ${p.net}</h2><span class="state ${p.ok ? 'ok' : ''}">${p.ok ? 'Approved by you' : p.kind + ' draft'}</span></div><div class="big c${i}">${art(p.k)}<em>Your ${p.kind === 'Carousel' ? 'photos go' : 'photo goes'} here</em></div>
+    ${st.pedit ? `<textarea id="eP" rows="9" aria-label="Post words">${esc(cap(p))}</textarea>` : `<p class="txt">${esc(cap(p))}</p>`}
+    <div class="row" style="margin-top:0"><button class="btn ${p.ok ? 'ok' : 'pri'}" data-a="okP">${p.ok ? 'Approved' : 'Approve'}</button><button class="btn" data-a="editP">${st.pedit ? 'Save changes' : 'Edit'}</button><button class="btn" data-a="copyP">Copy</button></div></div>`;
+  renderCal(false);
+}
+function saveL(){ const t = $('#eT'), d = $('#eD'); if (!t) return; if (t.value.trim() !== title(st.k) || d.value !== desc(st.k)) st.okL[st.k] = false; st.title[st.k] = t.value.trim() || P[st.k].title; st.desc[st.k] = d.value; st.edit = false; }
+function saveP(){ const e = $('#eP'); if (!e) return; const p = st.posts[st.sel]; if (e.value !== cap(p)) { p.mine = e.value; p.ok = false; } st.pedit = false; }
+document.addEventListener('input', e => {
+  const id = e.target.dataset.f; if (!id) return;
+  st.fill[st.k][id] = e.target.value; e.target.classList.toggle('has', !!e.target.value.trim());
+  if (st.posts) st.posts.forEach(p => { p.ok = p.ok && cap(p) === p.okText; }); // only posts whose words changed go back to draft
+  if (st.okL[st.k]) { st.okL[st.k] = false; const s = $('#lState'), b = $('[data-a=okL]'); s.className = 'state'; s.textContent = 'Draft, waiting on you'; b.className = 'btn pri'; b.textContent = 'Approve'; }
+});
+document.addEventListener('click', e => {
+  const pk = e.target.closest('[data-pick]'); if (pk) return pick(pk.dataset.pick);
+  const g = e.target.closest('[data-go]'); if (g && !g.disabled) { if (st.edit) saveL(); if (st.pedit) saveP(); return go(+g.dataset.go); }
+  const t = e.target.closest('[data-post]'); if (t && st.shown >= 6) { saveP(); st.sel = +t.dataset.post; renderPost(); if (innerWidth < 860) $('#post').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
+  const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, k = st.k, y = scrollY;
+  if (a === 'okL') { saveL(); st.okL[k] = !st.okL[k]; render(); scrollTo(0, y); toast(st.okL[k] ? 'Approved. Nothing was posted.' : 'Back to draft.'); }
+  if (a === 'editL') { if (st.edit) saveL(); else st.edit = true; render(); scrollTo(0, st.edit ? Math.max(0, $('#eT').getBoundingClientRect().top + scrollY - 120) : y); }
+  if (a === 'copyL') { if (st.edit) { saveL(); render(); scrollTo(0, y); } copy(listingText(k), 'Listing copied. Nothing was posted.'); }
+  if (a === 'editP') { if (st.pedit) saveP(); else st.pedit = true; renderPost(); bar(); }
+  if (a === 'copyP') { saveP(); renderPost(); copy(cap(st.posts[st.sel]), 'Post copied. Nothing was posted.'); }
+  if (a === 'okP') {
+    saveP(); const p = st.posts[st.sel]; p.ok = !p.ok; p.okText = cap(p); renderPost(); bar(); toast(p.ok ? 'Approved. Nothing was posted.' : 'Back to draft.');
+    if (p.ok && !allOk()) { const from = st.sel; later(() => { if (st.step === 3 && st.sel === from && !st.pedit && st.posts[from].ok) { let j = from; do { j = (j + 1) % 6; } while (st.posts[j].ok); st.sel = j; renderPost(); if (innerWidth < 860) $('#post').scrollIntoView({ behavior:'smooth', block:'start' }); } }, 800); }
+  }
+  if (a === 'other') pick(other(k));
+});
+render();
+})();
+</script>
+</body></html>
